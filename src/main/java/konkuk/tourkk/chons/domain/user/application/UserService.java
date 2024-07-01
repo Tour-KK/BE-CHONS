@@ -8,6 +8,9 @@ import konkuk.tourkk.chons.domain.user.domain.enums.Role;
 import konkuk.tourkk.chons.domain.user.domain.enums.SocialType;
 import konkuk.tourkk.chons.domain.user.exception.UserException;
 import konkuk.tourkk.chons.domain.user.infrastructure.UserRepository;
+import konkuk.tourkk.chons.domain.user.presentation.dto.req.UserNicknameRequest;
+import konkuk.tourkk.chons.domain.user.presentation.dto.res.UserInfoResponse;
+import konkuk.tourkk.chons.domain.user.presentation.dto.res.UserNicknameResponse;
 import konkuk.tourkk.chons.global.auth.presentation.dto.req.LoginRequest;
 import konkuk.tourkk.chons.global.exception.properties.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -33,17 +36,20 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public AdditionalInfoResponse addMoreInfo(Long userId, AdditionalInfoRequest request) {
-        User user = findById(userId);
-        user.changeNickname(request.getNickname());
-        user.changePhoneNum(request.getPhoneNum());
-
-        return AdditionalInfoResponse.of(user.getId(), user.getNickname(), user.getPhoneNum());
-    }
-
     public User findById(Long id) {
         Optional<User> userOptional = userRepository.findById(id);
         return userOptional
             .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
+    }
+
+    public UserNicknameResponse updateNickname(User user, UserNicknameRequest request) {
+        String nickname = request.getNickname();
+        user.changeNickname(nickname);
+
+        return UserNicknameResponse.of(user.getId(), user.getNickname());
+    }
+
+    public UserInfoResponse getUserInfo(User user) {
+        return UserInfoResponse.from(user);
     }
 }
