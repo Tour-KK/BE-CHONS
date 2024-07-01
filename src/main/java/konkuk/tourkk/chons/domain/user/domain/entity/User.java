@@ -73,6 +73,10 @@ public class User implements UserDetails {
         this.nickname = nickname;
     }
 
+    public void delete() {
+        this.deletedAt = LocalDateTime.now();
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.getKey()));
