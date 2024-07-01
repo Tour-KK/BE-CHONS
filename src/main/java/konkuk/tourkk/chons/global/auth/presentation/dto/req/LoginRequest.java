@@ -12,7 +12,18 @@ import lombok.NoArgsConstructor;
 public class LoginRequest {
 
     private String email;
+
     private String name;
+
     private String socialId;
+
     private SocialType socialType;
+
+    private String nickname;
+
+    private String birthYear;
+
+    private String birthDay;
+
+    private String phoneNum;
 }
