@@ -40,7 +40,7 @@ public class SecurityConfig {
                     SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/h2-console/**").permitAll()
-                .requestMatchers("/api/v1/user/additional").authenticated()
+                .requestMatchers("/api/v1/user/**").authenticated()
                 .requestMatchers("/api/v1/**").anonymous()
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll())
             .exceptionHandling(customizer -> customizer

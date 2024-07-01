@@ -84,8 +84,8 @@ public class User implements UserDetails {
         this.nickname = nickname;
     }
 
-    public void changePhoneNum(String phoneNum) {
-        this.phoneNum = phoneNum;
+    public void delete() {
+        this.deletedAt = LocalDateTime.now();
     }
 
     @Override
