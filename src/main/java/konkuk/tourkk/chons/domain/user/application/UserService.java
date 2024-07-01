@@ -2,8 +2,6 @@ package konkuk.tourkk.chons.domain.user.application;
 
 import java.time.LocalDate;
 import java.util.Optional;
-import konkuk.tourkk.chons.domain.user.application.req.AdditionalInfoRequest;
-import konkuk.tourkk.chons.domain.user.application.res.AdditionalInfoResponse;
 import konkuk.tourkk.chons.domain.user.domain.entity.User;
 import konkuk.tourkk.chons.domain.user.domain.enums.Role;
 import konkuk.tourkk.chons.domain.user.domain.enums.SocialType;
@@ -35,19 +33,5 @@ public class UserService {
             .birthDate(birthDate)
             .build();
         return userRepository.save(user);
-    }
-
-    public AdditionalInfoResponse addMoreInfo(Long userId, AdditionalInfoRequest request) {
-        User user = findById(userId);
-        user.changeNickname(request.getNickname());
-        user.changePhoneNum(request.getPhoneNum());
-
-        return AdditionalInfoResponse.of(user.getId(), user.getNickname(), user.getPhoneNum());
-    }
-
-    private User findById(Long id) {
-        Optional<User> userOptional = userRepository.findById(id);
-        return userOptional
-            .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
     }
 }
