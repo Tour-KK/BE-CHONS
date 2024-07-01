@@ -41,7 +41,7 @@ public class UserService {
         return AdditionalInfoResponse.of(user.getId(), user.getNickname(), user.getPhoneNum());
     }
 
-    private User findById(Long id) {
+    public User findById(Long id) {
         Optional<User> userOptional = userRepository.findById(id);
         return userOptional
             .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
