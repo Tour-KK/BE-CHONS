@@ -24,15 +24,16 @@ public class AuthService {
     public LoginResponse login(LoginRequest request) {
         String accessToken = jwtService.createAccessToken(request.getEmail());
         String refreshToken = jwtService.createRefreshToken();
-        Optional<User> user = userRepository.findByEmail(request.getEmail());
+        Optional<User> userOptional = userRepository.findByEmail(request.getEmail());
 
-        if(user.isEmpty()) {
-            userService.registerUser(request.getName(), request.getEmail(),
+        if(userOptional.isEmpty()) {
+            User newUser = userService.registerUser(request.getName(), request.getEmail(),
                 request.getSocialId(), request.getSocialType(),
                 Role.USER);
-            return LoginResponse.of(accessToken, refreshToken, request.getEmail(), false);
+            return LoginResponse.of(newUser.getId(), accessToken, refreshToken, request.getEmail(), false);
         }
 
-        return LoginResponse.of(accessToken, refreshToken, request.getEmail(), true);
+        User user = userOptional.get();
+        return LoginResponse.of(user.getId(), accessToken, refreshToken, user.getEmail(), true);
     }
 }
