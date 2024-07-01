@@ -68,7 +68,8 @@ public class User implements UserDetails {
     private LocalDateTime deletedAt;
 
     @Builder
-    private User(String nickname, String phoneNum, String name, String email, Role role, String socialId, SocialType socialType, LocalDate birthDate) {
+    private User(String nickname, String phoneNum, String name, String email, Role role,
+        String socialId, SocialType socialType, LocalDate birthDate) {
         this.name = name;
         this.email = email;
         this.role = role;

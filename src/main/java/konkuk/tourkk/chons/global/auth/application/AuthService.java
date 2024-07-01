@@ -13,7 +13,6 @@ import konkuk.tourkk.chons.global.auth.jwt.service.JwtService;
 import konkuk.tourkk.chons.global.auth.presentation.dto.req.LoginRequest;
 import konkuk.tourkk.chons.global.auth.presentation.dto.res.LoginResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,7 +39,7 @@ public class AuthService {
         String refreshToken = jwtService.createRefreshToken();
         Optional<User> userOptional = userRepository.findByEmail(email);
 
-        if(userOptional.isEmpty()) {
+        if (userOptional.isEmpty()) {
             String formatted = toLocalDateFormat(socialType, birthYear, birthDay);
             User newUser = userService.registerUser(name, email, socialId,
                 socialType, Role.USER, LocalDate.parse(formatted), phoneNum, nickname);
