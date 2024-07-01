@@ -1,5 +1,6 @@
 package konkuk.tourkk.chons.domain.user.application;
 
+import java.time.LocalDate;
 import java.util.Optional;
 import konkuk.tourkk.chons.domain.user.application.req.AdditionalInfoRequest;
 import konkuk.tourkk.chons.domain.user.application.res.AdditionalInfoResponse;
@@ -22,13 +23,16 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public User registerUser(String name, String email, String socialId, SocialType socialType, Role role) {
+    public User registerUser(String name, String email, String socialId, SocialType socialType, Role role, LocalDate birthDate, String phoneNum, String nickname) {
         User user = User.builder()
+            .nickname(nickname)
+            .phoneNum(phoneNum)
             .role(role)
             .socialType(socialType)
             .socialId(socialId)
             .email(email)
             .name(name)
+            .birthDate(birthDate)
             .build();
         return userRepository.save(user);
     }
