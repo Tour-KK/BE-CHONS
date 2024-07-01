@@ -13,7 +13,8 @@ public class LoginResponse {
     private String email;
     private boolean isJoined;
 
-    public static LoginResponse of(Long userId, String accessToken, String refreshToken, String email, boolean isJoined) {
+    public static LoginResponse of(Long userId, String accessToken, String refreshToken,
+        String email, boolean isJoined) {
         return LoginResponse.builder()
             .userId(userId)
             .accessToken(accessToken)
