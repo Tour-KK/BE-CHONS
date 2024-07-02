@@ -1,5 +1,6 @@
 package konkuk.tourkk.chons.global.exception.properties;
 
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -25,9 +26,12 @@ public enum ErrorCode {
 
     // 403
     SECURITY_ACCESS_DENIED(FORBIDDEN, "접근 권한이 없습니다."),
+    REVIEW_UPDATE_ACCESS_DENIED(FORBIDDEN, "리뷰를 수정할 권한이 없습니다."),
+    REVIEW_DELETE_ACCESS_DENIED(FORBIDDEN, "리뷰를 삭제할 권한이 없습니다."),
 
     // 404
     USER_NOT_FOUND(NOT_FOUND, "user을 찾을 수 없습니다."),
+    REVIEW_NOT_FOUND(NOT_FOUND, "review를 찾을 수 없습니다."),
 
     // 500
     SERVER_ERROR(INTERNAL_SERVER_ERROR, "예상치 못한 서버 에러가 발생하였습니다.");
