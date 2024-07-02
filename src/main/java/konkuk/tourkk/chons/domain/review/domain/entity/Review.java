@@ -55,4 +55,12 @@ public class Review {
         this.houseId = houseId;
         this.userEmail = userEmail;
     }
+
+    public void changeContent(String content) {
+        this.content = content;
+    }
+
+    public void changeStar(Star star) {
+        this.star = star;
+    }
 }

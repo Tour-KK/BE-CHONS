@@ -1,5 +1,7 @@
 package konkuk.tourkk.chons.domain.review.application;
 
+import konkuk.tourkk.chons.domain.review.presentation.dto.req.ReviewUpdateRequest;
+import konkuk.tourkk.chons.domain.review.presentation.dto.res.ReviewUpdateResponse;
 import konkuk.tourkk.chons.domain.review.domain.entity.Review;
 import konkuk.tourkk.chons.domain.review.exception.ReviewException;
 import konkuk.tourkk.chons.domain.review.infrastructure.ReviewRepository;
@@ -37,6 +39,14 @@ public class ReivewService {
         Review review = findReviewById(reviewId);
 
         return ReviewResponse.from(review);
+    }
+
+    public ReviewUpdateResponse updateReivew(Long reviewId, ReviewUpdateRequest request) {
+        Review review = findReviewById(reviewId);
+        review.changeContent(request.getContent());
+        review.changeStar(request.getStar());
+
+        return ReviewUpdateResponse.of(reviewId, review.getContent(), review.getStar());
     }
 
     private Review findReviewById(Long reviewId) {

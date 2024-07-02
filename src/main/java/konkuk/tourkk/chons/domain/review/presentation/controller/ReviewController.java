@@ -1,6 +1,8 @@
 package konkuk.tourkk.chons.domain.review.presentation.controller;
 
 import konkuk.tourkk.chons.domain.review.application.ReivewService;
+import konkuk.tourkk.chons.domain.review.presentation.dto.req.ReviewUpdateRequest;
+import konkuk.tourkk.chons.domain.review.presentation.dto.res.ReviewUpdateResponse;
 import konkuk.tourkk.chons.domain.review.presentation.dto.req.ReviewRequest;
 import konkuk.tourkk.chons.domain.review.presentation.dto.res.ReviewResponse;
 import konkuk.tourkk.chons.domain.user.domain.entity.User;
@@ -10,9 +12,10 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -32,5 +35,11 @@ public class ReviewController {
     @GetMapping("/{reviewId}")
     public ResponseEntity<ReviewResponse> getReview(@PathVariable Long reviewId) {
         return ResponseEntity.ok(reviewService.getReview(reviewId));
+    }
+
+    @PutMapping("/{reviewId}")
+    public ResponseEntity<ReviewUpdateResponse> updateReview(@PathVariable Long reviewId, @RequestBody ReviewUpdateRequest request) {
+        ReviewUpdateResponse response = reviewService.updateReivew(reviewId, request);
+        return ResponseEntity.ok(response);
     }
 }

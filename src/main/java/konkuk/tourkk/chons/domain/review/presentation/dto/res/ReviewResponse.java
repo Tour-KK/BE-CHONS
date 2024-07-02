@@ -28,6 +28,7 @@ public class ReviewResponse {
             .star(review.getStar())
             .userId(review.getUserId())
             .houseId(review.getHouseId())
+            .userEmail(review.getUserEmail())
             .build();
     }
 }
