@@ -65,6 +65,13 @@ public class ReivewService {
             .collect(Collectors.toList());
     }
 
+    public List<ReviewResponse> getByUserId(Long userId) {
+        return reviewRepository.findByUserId(userId)
+            .stream()
+            .map(ReviewResponse::from)
+            .collect(Collectors.toList());
+    }
+
     private Review checkAccess(Long userId, Long reviewId) {
         Review review = findReviewById(reviewId);
         if (!review.getUserId().equals(userId)) {
