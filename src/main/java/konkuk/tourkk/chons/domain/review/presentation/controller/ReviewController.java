@@ -1,10 +1,10 @@
 package konkuk.tourkk.chons.domain.review.presentation.controller;
 
 import konkuk.tourkk.chons.domain.review.application.ReivewService;
-import konkuk.tourkk.chons.domain.review.presentation.dto.req.ReviewUpdateRequest;
-import konkuk.tourkk.chons.domain.review.presentation.dto.res.ReviewUpdateResponse;
 import konkuk.tourkk.chons.domain.review.presentation.dto.req.ReviewRequest;
+import konkuk.tourkk.chons.domain.review.presentation.dto.req.ReviewUpdateRequest;
 import konkuk.tourkk.chons.domain.review.presentation.dto.res.ReviewResponse;
+import konkuk.tourkk.chons.domain.review.presentation.dto.res.ReviewUpdateResponse;
 import konkuk.tourkk.chons.domain.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +26,8 @@ public class ReviewController {
     private final ReivewService reviewService;
 
     @PostMapping
-    public ResponseEntity<ReviewResponse> createReview(@AuthenticationPrincipal User user, @RequestBody
+    public ResponseEntity<ReviewResponse> createReview(@AuthenticationPrincipal User user,
+        @RequestBody
         ReviewRequest request) {
         ReviewResponse response = reviewService.createReview(user.getId(), request);
         return ResponseEntity.ok(response);
@@ -38,13 +39,15 @@ public class ReviewController {
     }
 
     @PutMapping("/{reviewId}")
-    public ResponseEntity<ReviewUpdateResponse> updateReview(@AuthenticationPrincipal User user, @PathVariable Long reviewId, @RequestBody ReviewUpdateRequest request) {
+    public ResponseEntity<ReviewUpdateResponse> updateReview(@AuthenticationPrincipal User user,
+        @PathVariable Long reviewId, @RequestBody ReviewUpdateRequest request) {
         ReviewUpdateResponse response = reviewService.updateReview(user.getId(), reviewId, request);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{reviewId}")
-    public ResponseEntity<Void> deleteReview(@AuthenticationPrincipal Long userId, @PathVariable Long reviewId) {
+    public ResponseEntity<Void> deleteReview(@AuthenticationPrincipal Long userId,
+        @PathVariable Long reviewId) {
         reviewService.deleteReview(userId, reviewId);
         return ResponseEntity.noContent().build();
     }

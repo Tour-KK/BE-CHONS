@@ -1,15 +1,16 @@
 package konkuk.tourkk.chons.domain.user.application;
 
 import java.time.LocalDate;
+import java.util.Optional;
 import konkuk.tourkk.chons.domain.user.domain.entity.User;
 import konkuk.tourkk.chons.domain.user.domain.enums.Role;
 import konkuk.tourkk.chons.domain.user.domain.enums.SocialType;
+import konkuk.tourkk.chons.domain.user.exception.UserException;
 import konkuk.tourkk.chons.domain.user.infrastructure.UserRepository;
 import konkuk.tourkk.chons.domain.user.presentation.dto.req.UserNicknameRequest;
 import konkuk.tourkk.chons.domain.user.presentation.dto.res.UserInfoResponse;
 import konkuk.tourkk.chons.domain.user.presentation.dto.res.UserNicknameResponse;
 import konkuk.tourkk.chons.global.auth.jwt.service.JwtService;
-import konkuk.tourkk.chons.global.auth.presentation.dto.req.LoginRequest;
 import konkuk.tourkk.chons.global.exception.properties.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

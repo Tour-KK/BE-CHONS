@@ -2,7 +2,6 @@ package konkuk.tourkk.chons.domain.user.presentation.dto.res;
 
 import konkuk.tourkk.chons.domain.user.domain.entity.User;
 import konkuk.tourkk.chons.domain.user.domain.enums.Role;
-import konkuk.tourkk.chons.domain.user.domain.enums.SocialType;
 import lombok.Builder;
 import lombok.Getter;
 
