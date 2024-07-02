@@ -17,8 +17,6 @@ public class UserInfoResponse {
 
     private String phoneNum;
 
-    private String nickname;
-
     private Role role;
 
     public static UserInfoResponse from(User user) {
@@ -27,7 +25,6 @@ public class UserInfoResponse {
             .name(user.getName())
             .email(user.getEmail())
             .phoneNum(user.getPhoneNum())
-            .nickname(user.getNickname())
             .role(user.getRole())
             .build();
     }

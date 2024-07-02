@@ -42,7 +42,7 @@ public class AuthService {
         if (userOptional.isEmpty()) {
             String formatted = toLocalDateFormat(socialType, birthYear, birthDay);
             User newUser = userService.registerUser(name, email, socialId,
-                socialType, Role.USER, LocalDate.parse(formatted), phoneNum, nickname);
+                socialType, Role.USER, phoneNum);
             return LoginResponse.of(newUser.getId(), accessToken, refreshToken, email, false);
         }
 
