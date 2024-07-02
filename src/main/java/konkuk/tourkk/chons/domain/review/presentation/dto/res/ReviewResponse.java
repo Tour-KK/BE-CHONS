@@ -19,6 +19,8 @@ public class ReviewResponse {
 
     private Long houseId;
 
+    private String userEmail;
+
     public static ReviewResponse from(Review review) {
         return ReviewResponse.builder()
             .reviewId(review.getId())
