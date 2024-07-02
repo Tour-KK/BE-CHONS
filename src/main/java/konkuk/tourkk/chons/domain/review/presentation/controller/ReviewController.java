@@ -1,5 +1,6 @@
 package konkuk.tourkk.chons.domain.review.presentation.controller;
 
+import java.util.List;
 import konkuk.tourkk.chons.domain.review.application.ReivewService;
 import konkuk.tourkk.chons.domain.review.presentation.dto.req.ReviewRequest;
 import konkuk.tourkk.chons.domain.review.presentation.dto.req.ReviewUpdateRequest;
@@ -7,6 +8,7 @@ import konkuk.tourkk.chons.domain.review.presentation.dto.res.ReviewResponse;
 import konkuk.tourkk.chons.domain.review.presentation.dto.res.ReviewUpdateResponse;
 import konkuk.tourkk.chons.domain.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -50,5 +52,11 @@ public class ReviewController {
         @PathVariable Long reviewId) {
         reviewService.deleteReview(userId, reviewId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/house/{houseId}")
+    public ResponseEntity<List<ReviewResponse>> getByHouseId(@PathVariable Long houseId) {
+        List<ReviewResponse> responses = reviewService.getByHouseId(houseId);
+        return ResponseEntity.ok(responses);
     }
 }
