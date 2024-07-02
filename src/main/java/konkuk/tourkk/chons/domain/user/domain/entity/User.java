@@ -9,7 +9,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -44,9 +43,6 @@ public class User implements UserDetails {
     @Column(nullable = false, length = 20)
     private String phoneNum;
 
-    @Column(length = 10)
-    private String nickname;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
@@ -58,9 +54,6 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String socialId;
 
-    @Column(nullable = false)
-    private LocalDate birthDate;
-
     @CreationTimestamp
     @Column(nullable = false)
     private LocalDateTime createdAt;
@@ -68,20 +61,14 @@ public class User implements UserDetails {
     private LocalDateTime deletedAt;
 
     @Builder
-    private User(String nickname, String phoneNum, String name, String email, Role role,
-        String socialId, SocialType socialType, LocalDate birthDate) {
+    private User(String phoneNum, String name, String email, Role role,
+        String socialId, SocialType socialType) {
         this.name = name;
         this.email = email;
         this.role = role;
         this.socialId = socialId;
         this.socialType = socialType;
-        this.birthDate = birthDate;
         this.phoneNum = phoneNum;
-        this.nickname = nickname;
-    }
-
-    public void changeNickname(String nickname) {
-        this.nickname = nickname;
     }
 
     public void delete() {

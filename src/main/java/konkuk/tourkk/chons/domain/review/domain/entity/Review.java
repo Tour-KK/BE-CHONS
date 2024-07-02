@@ -38,7 +38,7 @@ public class Review {
     private Long userId;
 
     @Column(nullable = false)
-    private String userEmail;
+    private String userName;
 
     @Column(nullable = false)
     private Long houseId;
@@ -48,12 +48,12 @@ public class Review {
     private LocalDateTime createdAt;
 
     @Builder
-    private Review(String content, Star star, Long userId, Long houseId, String userEmail) {
+    private Review(String content, Star star, Long userId, Long houseId, String userName) {
         this.content = content;
         this.star = star;
         this.userId = userId;
         this.houseId = houseId;
-        this.userEmail = userEmail;
+        this.userName = userName;
     }
 
     public void changeContent(String content) {

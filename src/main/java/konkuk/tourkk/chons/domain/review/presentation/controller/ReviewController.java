@@ -1,5 +1,6 @@
 package konkuk.tourkk.chons.domain.review.presentation.controller;
 
+import java.util.List;
 import konkuk.tourkk.chons.domain.review.application.ReivewService;
 import konkuk.tourkk.chons.domain.review.presentation.dto.req.ReviewRequest;
 import konkuk.tourkk.chons.domain.review.presentation.dto.req.ReviewUpdateRequest;
@@ -50,5 +51,17 @@ public class ReviewController {
         @PathVariable Long reviewId) {
         reviewService.deleteReview(userId, reviewId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/house/{houseId}")
+    public ResponseEntity<List<ReviewResponse>> getByHouse(@PathVariable Long houseId) {
+        List<ReviewResponse> responses = reviewService.getByHouseId(houseId);
+        return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<List<ReviewResponse>> getByUser(@AuthenticationPrincipal User user) {
+        List<ReviewResponse> response = reviewService.getByUserId(user.getId());
+        return ResponseEntity.ok(response);
     }
 }

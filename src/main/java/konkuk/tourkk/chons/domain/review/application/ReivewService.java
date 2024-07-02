@@ -1,5 +1,7 @@
 package konkuk.tourkk.chons.domain.review.application;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import konkuk.tourkk.chons.domain.review.domain.entity.Review;
 import konkuk.tourkk.chons.domain.review.exception.ReviewException;
 import konkuk.tourkk.chons.domain.review.infrastructure.ReviewRepository;
@@ -30,7 +32,7 @@ public class ReivewService {
             .star(request.getStar())
             .userId(userId)
             .houseId(request.getHouseId())
-            .userEmail(user.getEmail())
+            .userName(user.getName())
             .build();
         return ReviewResponse.from(reviewRepository.save(review));
     }
@@ -53,6 +55,21 @@ public class ReivewService {
     public void deleteReview(Long userId, Long reviewId) {
         checkAccess(userId, reviewId);
         reviewRepository.deleteById(reviewId);
+    }
+
+    public List<ReviewResponse> getByHouseId(Long houseId) {
+        // TODO: house가 존재하는지 확인
+        return reviewRepository.findByHouseId(houseId)
+            .stream()
+            .map(ReviewResponse::from)
+            .collect(Collectors.toList());
+    }
+
+    public List<ReviewResponse> getByUserId(Long userId) {
+        return reviewRepository.findByUserId(userId)
+            .stream()
+            .map(ReviewResponse::from)
+            .collect(Collectors.toList());
     }
 
     private Review checkAccess(Long userId, Long reviewId) {
