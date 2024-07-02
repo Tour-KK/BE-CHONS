@@ -41,12 +41,25 @@ public class ReivewService {
         return ReviewResponse.from(review);
     }
 
-    public ReviewUpdateResponse updateReivew(Long reviewId, ReviewUpdateRequest request) {
-        Review review = findReviewById(reviewId);
+    public ReviewUpdateResponse updateReview(Long userId, Long reviewId, ReviewUpdateRequest request) {
+        Review review = checkAccess(userId, reviewId);
         review.changeContent(request.getContent());
         review.changeStar(request.getStar());
 
         return ReviewUpdateResponse.of(reviewId, review.getContent(), review.getStar());
+    }
+
+    public void deleteReview(Long userId, Long reviewId) {
+        checkAccess(userId, reviewId);
+        reviewRepository.deleteById(reviewId);
+    }
+
+    private Review checkAccess(Long userId, Long reviewId) {
+        Review review = findReviewById(reviewId);
+        if(!review.getUserId().equals(userId)) {
+            throw new ReviewException(ErrorCode.REVIEW_DELETE_ACCESS_DENIED);
+        }
+        return review;
     }
 
     private Review findReviewById(Long reviewId) {

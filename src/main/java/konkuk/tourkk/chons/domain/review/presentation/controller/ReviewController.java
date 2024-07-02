@@ -9,13 +9,13 @@ import konkuk.tourkk.chons.domain.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -38,8 +38,14 @@ public class ReviewController {
     }
 
     @PutMapping("/{reviewId}")
-    public ResponseEntity<ReviewUpdateResponse> updateReview(@PathVariable Long reviewId, @RequestBody ReviewUpdateRequest request) {
-        ReviewUpdateResponse response = reviewService.updateReivew(reviewId, request);
+    public ResponseEntity<ReviewUpdateResponse> updateReview(@AuthenticationPrincipal User user, @PathVariable Long reviewId, @RequestBody ReviewUpdateRequest request) {
+        ReviewUpdateResponse response = reviewService.updateReview(user.getId(), reviewId, request);
         return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{reviewId}")
+    public ResponseEntity<Void> deleteReview(@AuthenticationPrincipal Long userId, @PathVariable Long reviewId) {
+        reviewService.deleteReview(userId, reviewId);
+        return ResponseEntity.noContent().build();
     }
 }

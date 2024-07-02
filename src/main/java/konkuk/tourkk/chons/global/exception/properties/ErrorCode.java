@@ -26,6 +26,8 @@ public enum ErrorCode {
 
     // 403
     SECURITY_ACCESS_DENIED(FORBIDDEN, "접근 권한이 없습니다."),
+    REVIEW_UPDATE_ACCESS_DENIED(FORBIDDEN, "리뷰를 수정할 권한이 없습니다."),
+    REVIEW_DELETE_ACCESS_DENIED(FORBIDDEN, "리뷰를 삭제할 권한이 없습니다."),
 
     // 404
     USER_NOT_FOUND(NOT_FOUND, "user을 찾을 수 없습니다."),
