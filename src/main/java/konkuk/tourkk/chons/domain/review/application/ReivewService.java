@@ -32,7 +32,7 @@ public class ReivewService {
             .star(request.getStar())
             .userId(userId)
             .houseId(request.getHouseId())
-            .userEmail(user.getEmail())
+            .userName(user.getName())
             .build();
         return ReviewResponse.from(reviewRepository.save(review));
     }
