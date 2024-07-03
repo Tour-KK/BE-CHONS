@@ -44,7 +44,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/v1/user/**").authenticated()
                 .requestMatchers(HttpMethod.GET, "/api/v1/review/**").permitAll()
                 .requestMatchers("/api/v1/review/**").authenticated()
-                .requestMatchers("/api/v1/**").anonymous()
+                .requestMatchers("/api/v1/like/**").authenticated()
+                .requestMatchers("/api/v1/**").permitAll()
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll())
             .exceptionHandling(customizer -> customizer
                 .authenticationEntryPoint(customAuthenticationEntryPoint())
