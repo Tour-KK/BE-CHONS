@@ -45,6 +45,8 @@ public class ReivewService {
 
     public ReviewUpdateResponse updateReview(Long userId, Long reviewId,
         ReviewUpdateRequest request) {
+        userService.findUserById(userId);
+
         Review review = checkAccess(userId, reviewId);
         review.changeContent(request.getContent());
         review.changeStar(request.getStar());
@@ -53,8 +55,10 @@ public class ReivewService {
     }
 
     public void deleteReview(Long userId, Long reviewId) {
-        checkAccess(userId, reviewId);
-        reviewRepository.deleteById(reviewId);
+        userService.findUserById(userId);
+
+        Review review = checkAccess(userId, reviewId);
+        reviewRepository.delete(review);
     }
 
     public List<ReviewResponse> getByHouseId(Long houseId) {
@@ -66,6 +70,8 @@ public class ReivewService {
     }
 
     public List<ReviewResponse> getByUserId(Long userId) {
+        userService.findUserById(userId);
+
         return reviewRepository.findByUserId(userId)
             .stream()
             .map(ReviewResponse::from)
