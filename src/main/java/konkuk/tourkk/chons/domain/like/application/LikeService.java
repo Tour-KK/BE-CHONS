@@ -41,6 +41,11 @@ public class LikeService {
         likeRepository.delete(like);
     }
 
+    // TODO: house에서 구현
+//    public List<HouseResponse> getLikeHousesByUser(Long userId) {
+//
+//    }
+
     private void isExist(Long userId, Long houseId) {
         Optional<Like> like = likeRepository.findByUserIdAndHouseId(userId, houseId);
         if(like.isPresent()) {
