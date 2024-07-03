@@ -6,6 +6,7 @@ import konkuk.tourkk.chons.domain.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,5 +23,11 @@ public class LikeController {
     public ResponseEntity<LikeResponse> like(@AuthenticationPrincipal User user, @PathVariable Long houseId) {
         LikeResponse response = likeService.like(user.getId(), houseId);
         return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{houseId}")
+    public ResponseEntity<Void> cancelLike(@AuthenticationPrincipal User user, @PathVariable Long houseId) {
+        likeService.cancelLike(user.getId(), houseId);
+        return ResponseEntity.noContent().build();
     }
 }
