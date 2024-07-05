@@ -1,6 +1,5 @@
 package konkuk.tourkk.chons.domain.like.exception;
 
-import konkuk.tourkk.chons.domain.like.domain.entity.Like;
 import konkuk.tourkk.chons.global.exception.exceptionClass.CustomException;
 import konkuk.tourkk.chons.global.exception.properties.ErrorCode;
 

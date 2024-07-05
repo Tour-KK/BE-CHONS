@@ -18,15 +18,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class LikeController {
 
     private final LikeService likeService;
-    
+
     @PostMapping("/{houseId}")
-    public ResponseEntity<LikeResponse> like(@AuthenticationPrincipal User user, @PathVariable Long houseId) {
+    public ResponseEntity<LikeResponse> like(@AuthenticationPrincipal User user,
+        @PathVariable Long houseId) {
         LikeResponse response = likeService.like(user.getId(), houseId);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{houseId}")
-    public ResponseEntity<Void> cancelLike(@AuthenticationPrincipal User user, @PathVariable Long houseId) {
+    public ResponseEntity<Void> cancelLike(@AuthenticationPrincipal User user,
+        @PathVariable Long houseId) {
         likeService.cancelLike(user.getId(), houseId);
         return ResponseEntity.noContent().build();
     }
