@@ -42,6 +42,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/api/v1/user/**").authenticated()
+                .requestMatchers("/api/v1/house/**").authenticated()
                 .requestMatchers(HttpMethod.GET, "/api/v1/review/**").permitAll()
                 .requestMatchers("/api/v1/review/**").authenticated()
                 .requestMatchers("/api/v1/like/**").authenticated()
