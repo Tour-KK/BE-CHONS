@@ -14,8 +14,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "region_TB")
-public class Region {
+@Table(name = "area_TB")
+public class Area {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +28,7 @@ public class Region {
     String name;
 
     @Builder
-    private Region(Long code, String name) {
+    private Area(Long code, String name) {
         this.code = code;
         this.name = name;
     }

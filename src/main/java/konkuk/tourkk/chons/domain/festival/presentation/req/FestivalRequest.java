@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class FestivalRequest {
 
-    String firstRegion;
+    String addr1;
 
-    String secondRegion;
+    String addr2;
 }

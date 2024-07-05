@@ -2,9 +2,9 @@ package konkuk.tourkk.chons.domain.festival.application;
 
 import java.util.List;
 import java.util.Map;
-import konkuk.tourkk.chons.domain.festival.domain.entity.Region;
+import konkuk.tourkk.chons.domain.festival.domain.entity.Area;
 import konkuk.tourkk.chons.domain.festival.domain.entity.Sigungu;
-import konkuk.tourkk.chons.domain.festival.infrastructure.RegionRepository;
+import konkuk.tourkk.chons.domain.festival.infrastructure.AreaRepository;
 import konkuk.tourkk.chons.domain.festival.infrastructure.SigunguRepository;
 import konkuk.tourkk.chons.global.common.webclient.WebClientService;
 import lombok.RequiredArgsConstructor;
@@ -15,14 +15,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class RegionSigunguService {
+public class AreaSigunguService {
 
-    private final RegionRepository regionRepository;
+    private final AreaRepository areaRepository;
     private final SigunguRepository sigunguRepository;
     private final WebClientService webClientService;
 
-    public void makeRegions() {
-        webClientService.requestRegions()
+    public void saveAreas() {
+        webClientService.requestAreas()
             .subscribe(response -> {
                 Map<String, Object> body = (Map<String, Object>) ((Map<String, Object>) response.get(
                     "response")).get("body");
@@ -33,17 +33,17 @@ public class RegionSigunguService {
                     String code = item.get("code");
                     String name = item.get("name");
 
-                    Region region = Region.builder()
+                    Area area = Area.builder()
                         .name(name)
                         .code(Long.parseLong(code))
                         .build();
-                    regionRepository.save(region);
-                    makeSigungus(region.getCode());
+                    areaRepository.save(area);
+                    saveSigungus(area.getCode());
                 }
             });
     }
 
-    private void makeSigungus(Long areaCode) {
+    private void saveSigungus(Long areaCode) {
         webClientService.requestSigungus(areaCode)
             .subscribe(response -> {
                 Map<String, Object> body = (Map<String, Object>) ((Map<String, Object>) response.get(

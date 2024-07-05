@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SigunguRepository extends JpaRepository<Sigungu, Long> {
 
-    Optional<Sigungu> findByNameAndAreaCode(String secondRegion, Long areaCode);
+    Optional<Sigungu> findByNameAndAreaCode(String name, Long areaCode);
 }

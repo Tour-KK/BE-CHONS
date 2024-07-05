@@ -34,7 +34,7 @@ public enum ErrorCode {
     USER_NOT_FOUND(NOT_FOUND, "user을 찾을 수 없습니다."),
     REVIEW_NOT_FOUND(NOT_FOUND, "review를 찾을 수 없습니다."),
     LIKE_NOT_FOUND(NOT_FOUND, "해당 집에 대해 좋아요를 하지 않았습니다."),
-    REGION_NOT_FOUND(NOT_FOUND, "지역이 존재하지 않습니다."),
+    AREA_NOT_FOUND(NOT_FOUND, "지역이 존재하지 않습니다."),
     SIGUNGU_NOT_FOUND(NOT_FOUND, "시군구가 존재하지 않습니다."),
 
     // 409

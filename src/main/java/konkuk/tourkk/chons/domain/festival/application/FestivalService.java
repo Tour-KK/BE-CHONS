@@ -9,10 +9,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import konkuk.tourkk.chons.domain.festival.domain.entity.Region;
+import konkuk.tourkk.chons.domain.festival.domain.entity.Area;
 import konkuk.tourkk.chons.domain.festival.domain.entity.Sigungu;
 import konkuk.tourkk.chons.domain.festival.exception.FestivalException;
-import konkuk.tourkk.chons.domain.festival.infrastructure.RegionRepository;
+import konkuk.tourkk.chons.domain.festival.infrastructure.AreaRepository;
 import konkuk.tourkk.chons.domain.festival.infrastructure.SigunguRepository;
 import konkuk.tourkk.chons.domain.festival.presentation.req.FestivalRequest;
 import konkuk.tourkk.chons.domain.festival.presentation.res.FestivalResponse;
@@ -29,26 +29,26 @@ import org.springframework.stereotype.Service;
 public class FestivalService {
 
     private final WebClientService webClientService;
-    private final RegionRepository regionRepository;
+    private final AreaRepository areaRepository;
     private final SigunguRepository sigunguRepository;
 
     public List<FestivalResponse> getFestivalList(FestivalRequest request) {
-        Region region = getRegion(request);
-        Sigungu sigungu = getSigungu(region.getCode(), request);
+        Area area = getArea(request);
+        Sigungu sigungu = getSigungu(area.getCode(), request);
 
-        return webClientService.getAroundFestivals(region, sigungu)
+        return webClientService.getAroundFestivals(area, sigungu)
             .map(response -> getFestivalResponses(response, YYYYMMDD_DATE_FORMATTER))
             .block();
     }
 
     private Sigungu getSigungu(Long areaCode, FestivalRequest request) {
-        return sigunguRepository.findByNameAndAreaCode(request.getSecondRegion(), areaCode)
+        return sigunguRepository.findByNameAndAreaCode(request.getAddr2(), areaCode)
             .orElseThrow(() -> new FestivalException(ErrorCode.SIGUNGU_NOT_FOUND));
     }
 
-    private Region getRegion(FestivalRequest request) {
-        return regionRepository.findByName(request.getFirstRegion())
-            .orElseThrow(() -> new FestivalException(ErrorCode.REGION_NOT_FOUND));
+    private Area getArea(FestivalRequest request) {
+        return areaRepository.findByName(request.getAddr1())
+            .orElseThrow(() -> new FestivalException(ErrorCode.AREA_NOT_FOUND));
     }
 
     private List<FestivalResponse> getFestivalResponses(Map response,

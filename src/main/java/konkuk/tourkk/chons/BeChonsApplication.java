@@ -1,7 +1,6 @@
 package konkuk.tourkk.chons;
 
-import konkuk.tourkk.chons.domain.festival.application.FestivalService;
-import konkuk.tourkk.chons.domain.festival.application.RegionSigunguService;
+import konkuk.tourkk.chons.domain.festival.application.AreaSigunguService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -15,7 +14,7 @@ import org.springframework.context.annotation.Bean;
 public class BeChonsApplication {
 
     //develop용
-    private final RegionSigunguService regionSigunguService;
+    private final AreaSigunguService areaSigunguService;
 
     public static void main(String[] args) {
         SpringApplication.run(BeChonsApplication.class, args);
@@ -24,7 +23,7 @@ public class BeChonsApplication {
     // develop용
     @Bean
     public CommandLineRunner commandLineRunner() {
-        regionSigunguService.makeRegions();
+        areaSigunguService.saveAreas();
         return args -> {};
     }
 }

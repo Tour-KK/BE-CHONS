@@ -3,7 +3,7 @@ package konkuk.tourkk.chons.domain.festival.application.res;
 import lombok.Getter;
 
 @Getter
-public class RegionResponse {
+public class AreaResponse {
 
     String code;
 
