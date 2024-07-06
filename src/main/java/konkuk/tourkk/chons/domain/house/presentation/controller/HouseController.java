@@ -27,7 +27,6 @@ public class HouseController {
     }
     @GetMapping("/{houseId}")
     public ResponseEntity<HouseResponse> getHouse(@PathVariable Long houseId){
-        log.info("???asdasdsad");
         return ResponseEntity.ok(houseService.getHouse(houseId));
     }
 }
