@@ -1,6 +1,7 @@
 package konkuk.tourkk.chons.domain.reservation.presentation.controller;
 import konkuk.tourkk.chons.domain.reservation.application.ReservationService;
 import konkuk.tourkk.chons.domain.reservation.domain.entity.Reservation;
+import konkuk.tourkk.chons.domain.reservation.presentation.dto.req.RegisterRequest;
 import konkuk.tourkk.chons.domain.reservation.presentation.dto.req.ReservationRequest;
 import konkuk.tourkk.chons.domain.reservation.presentation.dto.res.ReservationResponse;
 import konkuk.tourkk.chons.domain.user.domain.entity.User;
@@ -21,25 +22,23 @@ public class ReservationController {
     }
 
     // 예약 등록
-    @PostMapping
+    @PostMapping("/{houseId}")
     public ResponseEntity<ReservationResponse> registerReservation(
-            @RequestBody ReservationRequest request,
-            @AuthenticationPrincipal User currentUser,
-            @AuthenticationPrincipal House currentHouse) {
-        // 인증된 사용자와 집의 ID로 request 객체를 업데이트
-        request.setUserId(currentUser.getId());
-        request.setHouseId(currentHouse.getId());
+            @PathVariable Long houseId,
+            @RequestBody RegisterRequest request,
+            @AuthenticationPrincipal User currentUser) {
 
-        ReservationResponse response = reservationService.saveReservation(request);
+        ReservationResponse response = reservationService.saveReservation(request, currentUser, houseId);
         return ResponseEntity.ok(response);
     }
 
     // 사용자의 예약 리스트 조회
-    @GetMapping("/{userId}")
-    public ResponseEntity<List<Reservation>> getReservationList(@PathVariable Long userId) {
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<ReservationResponse>> getReservationList(
+            @PathVariable Long userId) {
 
-        List<Reservation> reservations = reservationService.getReservationsByUserId(userId);
-        return ResponseEntity.ok(reservations);
+        List<ReservationResponse> responses = reservationService.getReservationsByUserId(userId);
+        return ResponseEntity.ok(responses);
     }
 
 
@@ -49,24 +48,27 @@ public class ReservationController {
             @PathVariable Long reservationId) {
 
         ReservationResponse response = reservationService.getReservationsById(reservationId);
-
         return ResponseEntity.ok(response);
     }
 
     // 예약 삭제
-    @DeleteMapping
-    public ResponseEntity<Void> deleteReservation(@RequestParam Long reservationId) {
-        reservationService.deleteReservation(reservationId);
+    @DeleteMapping("/{reservationId}")
+    public ResponseEntity<Void> deleteReservation(
+            @PathVariable Long reservationId,
+            @AuthenticationPrincipal User currentUser) {
+
+        reservationService.deleteReservation(reservationId, currentUser);
         return ResponseEntity.noContent().build();
     }
 
     // 예약 수정
-    @PatchMapping
+    @PatchMapping("/{reservationId}")
     public ResponseEntity<ReservationResponse> editReservation(
             @RequestBody ReservationRequest request,
-            Long reservationId){
+            @PathVariable Long reservationId,
+            @AuthenticationPrincipal User currentUser) {
 
-        ReservationResponse response = reservationService.updateReservation(request, reservationId);
+        ReservationResponse response = reservationService.updateReservation(request, reservationId, currentUser);
         return ResponseEntity.ok(response);
     }
 

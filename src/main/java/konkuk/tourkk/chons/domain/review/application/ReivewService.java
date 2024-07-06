@@ -81,7 +81,7 @@ public class ReivewService {
     private Review checkAccess(Long userId, Long reviewId) {
         Review review = findReviewById(reviewId);
         if (!review.getUserId().equals(userId)) {
-            throw new ReviewException(ErrorCode.REVIEW_DELETE_ACCESS_DENIED);
+            throw new ReviewException(ErrorCode.RESERVATION_DELETE_ACCESS_DENIED);
         }
         return review;
     }

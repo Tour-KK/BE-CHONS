@@ -1,4 +1,4 @@
-package konkuk.tourkk.chons.domain.reservation.presentation.dto.res;
+package konkuk.tourkk.chons.domain.reservation.presentation.dto.req;
 
 import konkuk.tourkk.chons.domain.reservation.domain.entity.Reservation;
 import lombok.Getter;
@@ -7,9 +7,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
-public class ReservationResponse {
-    private Long Id;
-    private Long userId;
+public class RegisterRequest {
+
+
     private Long houseId;
     private int price;
     private LocalDate startAt;
@@ -17,31 +17,14 @@ public class ReservationResponse {
     private int personNum;
 
 
-    public ReservationResponse(Reservation reservation) {
-        this.Id = reservation.getId();
-        this.userId = reservation.getUserId();
-        this.houseId = reservation.getHouseId();
-        this.price = reservation.getPrice();
-        this.startAt = reservation.getStartAt();
-        this.endAt = reservation.getEndAt();
-        this.personNum = reservation.getPersonNum();
+    public RegisterRequest(Long houseId, int price,
+                           LocalDate startAt, LocalDate endAt, int personNum) {
 
-    }
-
-    public Long getId() {
-        return Id;
-    }
-
-    public void setId(Long Id) {
-        this.Id = Id;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
+        this.houseId = houseId;
+        this.price = price;
+        this.startAt = startAt;
+        this.endAt = endAt;
+        this.personNum = personNum;
     }
 
     public Long getHouseId() {

@@ -9,15 +9,15 @@ import java.util.List;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
-    @Query("SELECT r FROM Reservation r WHERE r.ID = :ID")
-    Optional<Reservation> findById(Long ID);
+    @Query("SELECT r FROM Reservation r WHERE r.Id = :Id AND r.canceledAt IS NULL ")
+    Optional<Reservation> findById(Long Id);
 
 
-    @Query("SELECT r FROM Reservation r WHERE r.userID = :userID")
-    List<Reservation> findByUserId(Long userID);
+    @Query("SELECT r FROM Reservation r WHERE r.userId = :userId AND r.canceledAt IS NULL")
+    List<Reservation> findByUserId(Long userId);
 
 
-    @Query("SELECT r FROM Reservation r WHERE r.houseID = :houseID")
-    Optional<Reservation> findByHouseId(Long houseID);
+    /*@Query("SELECT r FROM Reservation r WHERE r.houseID = :houseID")
+    Optional<Reservation> findByHouseId(Long houseId);*/
 
 }

@@ -1,15 +1,15 @@
-package konkuk.tourkk.chons.domain.like.exception;
+package konkuk.tourkk.chons.domain.house.exception;
 
 import konkuk.tourkk.chons.global.exception.exceptionClass.CustomException;
 import konkuk.tourkk.chons.global.exception.properties.ErrorCode;
 
-public class LikeException extends CustomException {
+public class HouseException extends CustomException {
 
-    public LikeException(ErrorCode errorCode) {
+    public HouseException(ErrorCode errorCode) {
         super(errorCode);
     }
 
-    public LikeException(ErrorCode errorCode, String runtimeValue) {
+    public HouseException(ErrorCode errorCode, String runtimeValue) {
         super(errorCode, runtimeValue);
     }
 }

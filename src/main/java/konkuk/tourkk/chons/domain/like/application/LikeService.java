@@ -48,7 +48,7 @@ public class LikeService {
 
     private void isExist(Long userId, Long houseId) {
         Optional<Like> like = likeRepository.findByUserIdAndHouseId(userId, houseId);
-        if(like.isPresent()) {
+        if (like.isPresent()) {
             throw new LikeException(ErrorCode.LIKE_ALREADY);
         }
     }

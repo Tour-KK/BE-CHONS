@@ -2,16 +2,20 @@ package konkuk.tourkk.chons.domain.reservation.domain.entity;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import konkuk.tourkk.chons.domain.reservation.presentation.dto.req.ReservationRequest;
 import konkuk.tourkk.chons.domain.user.domain.entity.User;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "reservation_TB")
 public class Reservation {
     @Id
@@ -36,16 +40,16 @@ public class Reservation {
 
 
     @Column(nullable = false)
-    private LocalDateTime startAt;
+    private LocalDate startAt;
 
     @Column(nullable = false)
-    private LocalDateTime endAt;
+    private LocalDate endAt;
 
     @Column(nullable = false)
     private int personNum;
 
 
-    public Reservation(Long userId, Long houseId, int price, LocalDateTime startAt, LocalDateTime endAt, int personNum) {
+    public Reservation(Long userId, Long houseId, int price, LocalDate startAt, LocalDate endAt, int personNum) {
         this.userId = userId;
         this.houseId = houseId;
         this.price = price;
@@ -106,19 +110,19 @@ public class Reservation {
         this.price = price;
     }
 
-    public LocalDateTime getStartAt() {
+    public LocalDate getStartAt() {
         return startAt;
     }
 
-    public void setStartAt(LocalDateTime startAt) {
+    public void setStartAt(LocalDate startAt) {
         this.startAt = startAt;
     }
 
-    public LocalDateTime getEndAt() {
+    public LocalDate getEndAt() {
         return endAt;
     }
 
-    public void setEndAt(LocalDateTime endAt) {
+    public void setEndAt(LocalDate endAt) {
         this.endAt = endAt;
     }
 

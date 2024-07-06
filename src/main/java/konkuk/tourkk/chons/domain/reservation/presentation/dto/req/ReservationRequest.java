@@ -2,6 +2,8 @@ package konkuk.tourkk.chons.domain.reservation.presentation.dto.req;
 
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -11,13 +13,13 @@ public class ReservationRequest {
     private Long userId;
     private Long houseId;
     private int price;
-    private LocalDateTime startAt;
-    private LocalDateTime endAt;
+    private LocalDate startAt;
+    private LocalDate endAt;
     private int personNum;
 
     // 사용자 ID를 포함한 모든 필드를 초기화하는 생성자
     public ReservationRequest(Long userId, Long houseId, int price,
-                              LocalDateTime startAt, LocalDateTime endAt, int personNum) {
+                              LocalDate startAt, LocalDate endAt, int personNum) {
         this.userId = userId;
         this.houseId = houseId;
         this.price = price;
@@ -50,19 +52,19 @@ public class ReservationRequest {
         this.price = price;
     }
 
-    public LocalDateTime getStartAt() {
+    public LocalDate getStartAt() {
         return startAt;
     }
 
-    public void setStartAt(LocalDateTime startAt) {
+    public void setStartAt(LocalDate startAt) {
         this.startAt = startAt;
     }
 
-    public LocalDateTime getEndAt() {
+    public LocalDate getEndAt() {
         return endAt;
     }
 
-    public void setEndAt(LocalDateTime endAt) {
+    public void setEndAt(LocalDate endAt) {
         this.endAt = endAt;
     }
 
