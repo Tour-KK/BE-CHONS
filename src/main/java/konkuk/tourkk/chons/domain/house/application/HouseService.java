@@ -54,17 +54,19 @@ public class HouseService {
     }
 
     public HouseResponse getHouse(Long houseId){
-        House house = findByHouseId(houseId);
+        House house = findHouseByHouseId(houseId);
         return HouseResponse.from(house);
     }
-//    private void validateDuplicateHouse(House member) {
+
+    private House findHouseByHouseId(Long houseId){
+        return houseRepository.findById(houseId)
+                .orElseThrow(() -> new HouseException(ErrorCode.HOUSE_NOT_FOUND));
+    }
+
+    //    private void validateDuplicateHouse(House member) {
 //        houseRepository.findByName(member.getHouseName())
 //                .ifPresent(m -> {
 //                    throw new IllegalStateException("이미 존재하는 집입니다.");
 //                });
 //    }
-    private House findByHouseId(Long houseId){
-        return houseRepository.findById(houseId)
-                .orElseThrow(() -> new HouseException(ErrorCode.REVIEW_NOT_FOUND));
-    }
 }

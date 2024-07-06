@@ -1,15 +1,14 @@
 package konkuk.tourkk.chons.domain.house.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "house_TB")
 public class House{
 
@@ -19,7 +18,6 @@ public class House{
 
     @Column(nullable = false, length = 15)
     private String houseName;
-
 
     @Column(nullable = false)
     private String houseIntroduction;
@@ -51,6 +49,7 @@ public class House{
     @Column(nullable = false)
     private int operationalStatus;
 
+    @ElementCollection
     @Column(nullable = false)
     private List<String> availableReservationDates;
 
