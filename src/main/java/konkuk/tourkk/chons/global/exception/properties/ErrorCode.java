@@ -39,6 +39,7 @@ public enum ErrorCode {
     AREA_NOT_FOUND(NOT_FOUND, "지역이 존재하지 않습니다."),
     SIGUNGU_NOT_FOUND(NOT_FOUND, "시군구가 존재하지 않습니다."),
     RESERVATION_NOT_FOUND(NOT_FOUND, "reservation을 찾을 수 없습니다."),
+    HOUSE_NOT_FOUND(NOT_FOUND,"house를 찾을 수 없습니다."),
 
     // 409
     LIKE_ALREADY(CONFLICT, "이미 좋아요한 집입니다."),

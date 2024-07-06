@@ -1,13 +1,11 @@
 package konkuk.tourkk.chons.domain.house.presentation.controller;
 
 import konkuk.tourkk.chons.domain.house.application.HouseService;
-import konkuk.tourkk.chons.domain.house.domain.entity.House;
 import konkuk.tourkk.chons.domain.house.presentation.controller.dto.req.HouseRequest;
 import konkuk.tourkk.chons.domain.house.presentation.controller.dto.res.HouseResponse;
 import konkuk.tourkk.chons.domain.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -27,4 +25,11 @@ public class HouseController {
         HouseResponse response = houseService.createHouse(user.getId(),request);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/{houseId}")
+    public ResponseEntity<HouseResponse> getHouse(@PathVariable Long houseId){
+        log.info("???asdasdsad");
+        return ResponseEntity.ok(houseService.getHouse(houseId));
+    }
+
 }
