@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.Map;
 import konkuk.tourkk.chons.domain.festival.domain.entity.Area;
 import konkuk.tourkk.chons.domain.festival.domain.entity.Sigungu;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriBuilder;
@@ -25,6 +26,13 @@ public class WebClientService {
 
         return TOUR_API_WEBCLIENT.get()
             .uri(uriBuilder -> generateAroundFestivalRequest(area, sigungu, uriBuilder, oneYearBefore))
+            .retrieve()
+            .bodyToMono(Map.class);
+    }
+
+    public Mono<Map> getFestivalDetail(String contentId) {
+        return TOUR_API_WEBCLIENT.get()
+            .uri(uriBuilder -> generateFestivalDetailRequest(contentId, uriBuilder))
             .retrieve()
             .bodyToMono(Map.class);
     }
@@ -51,6 +59,21 @@ public class WebClientService {
             .queryParam("MobileOS", "ETC")
             .queryParam("MobileApp", "CHONS")
             .queryParam("serviceKey", TOUR_API_SECRET_KEY)
+            .build();
+    }
+
+    private URI generateFestivalDetailRequest(String contentId, UriBuilder uriBuilder) {
+        return uriBuilder.path("/detailCommon1")
+            .queryParam("_type", "json")
+            .queryParam("contentId", contentId)
+            .queryParam("MobileOS", "ETC")
+            .queryParam("MobileApp", "CHONS")
+            .queryParam("serviceKey", TOUR_API_SECRET_KEY)
+            .queryParam("defaultYN", "Y")
+            .queryParam("firstImageYN", "Y")
+            .queryParam("addrinfoYN", "Y")
+            .queryParam("mapinfoYN", "Y")
+            .queryParam("overviewYN", "Y")
             .build();
     }
 
