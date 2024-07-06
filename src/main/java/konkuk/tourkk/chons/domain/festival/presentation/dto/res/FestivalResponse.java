@@ -1,4 +1,4 @@
-package konkuk.tourkk.chons.domain.festival.presentation.res;
+package konkuk.tourkk.chons.domain.festival.presentation.dto.res;
 
 import java.util.Map;
 import lombok.Builder;

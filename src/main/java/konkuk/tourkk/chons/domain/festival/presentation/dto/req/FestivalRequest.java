@@ -1,4 +1,4 @@
-package konkuk.tourkk.chons.domain.festival.presentation.req;
+package konkuk.tourkk.chons.domain.festival.presentation.dto.req;
 
 import lombok.Getter;
 

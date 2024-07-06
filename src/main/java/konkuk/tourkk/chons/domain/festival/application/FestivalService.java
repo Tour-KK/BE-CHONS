@@ -14,18 +14,17 @@ import konkuk.tourkk.chons.domain.festival.domain.entity.Sigungu;
 import konkuk.tourkk.chons.domain.festival.exception.FestivalException;
 import konkuk.tourkk.chons.domain.festival.infrastructure.AreaRepository;
 import konkuk.tourkk.chons.domain.festival.infrastructure.SigunguRepository;
-import konkuk.tourkk.chons.domain.festival.presentation.req.FestivalRequest;
-import konkuk.tourkk.chons.domain.festival.presentation.res.FestivalResponse;
+import konkuk.tourkk.chons.domain.festival.presentation.dto.req.FestivalRequest;
+import konkuk.tourkk.chons.domain.festival.presentation.dto.res.FestivalDetailResponse;
+import konkuk.tourkk.chons.domain.festival.presentation.dto.res.FestivalResponse;
 import konkuk.tourkk.chons.global.common.webclient.WebClientService;
 import konkuk.tourkk.chons.global.exception.properties.ErrorCode;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
-@Slf4j
 public class FestivalService {
 
     private final WebClientService webClientService;
@@ -38,6 +37,12 @@ public class FestivalService {
 
         return webClientService.getAroundFestivals(area, sigungu)
             .map(response -> getFestivalResponses(response, YYYYMMDD_DATE_FORMATTER))
+            .block();
+    }
+
+    public FestivalDetailResponse getFestivalDetail(String contentId) {
+        return webClientService.getFestivalDetail(contentId)
+            .map(this::getFestivalDetailResponses)
             .block();
     }
 
@@ -68,6 +73,11 @@ public class FestivalService {
             }
         }
         return festivalResponses;
+    }
+
+    private FestivalDetailResponse getFestivalDetailResponses(Map response) {
+        Map<String, String> item = getMainResponses(response).get(0);
+        return FestivalDetailResponse.of(item);
     }
 
     private boolean checkOpenFestival(LocalDate now, LocalDate eventstartdate,
