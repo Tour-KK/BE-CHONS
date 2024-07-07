@@ -1,0 +1,18 @@
+pipeline {
+    agent any
+    tools {
+        gradle 'gradle'
+    }
+    stages {
+        stage('Git Clone') {
+            steps {
+                git branch: 'main', url: 'https://github.com/Tour-KK/BE-CHONS.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh "./gradlew clean build"
+            }
+        }
+    }
+}
