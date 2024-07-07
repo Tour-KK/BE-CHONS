@@ -5,8 +5,9 @@ import konkuk.tourkk.chons.domain.house.application.apiresponse.AreaListResponse
 import konkuk.tourkk.chons.domain.house.domain.entity.House;
 import konkuk.tourkk.chons.domain.house.exception.HouseException;
 import konkuk.tourkk.chons.domain.house.infrastructure.HouseRepository;
-import konkuk.tourkk.chons.domain.house.presentation.controller.dto.req.HouseRequest;
-import konkuk.tourkk.chons.domain.house.presentation.controller.dto.res.HouseResponse;
+import konkuk.tourkk.chons.domain.house.presentation.dto.req.HouseRequest;
+import konkuk.tourkk.chons.domain.house.presentation.dto.res.HouseResponse;
+import konkuk.tourkk.chons.domain.user.application.UserService;
 import konkuk.tourkk.chons.global.exception.properties.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ public class HouseService {
 
     private final HouseRepository houseRepository;
     private final AreaSigunguService areaSigunguService;
+    private final UserService userService;
 
     public HouseResponse createHouse(Long userId, HouseRequest request) {
         List<AreaListResponse> areaList = areaSigunguService.getAreaList();
@@ -53,11 +55,26 @@ public class HouseService {
 
     @Transactional(readOnly = true)
     public HouseResponse getHouse(Long houseId) {
-        House house = findHouseByHouseId(houseId);
+        House house = findHouseById(houseId);
         return HouseResponse.from(house);
     }
 
-    private House findHouseByHouseId(Long houseId) {
+    public void deleteHouse(Long userId,Long houseId){
+        userService.findUserById(userId);
+
+        House house = checkAccess(userId,houseId);
+        houseRepository.delete(house);
+    }
+
+    public HouseResponse updateHouse(Long userId,Long houseId,HouseRequest request){
+        userService.findUserById(userId);
+
+        House house = checkAccess(userId,houseId);
+        changeHouse(house,request);
+        return HouseResponse.from(house);
+    }
+
+    private House findHouseById(Long houseId) {
         return houseRepository.findById(houseId)
                 .orElseThrow(() -> new HouseException(ErrorCode.HOUSE_NOT_FOUND));
     }
@@ -69,5 +86,22 @@ public class HouseService {
             }
         }
         throw new HouseException(ErrorCode.AREA_NOT_FOUND); // 지역을 찾지 못하면 예외 발생
+    }
+
+    private House checkAccess(Long userId,Long houseId){
+        House house = findHouseById(houseId);
+        if(!house.getRegistrantId().equals(userId))
+            throw new HouseException(ErrorCode.HOUSE_DELETE_ACCESS_DENIED);
+        return house;
+    }
+
+    private void changeHouse(House house,HouseRequest request){
+        house.changeHostName(request.getHostName());
+        house.changeHouseIntroduction(request.getHouseIntroduction());
+        house.changeFreeService(request.getFreeService());
+        house.changePhoneNumber(request.getPhoneNumber());
+        house.changeFacilityPhotos(request.getFacilityPhotos());
+        house.changeAddress(request.getAddress());
+        house.changeRegion(createRegion(request.getAddress(),areaSigunguService.getAreaList()));
     }
 }
