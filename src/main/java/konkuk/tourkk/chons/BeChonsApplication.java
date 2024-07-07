@@ -1,6 +1,6 @@
 package konkuk.tourkk.chons;
 
-import konkuk.tourkk.chons.domain.festival.application.AreaSigunguService;
+import konkuk.tourkk.chons.domain.sigungu.application.AreaSigunguService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
