@@ -21,9 +21,9 @@ pipeline {
                     steps {
                         sshagent(credentials: ['chons-ncp']) {
                             sh '''
-                                sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no ubuntu@223.130.131.166 uptime
-                                sshpass -p $SSH_PASSWORD scp /var/jenkins_home/workspace/chons/build/libs/BE-CHONS-0.0.1-SNAPSHOT.jar ubuntu@223.130.131.166:/home/root/chons
-                                sshpass -p $SSH_PASSWORD ssh -t ubuntu@223.130.131.166 ./deploy.sh
+                                sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no root@223.130.131.166 uptime
+                                sshpass -p $SSH_PASSWORD scp /var/jenkins_home/workspace/chons/build/libs/BE-CHONS-0.0.1-SNAPSHOT.jar root@223.130.131.166:/home/root/chons
+                                sshpass -p $SSH_PASSWORD ssh -t root@223.130.131.166 ./deploy.sh
                             '''
                         }
                     }
