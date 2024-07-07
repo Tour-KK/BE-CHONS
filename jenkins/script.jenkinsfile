@@ -17,8 +17,8 @@ pipeline {
                         withCredentials([file(credentialsId: 'application', variable: 'applicationFile'),
                                         file(credentialsId: 'application_dev', variable: 'devApplicationFile')]) {
                             script {
-                                sh 'cp $applicationFile /src/main/resources/application.yml'
-                                sh 'cp $devApplicationFile /src/main/resources/application-dev.yml'
+                                sh 'cp $applicationFile /var/jenkins_home/workspace/chons/src/main/resources/application.yml'
+                                sh 'cp $devApplicationFile /var/jenkins_home/workspace/chons/src/main/resources/application-dev.yml'
                             }
                         }
                     }
