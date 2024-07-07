@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -41,8 +40,10 @@ public class SecurityConfig {
                 httpSecuritySessionManagementConfigurer.sessionCreationPolicy(
                     SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/h2-console/*").permitAll()
-                .requestMatchers("/api/v1/auth/login").anonymous()
+                .requestMatchers("/h2-console/**").permitAll()
+                .requestMatchers("/api/v1/auth/login").permitAll()
+                .requestMatchers("/api/v1/festival/**").permitAll()
+                .requestMatchers("/api/v1/**").authenticated()
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll())
             .exceptionHandling(customizer -> customizer
                 .authenticationEntryPoint(customAuthenticationEntryPoint())
