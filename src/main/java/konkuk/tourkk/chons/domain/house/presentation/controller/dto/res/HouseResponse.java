@@ -15,47 +15,41 @@ public class HouseResponse {
 
     private Long id;
 
-    private String houseName;
+    private String hostName;
 
     private String houseIntroduction;
 
-    private String precautions;
+    private String freeService;
 
-    private int elderlyInvolvement;
-
-    private int ruralExperience;
-
-    private String facilityPhotos;
-
-    private String address;
+    private List<String> facilityPhotos;
 
     private String phoneNumber;
 
     private int pricePerNight;
 
     private Long registrantId;
+//잠시 아웃
+//    private int operationalStatus;
+//
+//    private List<String> availableReservationDates;
 
-    private int operationalStatus;
-
-    private List<String> availableReservationDates;
+    private String address;
 
     private String region;
 
     public static HouseResponse from(House house){
         return HouseResponse.builder()
                 .id(house.getId())
-                .houseName(house.getHouseName())
+                .hostName(house.getHostName())
                 .houseIntroduction(house.getHouseIntroduction())
-                .precautions(house.getPrecautions())
-                .elderlyInvolvement(house.getElderlyInvolvement())
-                .ruralExperience(house.getRuralExperience())
+                .freeService(house.getFreeService())
                 .facilityPhotos(house.getFacilityPhotos())
                 .address(house.getAddress())
                 .phoneNumber(house.getPhoneNumber())
                 .pricePerNight(house.getPricePerNight())
                 .registrantId(house.getRegistrantId())
-                .operationalStatus(house.getOperationalStatus())
-                .availableReservationDates(house.getAvailableReservationDates())
+//                .operationalStatus(house.getOperationalStatus())
+//                .availableReservationDates(house.getAvailableReservationDates())
                 .region(house.getRegion())
                 .build();
     }

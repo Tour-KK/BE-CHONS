@@ -43,6 +43,7 @@ public enum ErrorCode {
 
     // 409
     LIKE_ALREADY(CONFLICT, "이미 좋아요한 집입니다."),
+    DATE_FORMAT_CONFLICT(CONFLICT, "날짜 형식이 올바르지 않습니다."),
 
     // 500
     SERVER_ERROR(INTERNAL_SERVER_ERROR, "예상치 못한 서버 에러가 발생하였습니다.");

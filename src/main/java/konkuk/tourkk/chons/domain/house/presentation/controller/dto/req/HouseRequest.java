@@ -6,29 +6,23 @@ import java.util.List;
 @Getter
 public class HouseRequest {
 
-    private String houseName;
+    private String hostName;
 
     private String houseIntroduction;
 
-    private String precautions;
+    private String freeService;
 
-    private int elderlyInvolvement;
-
-    private int ruralExperience;
-
-    private String facilityPhotos;
-
-    private String address;
+    private List<String> facilityPhotos;
 
     private String phoneNumber;
 
     private int pricePerNight;
 
     private Long registrantId;
+//잠시 아웃
+//    private int operationalStatus;
+//
+//    private List<String> availableReservationDates;
 
-    private int operationalStatus;
-
-    private List<String> availableReservationDates;
-
-    private String region;
+    private String address;
 }

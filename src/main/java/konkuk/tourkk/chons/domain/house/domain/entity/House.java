@@ -1,9 +1,7 @@
 package konkuk.tourkk.chons.domain.house.domain.entity;
 
 import jakarta.persistence.*;
-
 import lombok.*;
-
 
 import java.io.Serializable;
 import java.util.List;
@@ -11,7 +9,6 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-
 @Table(name = "house_TB")
 public class House{
 
@@ -19,23 +16,17 @@ public class House{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 15)
-    private String houseName;
+    @Column(nullable = false, length = 10)
+    private String hostName;
 
     @Column(nullable = false)
     private String houseIntroduction;
 
     @Column(nullable = false)
-    private String precautions;
-
-    @Column(nullable = false)
-    private int elderlyInvolvement;
-
-    @Column(nullable = false)
-    private int ruralExperience;
+    private String freeService;
 
     @Column(nullable = true)
-    private String facilityPhotos;
+    private List<String> facilityPhotos;
 
     @Column(nullable = false)
     private String address;
@@ -48,35 +39,32 @@ public class House{
 
     @Column(nullable = false)
     private Long registrantId;
-
-    @Column(nullable = false)
-    private int operationalStatus;
-
-
-    @ElementCollection
-    @Column(nullable = false)
-    private List<String> availableReservationDates;
+    //잠시 아웃
+//    @Column(nullable = true)
+//    private int operationalStatus;
+//
+//    @ElementCollection
+//    @Column(nullable = true)
+//    private List<String> availableReservationDates;
 
     @Column(nullable = false)
     private String region;
 
     @Builder
-    public House(String houseName, String houseIntroduction, String precautions, int elderlyInvolvement,
-                 int ruralExperience, String facilityPhotos, String address, String phoneNumber,
+    public House(String hostName, String houseIntroduction, String freeService,
+                 List<String> facilityPhotos, String address, String phoneNumber,
                  int pricePerNight, Long registrantId, int operationalStatus,
                  List<String> availableReservationDates, String region) {
-        this.houseName = houseName;
+        this.hostName = hostName;
         this.houseIntroduction = houseIntroduction;
-        this.precautions = precautions;
-        this.elderlyInvolvement = elderlyInvolvement;
-        this.ruralExperience = ruralExperience;
+        this.freeService = freeService;
         this.facilityPhotos = facilityPhotos;
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.pricePerNight = pricePerNight;
         this.registrantId = registrantId;
-        this.operationalStatus = operationalStatus;
-        this.availableReservationDates = availableReservationDates;
+//        this.operationalStatus = operationalStatus;
+//        this.availableReservationDates = availableReservationDates;
         this.region = region;
     }
 

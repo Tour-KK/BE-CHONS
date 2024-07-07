@@ -1,10 +1,16 @@
 package konkuk.tourkk.chons.domain.reservation.application;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import jakarta.transaction.Transactional;
+import konkuk.tourkk.chons.domain.house.domain.entity.House;
+import konkuk.tourkk.chons.domain.house.exception.HouseException;
+import konkuk.tourkk.chons.domain.house.infrastructure.HouseRepository;
 import konkuk.tourkk.chons.domain.reservation.domain.entity.Reservation;
 import konkuk.tourkk.chons.domain.reservation.exception.ReservationException;
 import konkuk.tourkk.chons.domain.reservation.infrastructure.ReservationRepository;
@@ -20,23 +26,18 @@ import konkuk.tourkk.chons.domain.user.domain.enums.Role;
 import konkuk.tourkk.chons.domain.user.exception.UserException;
 import konkuk.tourkk.chons.domain.user.infrastructure.UserRepository;
 import konkuk.tourkk.chons.global.exception.properties.ErrorCode;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final UserRepository userRepository;
-    // private final HouseRepository houseRepository;
-
-    public ReservationService(ReservationRepository reservationRepository,
-                              UserRepository userRepository
-                              ) {
-        this.reservationRepository = reservationRepository;
-        this.userRepository = userRepository;
-        // this.houseRepository = houseRepository;
-    }
+    private final HouseRepository houseRepository;
 
 
     @Transactional
@@ -47,7 +48,7 @@ public class ReservationService {
         Reservation reservation = new Reservation(
                 userId,
                 houseId,
-                request.getPrice(),
+                calculatePrice(houseId, request.getStartAt(), request.getEndAt()),
                 request.getStartAt(),
                 request.getEndAt(),
                 request.getPersonNum()
@@ -85,7 +86,7 @@ public class ReservationService {
         Long userId = currentUser.getId();
         Reservation reservation = checkAccess(userId, reservationId, true);
 
-        reservation.cancel();
+        reservationRepository.delete(reservation);
     }
 
     @Transactional
@@ -94,17 +95,11 @@ public class ReservationService {
         Long userId = currentUser.getId();
         Reservation reservation = checkAccess(userId, reservationId, false);
 
-        // 이건 혹시 몰라서 주석처리 한겁니다..
-        // Reservation reservation = reservationRepository.findById(reservationId)
-       //         .orElseThrow(() -> new NoSuchElementException("Reservation not found with id: " + reservationId));
-
         // 예약 정보 업데이트
-        reservation.setPrice(request.getPrice());
+        reservation.setPrice(calculatePrice(request.getHouseId(), request.getStartAt(), request.getEndAt()));
         reservation.setStartAt(request.getStartAt());
         reservation.setEndAt(request.getEndAt());
         reservation.setPersonNum(request.getPersonNum());
-        // 가격 재계산 (필요한 경우)
-        // reservation.setPrice(calculatePrice(house, request.getStartAt(), request.getEndAt()));
 
         Reservation updatedReservation = reservationRepository.save(reservation);
         return new ReservationResponse(updatedReservation);
@@ -114,10 +109,7 @@ public class ReservationService {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new ReservationException(ErrorCode.RESERVATION_NOT_FOUND));
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
-
-        if (!reservation.getUserId().equals(userId) && user.getRole() != Role.ADMIN) {
+        if (!reservation.getUserId().equals(userId)) {
             if (isDelete) {
                 throw new ReservationException(ErrorCode.RESERVATION_DELETE_ACCESS_DENIED);
             } else {
@@ -125,6 +117,28 @@ public class ReservationService {
             }
         }
         return reservation;
+    }
+
+    private int calculatePrice(Long houseId, LocalDate startAt, LocalDate endAt) {
+
+        House house = houseRepository.findById(houseId)
+                .orElseThrow(() -> new HouseException(ErrorCode.HOUSE_NOT_FOUND));
+
+        int pricePerNight = house.getPricePerNight();
+        int totalPrice = 0;
+
+        LocalDate currentDate = startAt;
+        while (!currentDate.isAfter(endAt)) {
+            // 여기서 날짜별로 다른 가격을 적용할 수 있습니다 (예: 주말, 성수기 등)
+            totalPrice += pricePerNight;
+            currentDate = currentDate.plusDays(1);
+        }
+
+        // 마지막 날은 체크아웃 날짜이므로 가격에서 제외
+        totalPrice -= pricePerNight;
+
+        // 최소 1박 요금 적용
+        return Math.max(totalPrice, pricePerNight);
     }
 
     // 이것도 혹시 몰라서 주석처리한겁니다..

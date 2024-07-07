@@ -9,11 +9,11 @@ import java.util.List;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
-    @Query("SELECT r FROM Reservation r WHERE r.Id = :Id AND r.canceledAt IS NULL ")
+    @Query("SELECT r FROM Reservation r WHERE r.Id = :Id")
     Optional<Reservation> findById(Long Id);
 
 
-    @Query("SELECT r FROM Reservation r WHERE r.userId = :userId AND r.canceledAt IS NULL")
+    @Query("SELECT r FROM Reservation r WHERE r.userId = :userId")
     List<Reservation> findByUserId(Long userId);
 
 

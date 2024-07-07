@@ -1,4 +1,4 @@
-package konkuk.tourkk.chons.domain.festival.domain.entity;
+package konkuk.tourkk.chons.domain.sigungu.domain.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

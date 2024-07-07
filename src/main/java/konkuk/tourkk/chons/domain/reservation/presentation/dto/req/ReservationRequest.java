@@ -1,13 +1,14 @@
 package konkuk.tourkk.chons.domain.reservation.presentation.dto.req;
 
+import konkuk.tourkk.chons.domain.reservation.exception.ReservationException;
+import konkuk.tourkk.chons.global.exception.properties.ErrorCode;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 @Getter
-@Setter
 public class ReservationRequest {
 
     private Long userId;
@@ -17,62 +18,47 @@ public class ReservationRequest {
     private LocalDate endAt;
     private int personNum;
 
-    // 사용자 ID를 포함한 모든 필드를 초기화하는 생성자
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
+
     public ReservationRequest(Long userId, Long houseId, int price,
-                              LocalDate startAt, LocalDate endAt, int personNum) {
+                              String startAt, String endAt, int personNum) {
         this.userId = userId;
         this.houseId = houseId;
         this.price = price;
-        this.startAt = startAt;
-        this.endAt = endAt;
+        setStartAt(startAt);
+        setEndAt(endAt);
         this.personNum = personNum;
-    }
-
-    public Long getUserId() {
-        return userId;
     }
 
     public void setUserId(Long userId) {
         this.userId = userId;
     }
 
-    public Long getHouseId() {
-        return houseId;
-    }
-
     public void setHouseId(Long houseId) {
         this.houseId = houseId;
-    }
-
-    public int getPrice() {
-        return price;
     }
 
     public void setPrice(int price) {
         this.price = price;
     }
 
-    public LocalDate getStartAt() {
-        return startAt;
+    public void setStartAt(String startAt) {
+        this.startAt = parseDate(startAt);
     }
 
-    public void setStartAt(LocalDate startAt) {
-        this.startAt = startAt;
-    }
-
-    public LocalDate getEndAt() {
-        return endAt;
-    }
-
-    public void setEndAt(LocalDate endAt) {
-        this.endAt = endAt;
-    }
-
-    public int getPersonNum() {
-        return personNum;
+    public void setEndAt(String endAt) {
+        this.endAt = parseDate(endAt);
     }
 
     public void setPersonNum(int personNum) {
         this.personNum = personNum;
+    }
+
+    private LocalDate parseDate(String dateString) {
+        try {
+            return LocalDate.parse(dateString, DATE_FORMATTER);
+        } catch (DateTimeParseException e) {
+            throw new ReservationException(ErrorCode.DATE_FORMAT_CONFLICT);
+        }
     }
 }

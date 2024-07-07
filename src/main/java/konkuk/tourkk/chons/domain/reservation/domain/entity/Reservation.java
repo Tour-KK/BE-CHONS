@@ -32,12 +32,8 @@ public class Reservation {
     @Column(nullable = false)
     private Long houseId;
 
-    @Column(nullable = true)
-    private LocalDateTime canceledAt;
-
     @Column(nullable = false)
     private int price;
-
 
     @Column(nullable = false)
     private LocalDate startAt;
@@ -58,9 +54,9 @@ public class Reservation {
         this.personNum = personNum;
     }
 
-    public void cancel() {
+    /*public void cancel() {
         this.canceledAt = LocalDateTime.now();
-    }
+    }*/
 
     public Long getId() {
         return Id;
@@ -92,14 +88,6 @@ public class Reservation {
 
     public void setHouseId(Long houseId) {
         this.houseId = houseId;
-    }
-
-    public LocalDateTime getCanceledAt() {
-        return canceledAt;
-    }
-
-    public void setCanceledAt(LocalDateTime canceledAt) {
-        this.canceledAt = canceledAt;
     }
 
     public int getPrice() {

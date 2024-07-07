@@ -1,10 +1,13 @@
 package konkuk.tourkk.chons.domain.reservation.presentation.dto.res;
 
 import konkuk.tourkk.chons.domain.reservation.domain.entity.Reservation;
+import konkuk.tourkk.chons.domain.reservation.exception.ReservationException;
+import konkuk.tourkk.chons.global.exception.properties.ErrorCode;
 import lombok.Getter;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 @Getter
 public class ReservationResponse {
@@ -12,76 +15,58 @@ public class ReservationResponse {
     private Long userId;
     private Long houseId;
     private int price;
-    private LocalDate startAt;
-    private LocalDate endAt;
+    private String startAt;
+    private String endAt;
     private int personNum;
 
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
 
     public ReservationResponse(Reservation reservation) {
         this.Id = reservation.getId();
         this.userId = reservation.getUserId();
         this.houseId = reservation.getHouseId();
         this.price = reservation.getPrice();
-        this.startAt = reservation.getStartAt();
-        this.endAt = reservation.getEndAt();
+        this.startAt = formatDate(reservation.getStartAt());
+        this.endAt = formatDate(reservation.getEndAt());
         this.personNum = reservation.getPersonNum();
-
     }
 
-    public Long getId() {
-        return Id;
+    private String formatDate(LocalDate date) {
+        if (date == null) {
+            return null;
+        }
+        try {
+            return date.format(DATE_FORMATTER);
+        } catch (DateTimeParseException e) {
+           throw new ReservationException(ErrorCode.DATE_FORMAT_CONFLICT);
+        }
     }
 
     public void setId(Long Id) {
         this.Id = Id;
     }
 
-    public Long getUserId() {
-        return userId;
-    }
-
     public void setUserId(Long userId) {
         this.userId = userId;
-    }
-
-    public Long getHouseId() {
-        return houseId;
     }
 
     public void setHouseId(Long houseId) {
         this.houseId = houseId;
     }
 
-    public int getPrice() {
-        return price;
-    }
-
     public void setPrice(int price) {
         this.price = price;
     }
 
-    public LocalDate getStartAt() {
-        return startAt;
-    }
-
     public void setStartAt(LocalDate startAt) {
-        this.startAt = startAt;
-    }
-
-    public LocalDate getEndAt() {
-        return endAt;
+        this.startAt = formatDate(startAt);
     }
 
     public void setEndAt(LocalDate endAt) {
-        this.endAt = endAt;
-    }
-
-    public int getPersonNum() {
-        return personNum;
+        this.endAt = formatDate(endAt);
     }
 
     public void setPersonNum(int personNum) {
         this.personNum = personNum;
     }
-
 }
