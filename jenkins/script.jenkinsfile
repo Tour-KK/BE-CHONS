@@ -12,6 +12,20 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/Tour-KK/BE-CHONS.git'
             }
         }
+        stage('Create application.yml') {
+            steps {
+                withCredentials([string(credentialsId: 'APPLICATION', variable: 'APPLICATION_CONTENT')]) {
+                writeFile file: 'src/main/resources/application.yml', text: env.APPLICATION_CONTENT
+                }
+            }
+        }
+        stage('Create application-dev.yml') {
+                    steps {
+                        withCredentials([string(credentialsId: 'APPLICATION_DEV', variable: 'APPLICATION_DEV_CONTENT')]) {
+                        writeFile file: 'src/main/resources/application-dev.yml', text: env.APPLICATION_DEV_CONTENT
+                        }
+                    }
+                }
         stage('Build') {
             steps {
                 sh "./gradlew clean build"
