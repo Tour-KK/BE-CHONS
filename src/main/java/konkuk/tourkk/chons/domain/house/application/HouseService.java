@@ -1,7 +1,7 @@
 package konkuk.tourkk.chons.domain.house.application;
 
-import konkuk.tourkk.chons.domain.festival.application.FestivalService;
-import konkuk.tourkk.chons.domain.festival.presentation.dto.res.AreaListResponse;
+import konkuk.tourkk.chons.domain.sigungu.application.AreaSigunguService;
+import konkuk.tourkk.chons.domain.house.application.apiresponse.AreaListResponse;
 import konkuk.tourkk.chons.domain.house.domain.entity.House;
 import konkuk.tourkk.chons.domain.house.exception.HouseException;
 import konkuk.tourkk.chons.domain.house.infrastructure.HouseRepository;
@@ -21,10 +21,10 @@ import java.util.stream.Collectors;
 public class HouseService {
 
     private final HouseRepository houseRepository;
-    private final FestivalService festivalService;
+    private final AreaSigunguService areaSigunguService;
 
     public HouseResponse createHouse(Long userId, HouseRequest request) {
-        List<AreaListResponse> areaList = festivalService.getAreaList();
+        List<AreaListResponse> areaList = areaSigunguService.getAreaList();
         String address = request.getAddress();
         String region = createRegion(address, areaList);
 

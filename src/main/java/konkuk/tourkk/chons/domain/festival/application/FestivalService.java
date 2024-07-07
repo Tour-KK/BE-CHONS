@@ -9,15 +9,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import konkuk.tourkk.chons.domain.festival.domain.entity.Area;
-import konkuk.tourkk.chons.domain.festival.domain.entity.Sigungu;
+import konkuk.tourkk.chons.domain.sigungu.domain.entity.Sigungu;
 import konkuk.tourkk.chons.domain.festival.exception.FestivalException;
 import konkuk.tourkk.chons.domain.festival.infrastructure.AreaRepository;
-import konkuk.tourkk.chons.domain.festival.infrastructure.SigunguRepository;
+import konkuk.tourkk.chons.domain.sigungu.infrastructure.SigunguRepository;
 import konkuk.tourkk.chons.domain.festival.presentation.dto.req.FestivalRequest;
-import konkuk.tourkk.chons.domain.festival.presentation.dto.res.AreaListResponse;
 import konkuk.tourkk.chons.domain.festival.presentation.dto.res.FestivalDetailResponse;
 import konkuk.tourkk.chons.domain.festival.presentation.dto.res.FestivalResponse;
 import konkuk.tourkk.chons.global.common.webclient.WebClientService;
@@ -49,12 +47,6 @@ public class FestivalService {
             .block();
     }
 
-    public List<AreaListResponse> getAreaList(){
-        List<Area> areas = areaRepository.findAll();
-        return areas.stream()
-                .map(area -> new AreaListResponse(area.getName()))
-                .collect(Collectors.toList());
-    }
 
     private Sigungu getSigungu(Long areaCode, FestivalRequest request) {
         return sigunguRepository.findByNameAndAreaCode(request.getAddr2(), areaCode)

@@ -1,11 +1,14 @@
-package konkuk.tourkk.chons.domain.festival.application;
+package konkuk.tourkk.chons.domain.sigungu.application;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import konkuk.tourkk.chons.domain.festival.domain.entity.Area;
-import konkuk.tourkk.chons.domain.festival.domain.entity.Sigungu;
+import konkuk.tourkk.chons.domain.sigungu.domain.entity.Sigungu;
 import konkuk.tourkk.chons.domain.festival.infrastructure.AreaRepository;
-import konkuk.tourkk.chons.domain.festival.infrastructure.SigunguRepository;
+import konkuk.tourkk.chons.domain.sigungu.infrastructure.SigunguRepository;
+import konkuk.tourkk.chons.domain.house.application.apiresponse.AreaListResponse;
 import konkuk.tourkk.chons.global.common.webclient.WebClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -41,6 +44,12 @@ public class AreaSigunguService {
                     saveSigungus(area.getCode());
                 }
             });
+    }
+    public List<AreaListResponse> getAreaList(){
+        List<Area> areas = areaRepository.findAll();
+        return areas.stream()
+                .map(area -> new AreaListResponse(area.getName()))
+                .collect(Collectors.toList());
     }
 
     private void saveSigungus(Long areaCode) {
