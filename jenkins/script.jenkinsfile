@@ -12,17 +12,6 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/Tour-KK/BE-CHONS.git'
             }
         }
-        stage('secret.yml download') {
-                    steps {
-                        withCredentials([file(credentialsId: 'application', variable: 'applicationFile'),
-                                        file(credentialsId: 'application_dev', variable: 'devApplicationFile')]) {
-                            script {
-                                sh 'cp $applicationFile chons/src/main/resources/application.yml'
-                                sh 'cp $devApplicationFile chons/src/main/resources/application-dev.yml'
-                            }
-                        }
-                    }
-                }
         stage('Build') {
             steps {
                 sh "./gradlew clean build"
