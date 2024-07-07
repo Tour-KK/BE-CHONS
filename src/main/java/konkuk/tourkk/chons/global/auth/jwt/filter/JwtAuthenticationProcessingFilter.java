@@ -1,12 +1,13 @@
 package konkuk.tourkk.chons.global.auth.jwt.filter;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import konkuk.tourkk.chons.domain.user.domain.entity.User;
-import konkuk.tourkk.chons.global.auth.exception.AuthException;
 import konkuk.tourkk.chons.domain.user.infrastructure.UserRepository;
+import konkuk.tourkk.chons.global.auth.exception.AuthException;
 import konkuk.tourkk.chons.global.auth.jwt.service.JwtService;
 import konkuk.tourkk.chons.global.common.redis.RedisService;
 import konkuk.tourkk.chons.global.exception.properties.ErrorCode;
