@@ -28,7 +28,7 @@ pipeline {
                                sh '''
                                     cp ${application_dev}  src/main/resources/application-dev.yml'
                                     chmod 777 src/main/resources/application-dev.yml
-                                    '''
+                               '''
                         }
                     }
                 }
