@@ -15,7 +15,10 @@ pipeline {
         stage('Add Application') {
             steps {
                     withCredentials([file(credentialsId: 'application', variable: 'application')]) {
-                       sh 'cp ${application}  src/main/resources/application.yml'
+                       sh '''
+                            mkdir -p src/main/resources
+                            cp ${application}  src/main/resources/application.yml
+                       '''
                 }
             }
         }
