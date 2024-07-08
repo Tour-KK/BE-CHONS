@@ -24,8 +24,8 @@ pipeline {
         }
         stage('Add Application Dev') {
                     steps {
-                            withCredentials([file(credentialsId: 'application-dev', variable: 'application-dev')]) {
-                               sh 'cp ${application-dev}  src/main/resources/application-dev.yml'
+                            withCredentials([file(credentialsId: 'application-dev', variable: 'application_dev')]) {
+                               sh 'cp ${application_dev}  src/main/resources/application-dev.yml'
                         }
                     }
                 }
