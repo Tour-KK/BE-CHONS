@@ -1,6 +1,8 @@
 package konkuk.tourkk.chons.domain.review.presentation.controller;
 
 import java.util.List;
+
+import konkuk.tourkk.chons.domain.house.application.apiresponse.AreaListResponse;
 import konkuk.tourkk.chons.domain.review.application.ReivewService;
 import konkuk.tourkk.chons.domain.review.presentation.dto.req.ReviewRequest;
 import konkuk.tourkk.chons.domain.review.presentation.dto.req.ReviewUpdateRequest;
@@ -64,4 +66,5 @@ public class ReviewController {
         List<ReviewResponse> response = reviewService.getByUserId(user.getId());
         return ResponseEntity.ok(response);
     }
+
 }
