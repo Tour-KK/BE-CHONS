@@ -22,12 +22,12 @@ pipeline {
                 }
             }
         }
-        stage('Add Application Dev') {
+        stage('Add Application Prod') {
                     steps {
-                            withCredentials([file(credentialsId: 'application_dev', variable: 'application_dev')]) {
+                            withCredentials([file(credentialsId: 'application-prod', variable: 'application_prod')]) {
                                sh '''
-                                    cp ${application_dev}  src/main/resources/application-dev.yml
-                                    chmod 777 src/main/resources/application-dev.yml
+                                    cp ${application_prod}  src/main/resources/application-prod.yml
+                                    chmod 777 src/main/resources/application-prod.yml
                                '''
                         }
                     }
