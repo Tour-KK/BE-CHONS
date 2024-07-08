@@ -17,6 +17,7 @@ pipeline {
                     withCredentials([file(credentialsId: 'application', variable: 'application')]) {
                        sh '''
                             cp ${application}  src/main/resources/application.yml
+                            chmod 777 src/main/resources/application.yml
                        '''
                 }
             }
@@ -24,7 +25,10 @@ pipeline {
         stage('Add Application Dev') {
                     steps {
                             withCredentials([file(credentialsId: 'application-dev', variable: 'application_dev')]) {
-                               sh 'cp ${application_dev}  src/main/resources/application-dev.yml'
+                               sh '''
+                                    cp ${application_dev}  src/main/resources/application-dev.yml'
+                                    chmod 777 src/main/resources/application.yml
+                                    '''
                         }
                     }
                 }
