@@ -16,8 +16,8 @@ pipeline {
             steps {
                     withCredentials([file(credentialsId: 'application', variable: 'application')]) {
                        sh '''
-                            mkdir -p -m 755 src/main/resources
-                            cp ${application}  src/main/resources/application.yml
+                            sudo mkdir -p -m 755 src/main/resources
+                            sudo cp ${application}  src/main/resources/application.yml
                        '''
                 }
             }
