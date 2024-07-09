@@ -1,5 +1,6 @@
 package konkuk.tourkk.chons.domain.reservation.presentation.dto.req;
 
+import konkuk.tourkk.chons.domain.reservation.domain.entity.Reservation;
 import konkuk.tourkk.chons.domain.reservation.exception.ReservationException;
 import konkuk.tourkk.chons.global.exception.properties.ErrorCode;
 import lombok.Getter;
@@ -11,37 +12,16 @@ import java.time.format.DateTimeParseException;
 @Getter
 public class ReservationRequest {
 
-    private Long userId;
-    private Long houseId;
-    private int price;
     private LocalDate startAt;
     private LocalDate endAt;
     private int personNum;
 
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
-
-    public ReservationRequest(Long userId, Long houseId, int price,
-                              String startAt, String endAt, int personNum) {
-        this.userId = userId;
-        this.houseId = houseId;
-        this.price = price;
+    public ReservationRequest(String startAt, String endAt, int personNum) {
         setStartAt(startAt);
         setEndAt(endAt);
-        this.personNum = personNum;
+        setPersonNum(personNum);
+        validateDates();
     }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public void setHouseId(Long houseId) {
-        this.houseId = houseId;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
     public void setStartAt(String startAt) {
         this.startAt = parseDate(startAt);
     }
@@ -56,9 +36,14 @@ public class ReservationRequest {
 
     private LocalDate parseDate(String dateString) {
         try {
-            return LocalDate.parse(dateString, DATE_FORMATTER);
+            return LocalDate.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE);
         } catch (DateTimeParseException e) {
             throw new ReservationException(ErrorCode.DATE_FORMAT_CONFLICT);
+        }
+    }
+    private void validateDates() {
+        if (startAt != null && endAt != null && startAt.isAfter(endAt)) {
+            throw new ReservationException(ErrorCode.INVALID_DATE_RANGE);
         }
     }
 }

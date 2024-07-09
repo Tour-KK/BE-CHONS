@@ -44,6 +44,9 @@ public enum ErrorCode {
     // 409
     LIKE_ALREADY(CONFLICT, "이미 좋아요한 집입니다."),
     DATE_FORMAT_CONFLICT(CONFLICT, "날짜 형식이 올바르지 않습니다."),
+    INVALID_DATE_RANGE(CONFLICT, "예약 시작일이 종료일보다 늦을 수 없습니다."),
+    DATE_ALREADY_RESERVED(CONFLICT, "이미 예약된 날짜가 포함되어 있습니다."),
+    INVALID_HOUSE_ID(CONFLICT, "불가능한 집입니다."),
 
     // 500
     SERVER_ERROR(INTERNAL_SERVER_ERROR, "예상치 못한 서버 에러가 발생하였습니다.");

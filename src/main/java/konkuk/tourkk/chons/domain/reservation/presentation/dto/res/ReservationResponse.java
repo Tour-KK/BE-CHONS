@@ -42,31 +42,5 @@ public class ReservationResponse {
         }
     }
 
-    public void setId(Long Id) {
-        this.Id = Id;
-    }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public void setHouseId(Long houseId) {
-        this.houseId = houseId;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
-    public void setStartAt(LocalDate startAt) {
-        this.startAt = formatDate(startAt);
-    }
-
-    public void setEndAt(LocalDate endAt) {
-        this.endAt = formatDate(endAt);
-    }
-
-    public void setPersonNum(int personNum) {
-        this.personNum = personNum;
-    }
 }

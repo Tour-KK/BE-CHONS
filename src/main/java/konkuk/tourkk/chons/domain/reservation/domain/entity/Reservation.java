@@ -4,9 +4,6 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
-import konkuk.tourkk.chons.domain.reservation.presentation.dto.req.ReservationRequest;
-import konkuk.tourkk.chons.domain.user.domain.entity.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -53,10 +50,6 @@ public class Reservation {
         this.endAt = endAt;
         this.personNum = personNum;
     }
-
-    /*public void cancel() {
-        this.canceledAt = LocalDateTime.now();
-    }*/
 
     public Long getId() {
         return Id;

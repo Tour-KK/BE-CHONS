@@ -1,10 +1,6 @@
 package konkuk.tourkk.chons.domain.reservation.application;
 import java.time.LocalDate;
-import java.time.Period;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import jakarta.transaction.Transactional;
@@ -14,22 +10,15 @@ import konkuk.tourkk.chons.domain.house.infrastructure.HouseRepository;
 import konkuk.tourkk.chons.domain.reservation.domain.entity.Reservation;
 import konkuk.tourkk.chons.domain.reservation.exception.ReservationException;
 import konkuk.tourkk.chons.domain.reservation.infrastructure.ReservationRepository;
-import konkuk.tourkk.chons.domain.reservation.presentation.dto.req.RegisterRequest;
+import konkuk.tourkk.chons.domain.reservation.presentation.dto.req.EditRequest;
 import konkuk.tourkk.chons.domain.reservation.presentation.dto.req.ReservationRequest;
 import konkuk.tourkk.chons.domain.reservation.presentation.dto.res.ReservationResponse;
-import konkuk.tourkk.chons.domain.review.domain.entity.Review;
-import konkuk.tourkk.chons.domain.review.exception.ReviewException;
-import konkuk.tourkk.chons.domain.review.presentation.dto.res.ReviewResponse;
 import konkuk.tourkk.chons.domain.user.domain.entity.User;
 
-import konkuk.tourkk.chons.domain.user.domain.enums.Role;
-import konkuk.tourkk.chons.domain.user.exception.UserException;
 import konkuk.tourkk.chons.domain.user.infrastructure.UserRepository;
 import konkuk.tourkk.chons.global.exception.properties.ErrorCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @Transactional
@@ -38,13 +27,15 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final UserRepository userRepository;
     private final HouseRepository houseRepository;
+    private final BookableDateService bookabledateService;
 
 
     @Transactional
-    public ReservationResponse saveReservation(RegisterRequest request, User currentUser, Long houseId){
+    public ReservationResponse saveReservation(ReservationRequest request, User currentUser, Long houseId){
 
+        House house = houseRepository.findById(houseId)
+                .orElseThrow(() -> new HouseException(ErrorCode.HOUSE_NOT_FOUND));
         Long userId = currentUser.getId();
-
         Reservation reservation = new Reservation(
                 userId,
                 houseId,
@@ -53,8 +44,10 @@ public class ReservationService {
                 request.getEndAt(),
                 request.getPersonNum()
         );
-
+        bookabledateService.checkAvailability(houseId, request.getStartAt(), request.getEndAt());
         Reservation savedReservation = reservationRepository.save(reservation);
+        bookabledateService.saveBookableDates(houseId, request.getStartAt(), request.getEndAt(), savedReservation.getId());
+
         ReservationResponse reservationResponse = new ReservationResponse(savedReservation);
 
         return reservationResponse;
@@ -86,22 +79,30 @@ public class ReservationService {
         Long userId = currentUser.getId();
         Reservation reservation = checkAccess(userId, reservationId, true);
 
+        bookabledateService.deleteBookableDates(reservation.getHouseId(), reservation.getStartAt(), reservation.getEndAt());
         reservationRepository.delete(reservation);
     }
 
     @Transactional
-    public ReservationResponse updateReservation(ReservationRequest request, Long reservationId, User currentUser) {
+    public ReservationResponse updateReservation(EditRequest request, Long reservationId, User currentUser) {
 
         Long userId = currentUser.getId();
         Reservation reservation = checkAccess(userId, reservationId, false);
+        bookabledateService.editCheckAvailability(reservation, request, reservationId);
+
+        // 기존 날짜를 available하게 변경하기
+        bookabledateService.deleteBookableDates(reservation.getHouseId(), reservation.getStartAt(), reservation.getEndAt());
+
 
         // 예약 정보 업데이트
-        reservation.setPrice(calculatePrice(request.getHouseId(), request.getStartAt(), request.getEndAt()));
+        reservation.setPrice(calculatePrice(reservation.getHouseId(), request.getStartAt(), request.getEndAt()));
         reservation.setStartAt(request.getStartAt());
         reservation.setEndAt(request.getEndAt());
         reservation.setPersonNum(request.getPersonNum());
 
         Reservation updatedReservation = reservationRepository.save(reservation);
+        bookabledateService.saveBookableDates(reservation.getHouseId(), request.getStartAt(), request.getEndAt(), reservation.getId());
+
         return new ReservationResponse(updatedReservation);
     }
 
@@ -140,11 +141,5 @@ public class ReservationService {
         // 최소 1박 요금 적용
         return Math.max(totalPrice, pricePerNight);
     }
-
-    // 이것도 혹시 몰라서 주석처리한겁니다..
-    /*private Reservation findReservationById(Long reservationId) {
-        return reservationRepository.findById(reservationId)
-                .orElseThrow(() -> new ReservationException(ErrorCode.RESERVATION_NOT_FOUND));
-    }*/
 
 }
