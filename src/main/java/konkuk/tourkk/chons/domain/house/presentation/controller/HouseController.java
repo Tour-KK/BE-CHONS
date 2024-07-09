@@ -11,7 +11,6 @@ import konkuk.tourkk.chons.domain.house.presentation.controller.dto.res.HouseRes
 import konkuk.tourkk.chons.domain.sigungu.application.AreaSigunguService;
 import konkuk.tourkk.chons.domain.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +21,6 @@ import java.util.List;
 @RequestMapping("/api/v1/house")
 @RequiredArgsConstructor
 @RestController
-@Slf4j
 public class HouseController {
 
     private final HouseService houseService;
@@ -44,6 +42,7 @@ public class HouseController {
         return ResponseEntity.ok(response);
     }
 
+
     @Operation(
             summary = "집 상세 조회",
             description = "집의 상세 정보를 조회합니다."
@@ -55,6 +54,36 @@ public class HouseController {
     @GetMapping("/{houseId}")
     public ResponseEntity<HouseResponse> getHouse(@PathVariable Long houseId){
         return ResponseEntity.ok(houseService.getHouse(houseId));
+    }
+
+    @Operation(
+            summary = "집 삭제",
+            description = "집을 삭제합니다."
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "집 삭제에 성공하였습니다."
+    )
+    @DeleteMapping("/{houseId}")
+    public ResponseEntity<Void> deleteHouse(@AuthenticationPrincipal User user,
+                                             @PathVariable Long houseId) {
+        houseService.deleteHouse(user.getId(), houseId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(
+            summary = "집 수정",
+            description = "집을 수정합니다."
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "집 에 성공하였습니다."
+    )
+    @PutMapping("/{houseId}")
+    public ResponseEntity<HouseResponse> updateHouse(@AuthenticationPrincipal User user,
+                                                     @PathVariable Long houseId,@RequestBody HouseRequest request){
+        HouseResponse response = houseService.updateHouse(user.getId(),houseId,request);
+        return ResponseEntity.ok(response);
     }
 
     @Operation(
@@ -99,5 +128,4 @@ public class HouseController {
         List<HouseResponse> responses = houseService.getHouseListByUserId(user.getId());
         return ResponseEntity.ok(responses);
     }
-
 }

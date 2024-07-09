@@ -57,11 +57,26 @@ public class HouseService {
 
     @Transactional(readOnly = true)
     public HouseResponse getHouse(Long houseId) {
-        House house = findHouseByHouseId(houseId);
+        House house = findHouseById(houseId);
         return HouseResponse.from(house);
     }
 
-    private House findHouseByHouseId(Long houseId) {
+    public void deleteHouse(Long userId,Long houseId){
+        userService.findUserById(userId);
+
+        House house = checkAccess(userId,houseId);
+        houseRepository.delete(house);
+    }
+
+    public HouseResponse updateHouse(Long userId,Long houseId,HouseRequest request){
+        userService.findUserById(userId);
+
+        House house = checkAccess(userId,houseId);
+        changeHouse(house,request);
+        return HouseResponse.from(house);
+    }
+
+    private House findHouseById(Long houseId) {
         return houseRepository.findById(houseId)
                 .orElseThrow(() -> new HouseException(ErrorCode.HOUSE_NOT_FOUND));
     }
@@ -75,6 +90,23 @@ public class HouseService {
         throw new HouseException(ErrorCode.AREA_NOT_FOUND); // 지역을 찾지 못하면 예외 발생
     }
 
+
+    private House checkAccess(Long userId,Long houseId){
+        House house = findHouseById(houseId);
+        if(!house.getRegistrantId().equals(userId))
+            throw new HouseException(ErrorCode.HOUSE_DELETE_ACCESS_DENIED);
+        return house;
+    }
+
+    private void changeHouse(House house,HouseRequest request){
+        house.changeHostName(request.getHostName());
+        house.changeHouseIntroduction(request.getHouseIntroduction());
+        house.changeFreeService(request.getFreeService());
+        house.changePhoneNumber(request.getPhoneNumber());
+        house.changeFacilityPhotos(request.getFacilityPhotos());
+        house.changeAddress(request.getAddress());
+        house.changeRegion(createRegion(request.getAddress(),areaSigunguService.getAreaList()));
+    }
     public List<HouseResponse> getHouseListByRegion(Long userId, String region){
         userService.findUserById(userId);
         return houseRepository.findByRegion(region)
