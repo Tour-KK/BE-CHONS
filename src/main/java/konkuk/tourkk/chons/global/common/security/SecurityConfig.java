@@ -42,7 +42,6 @@ public class SecurityConfig {
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/api/v1/auth/login").permitAll()
-                .requestMatchers("/api/v1/festival/**").permitAll()
                 .requestMatchers("/api/v1/**").authenticated()
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll())
             .exceptionHandling(customizer -> customizer

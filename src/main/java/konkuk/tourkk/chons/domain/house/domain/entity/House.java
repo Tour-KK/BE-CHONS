@@ -68,4 +68,29 @@ public class House{
         this.region = region;
     }
 
+    public void changeHostName(String hostName) {
+        this.hostName = hostName;
+    }
+    public void changeHouseIntroduction(String houseIntroduction) {
+        this.houseIntroduction = houseIntroduction;
+    }
+    public void changeFreeService(String freeService) {
+        this.freeService = freeService;
+    }
+    public void changeFacilityPhotos(List<String> facilityPhotos) {
+        this.facilityPhotos = facilityPhotos;
+    }
+    public void changeAddress(String address) {
+        this.address = address;
+    }
+    public void changePhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+    public void changePricePerNight(int pricePerNight) {
+        this.pricePerNight = pricePerNight;
+    }
+    public void changeRegion(String region) {
+        this.region = region;
+    }
+
 }

@@ -24,6 +24,7 @@ public class BookableDateService {
 
     private final BookableDateRepository bookableDateRepository;
 
+    //예약 가능일자 데베에 저장하기
     @Transactional
     public void saveBookableDates(Long houseId, LocalDate startAt, LocalDate endAt, Long reservationId) {
         List<BookableDate> bookableDates = new ArrayList<>();
@@ -39,6 +40,7 @@ public class BookableDateService {
         bookableDateRepository.saveAll(bookableDates);
     }
 
+    // 예약 등록시 예약가능일자 테이블에서 확인하기
     @Transactional
     public void checkAvailability(Long houseId, LocalDate startAt, LocalDate endAt) {
 
@@ -50,6 +52,7 @@ public class BookableDateService {
         }
     }
 
+    // 예약 수정시 예약가능일자 테이블에서 확인하기
     public void editCheckAvailability(Reservation reservation, EditRequest request, Long reqReservationId) {
         Long houseId = reservation.getHouseId();
         if (!houseId.equals(request.getHouseId())) {
@@ -77,6 +80,7 @@ public class BookableDateService {
         // 모든 날짜가 예약 가능한 경우 메소드 정상 종료 (예약 진행 가능)
     }
 
+    //예액 삭제시 예약가능 테이블에서도 삭제하는 기능
     @Transactional
     public void deleteBookableDates(Long houseId, LocalDate startAt, LocalDate endAt) {
         bookableDateRepository.deleteByHouseIdAndDateBetween(houseId, startAt, endAt);
