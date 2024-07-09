@@ -1,14 +1,12 @@
 package konkuk.tourkk.chons.domain.house.application;
 
-import konkuk.tourkk.chons.domain.house.presentation.controller.dto.req.HouseListRequest;
-import konkuk.tourkk.chons.domain.review.presentation.dto.res.ReviewResponse;
 import konkuk.tourkk.chons.domain.sigungu.application.AreaSigunguService;
 import konkuk.tourkk.chons.domain.house.application.apiresponse.AreaListResponse;
 import konkuk.tourkk.chons.domain.house.domain.entity.House;
 import konkuk.tourkk.chons.domain.house.exception.HouseException;
 import konkuk.tourkk.chons.domain.house.infrastructure.HouseRepository;
-import konkuk.tourkk.chons.domain.house.presentation.controller.dto.req.HouseRequest;
-import konkuk.tourkk.chons.domain.house.presentation.controller.dto.res.HouseResponse;
+import konkuk.tourkk.chons.domain.house.presentation.dto.req.HouseRequest;
+import konkuk.tourkk.chons.domain.house.presentation.dto.res.HouseResponse;
 import konkuk.tourkk.chons.domain.user.application.UserService;
 import konkuk.tourkk.chons.global.exception.properties.ErrorCode;
 import lombok.RequiredArgsConstructor;
