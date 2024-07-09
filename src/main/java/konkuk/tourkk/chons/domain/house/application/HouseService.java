@@ -1,5 +1,7 @@
 package konkuk.tourkk.chons.domain.house.application;
 
+import konkuk.tourkk.chons.domain.house.presentation.controller.dto.req.HouseListRequest;
+import konkuk.tourkk.chons.domain.review.presentation.dto.res.ReviewResponse;
 import konkuk.tourkk.chons.domain.sigungu.application.AreaSigunguService;
 import konkuk.tourkk.chons.domain.house.application.apiresponse.AreaListResponse;
 import konkuk.tourkk.chons.domain.house.domain.entity.House;
@@ -7,6 +9,7 @@ import konkuk.tourkk.chons.domain.house.exception.HouseException;
 import konkuk.tourkk.chons.domain.house.infrastructure.HouseRepository;
 import konkuk.tourkk.chons.domain.house.presentation.controller.dto.req.HouseRequest;
 import konkuk.tourkk.chons.domain.house.presentation.controller.dto.res.HouseResponse;
+import konkuk.tourkk.chons.domain.user.application.UserService;
 import konkuk.tourkk.chons.global.exception.properties.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +25,7 @@ public class HouseService {
 
     private final HouseRepository houseRepository;
     private final AreaSigunguService areaSigunguService;
+    private final UserService userService;
 
     public HouseResponse createHouse(Long userId, HouseRequest request) {
         List<AreaListResponse> areaList = areaSigunguService.getAreaList();
@@ -69,5 +73,20 @@ public class HouseService {
             }
         }
         throw new HouseException(ErrorCode.AREA_NOT_FOUND); // 지역을 찾지 못하면 예외 발생
+    }
+
+    public List<HouseResponse> getHouseListByRegion(Long userId, String region){
+        userService.findUserById(userId);
+        return houseRepository.findByRegion(region)
+                .stream()
+                .map(HouseResponse::from)
+                .collect(Collectors.toList());
+    }
+    public List<HouseResponse> getHouseListByUserId(Long userId){
+        userService.findUserById(userId);
+        return houseRepository.findByRegistrantId(userId)
+                .stream()
+                .map(HouseResponse::from)
+                .collect(Collectors.toList());
     }
 }
