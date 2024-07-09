@@ -7,6 +7,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.time.Duration;
 import java.util.Date;
 import java.util.Optional;
+
+import jakarta.servlet.http.HttpServletResponse;
 import konkuk.tourkk.chons.domain.user.infrastructure.UserRepository;
 import konkuk.tourkk.chons.global.auth.exception.AuthException;
 import konkuk.tourkk.chons.global.common.redis.RedisService;
@@ -126,5 +128,19 @@ public class JwtService {
             throw new AuthException(ErrorCode.SECURITY_INVALID_REFRESH_TOKEN);
         }
         return email;
+    }
+
+    private void sendTokens(HttpServletResponse response, String reissuedAccessToken,
+                            String reissuedRefreshToken) {
+        response.setHeader(accessHeader, BEARER + reissuedAccessToken);
+        response.setHeader(refreshHeader, BEARER + reissuedRefreshToken);
+    }
+
+    public void reissueAndSendTokens(HttpServletResponse response, String refreshToken) {
+        String email = findRefreshTokenAndExtractEmail(refreshToken);
+        String reissuedRefreshToken = reissueRefreshToken(email);
+        String reissuedAccessToken = createAccessToken(email);
+
+        sendTokens(response, reissuedAccessToken, reissuedRefreshToken);
     }
 }
