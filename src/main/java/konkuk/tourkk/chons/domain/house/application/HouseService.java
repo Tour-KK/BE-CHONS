@@ -1,7 +1,7 @@
 package konkuk.tourkk.chons.domain.house.application;
 
-import konkuk.tourkk.chons.domain.sigungu.application.AreaSigunguService;
-import konkuk.tourkk.chons.domain.house.application.apiresponse.AreaListResponse;
+import konkuk.tourkk.chons.domain.areasigungu.application.service.AreaSigunguService;
+import konkuk.tourkk.chons.domain.areasigungu.application.dto.res.AreaListResponse;
 import konkuk.tourkk.chons.domain.house.domain.entity.House;
 import konkuk.tourkk.chons.domain.house.exception.HouseException;
 import konkuk.tourkk.chons.domain.house.infrastructure.HouseRepository;

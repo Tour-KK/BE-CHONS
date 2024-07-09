@@ -1,4 +1,4 @@
-package konkuk.tourkk.chons.domain.sigungu.domain.entity;
+package konkuk.tourkk.chons.domain.areasigungu.domain.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,8 +14,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "sigungu_TB")
-public class Sigungu {
+@Table(name = "area_TB")
+public class Area {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,13 +27,9 @@ public class Sigungu {
     @Column(nullable = false)
     String name;
 
-    @Column(nullable = false)
-    Long areaCode;
-
     @Builder
-    private Sigungu(Long code, String name, Long areaCode) {
+    private Area(Long code, String name) {
         this.code = code;
         this.name = name;
-        this.areaCode = areaCode;
     }
 }

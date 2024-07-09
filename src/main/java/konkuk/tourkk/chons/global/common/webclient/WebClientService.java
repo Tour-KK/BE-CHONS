@@ -5,8 +5,8 @@ import static konkuk.tourkk.chons.global.common.webclient.JsonResponseParser.YYY
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.Map;
-import konkuk.tourkk.chons.domain.festival.domain.entity.Area;
-import konkuk.tourkk.chons.domain.sigungu.domain.entity.Sigungu;
+import konkuk.tourkk.chons.domain.areasigungu.domain.entity.Area;
+import konkuk.tourkk.chons.domain.areasigungu.domain.entity.Sigungu;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriBuilder;

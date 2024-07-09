@@ -1,14 +1,14 @@
-package konkuk.tourkk.chons.domain.sigungu.application;
+package konkuk.tourkk.chons.domain.areasigungu.application.service;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import konkuk.tourkk.chons.domain.festival.domain.entity.Area;
-import konkuk.tourkk.chons.domain.sigungu.domain.entity.Sigungu;
-import konkuk.tourkk.chons.domain.festival.infrastructure.AreaRepository;
-import konkuk.tourkk.chons.domain.sigungu.infrastructure.SigunguRepository;
-import konkuk.tourkk.chons.domain.house.application.apiresponse.AreaListResponse;
+import konkuk.tourkk.chons.domain.areasigungu.domain.entity.Area;
+import konkuk.tourkk.chons.domain.areasigungu.domain.entity.Sigungu;
+import konkuk.tourkk.chons.domain.areasigungu.infrastructure.AreaRepository;
+import konkuk.tourkk.chons.domain.areasigungu.infrastructure.SigunguRepository;
+import konkuk.tourkk.chons.domain.areasigungu.application.dto.res.AreaListResponse;
 import konkuk.tourkk.chons.global.common.webclient.WebClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package konkuk.tourkk.chons.domain.house.application.apiresponse;
+package konkuk.tourkk.chons.domain.areasigungu.application.dto.res;
 
 import lombok.Getter;
 

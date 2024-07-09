@@ -10,11 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import konkuk.tourkk.chons.domain.festival.domain.entity.Area;
-import konkuk.tourkk.chons.domain.sigungu.domain.entity.Sigungu;
+import konkuk.tourkk.chons.domain.areasigungu.domain.entity.Area;
+import konkuk.tourkk.chons.domain.areasigungu.domain.entity.Sigungu;
 import konkuk.tourkk.chons.domain.festival.exception.FestivalException;
-import konkuk.tourkk.chons.domain.festival.infrastructure.AreaRepository;
-import konkuk.tourkk.chons.domain.sigungu.infrastructure.SigunguRepository;
+import konkuk.tourkk.chons.domain.areasigungu.infrastructure.AreaRepository;
+import konkuk.tourkk.chons.domain.areasigungu.infrastructure.SigunguRepository;
 import konkuk.tourkk.chons.domain.festival.presentation.dto.req.FestivalRequest;
 import konkuk.tourkk.chons.domain.festival.presentation.dto.res.FestivalDetailResponse;
 import konkuk.tourkk.chons.domain.festival.presentation.dto.res.FestivalResponse;
