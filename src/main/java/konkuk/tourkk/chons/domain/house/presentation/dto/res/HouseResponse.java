@@ -1,9 +1,5 @@
-package konkuk.tourkk.chons.domain.house.presentation.controller.dto.res;
+package konkuk.tourkk.chons.domain.house.presentation.dto.res;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import konkuk.tourkk.chons.domain.house.domain.entity.House;
 import lombok.Builder;
 import lombok.Getter;
