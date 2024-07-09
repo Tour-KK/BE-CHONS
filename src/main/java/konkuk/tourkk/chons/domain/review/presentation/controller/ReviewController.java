@@ -1,11 +1,8 @@
 package konkuk.tourkk.chons.domain.review.presentation.controller;
 
-import java.util.List;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import konkuk.tourkk.chons.domain.house.application.apiresponse.AreaListResponse;
 import konkuk.tourkk.chons.domain.review.application.ReivewService;
 import konkuk.tourkk.chons.domain.review.presentation.dto.req.ReviewRequest;
 import konkuk.tourkk.chons.domain.review.presentation.dto.req.ReviewUpdateRequest;
@@ -15,14 +12,9 @@ import konkuk.tourkk.chons.domain.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Tag(name = "Review", description = "Review 관련 API. 토큰이 필요합니다.")
 @RestController
@@ -42,8 +34,8 @@ public class ReviewController {
     )
     @PostMapping
     public ResponseEntity<ReviewResponse> createReview(@AuthenticationPrincipal User user,
-        @RequestBody
-        ReviewRequest request) {
+                                                       @RequestBody
+                                                       ReviewRequest request) {
         ReviewResponse response = reviewService.createReview(user.getId(), request);
         return ResponseEntity.ok(response);
     }
@@ -71,7 +63,7 @@ public class ReviewController {
     )
     @PutMapping("/{reviewId}")
     public ResponseEntity<ReviewUpdateResponse> updateReview(@AuthenticationPrincipal User user,
-        @PathVariable Long reviewId, @RequestBody ReviewUpdateRequest request) {
+                                                             @PathVariable Long reviewId, @RequestBody ReviewUpdateRequest request) {
         ReviewUpdateResponse response = reviewService.updateReview(user.getId(), reviewId, request);
         return ResponseEntity.ok(response);
     }
@@ -86,7 +78,7 @@ public class ReviewController {
     )
     @DeleteMapping("/{reviewId}")
     public ResponseEntity<Void> deleteReview(@AuthenticationPrincipal Long userId,
-        @PathVariable Long reviewId) {
+                                             @PathVariable Long reviewId) {
         reviewService.deleteReview(userId, reviewId);
         return ResponseEntity.noContent().build();
     }

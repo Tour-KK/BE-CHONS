@@ -1,11 +1,12 @@
 package konkuk.tourkk.chons.global.common.redis;
 
-import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.Duration;
 
 @Component
 @RequiredArgsConstructor

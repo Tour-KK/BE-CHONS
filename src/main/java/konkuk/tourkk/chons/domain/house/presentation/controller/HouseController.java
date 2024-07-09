@@ -3,12 +3,12 @@ package konkuk.tourkk.chons.domain.house.presentation.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import konkuk.tourkk.chons.domain.areasigungu.application.dto.res.AreaListResponse;
+import konkuk.tourkk.chons.domain.areasigungu.application.service.AreaSigunguService;
 import konkuk.tourkk.chons.domain.house.application.HouseService;
-import konkuk.tourkk.chons.domain.house.application.apiresponse.AreaListResponse;
 import konkuk.tourkk.chons.domain.house.presentation.dto.req.HouseListRequest;
 import konkuk.tourkk.chons.domain.house.presentation.dto.req.HouseRequest;
 import konkuk.tourkk.chons.domain.house.presentation.dto.res.HouseResponse;
-import konkuk.tourkk.chons.domain.sigungu.application.AreaSigunguService;
 import konkuk.tourkk.chons.domain.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -36,9 +36,9 @@ public class HouseController {
     )
     @PostMapping
     public ResponseEntity<HouseResponse> createHouse(@AuthenticationPrincipal User user,
-                                                         @RequestBody HouseRequest request) {
+                                                     @RequestBody HouseRequest request) {
 
-        HouseResponse response = houseService.createHouse(user.getId(),request);
+        HouseResponse response = houseService.createHouse(user.getId(), request);
         return ResponseEntity.ok(response);
     }
 
@@ -52,7 +52,7 @@ public class HouseController {
             description = "집 상세 조회에 성공하였습니다."
     )
     @GetMapping("/{houseId}")
-    public ResponseEntity<HouseResponse> getHouse(@PathVariable Long houseId){
+    public ResponseEntity<HouseResponse> getHouse(@PathVariable Long houseId) {
         return ResponseEntity.ok(houseService.getHouse(houseId));
     }
 
@@ -66,7 +66,7 @@ public class HouseController {
     )
     @DeleteMapping("/{houseId}")
     public ResponseEntity<Void> deleteHouse(@AuthenticationPrincipal User user,
-                                             @PathVariable Long houseId) {
+                                            @PathVariable Long houseId) {
         houseService.deleteHouse(user.getId(), houseId);
         return ResponseEntity.noContent().build();
     }
@@ -81,8 +81,8 @@ public class HouseController {
     )
     @PutMapping("/{houseId}")
     public ResponseEntity<HouseResponse> updateHouse(@AuthenticationPrincipal User user,
-                                                     @PathVariable Long houseId,@RequestBody HouseRequest request){
-        HouseResponse response = houseService.updateHouse(user.getId(),houseId,request);
+                                                     @PathVariable Long houseId, @RequestBody HouseRequest request) {
+        HouseResponse response = houseService.updateHouse(user.getId(), houseId, request);
         return ResponseEntity.ok(response);
     }
 
@@ -95,7 +95,7 @@ public class HouseController {
             description = "지역 목록 조회에 성공하였습니다."
     )
     @GetMapping("/region")
-    public ResponseEntity<List<AreaListResponse>> getRegionList(@AuthenticationPrincipal User user){
+    public ResponseEntity<List<AreaListResponse>> getRegionList(@AuthenticationPrincipal User user) {
         List<AreaListResponse> responses = areaSigunguService.getAreaList();
         return ResponseEntity.ok(responses);
     }
@@ -110,8 +110,8 @@ public class HouseController {
     )
     @GetMapping("/list/region")
     public ResponseEntity<List<HouseResponse>> getByRegion(@AuthenticationPrincipal User user,
-                                                           @RequestBody HouseListRequest request){
-        List<HouseResponse> responses = houseService.getHouseListByRegion(user.getId(),request.getRegion());
+                                                           @RequestBody HouseListRequest request) {
+        List<HouseResponse> responses = houseService.getHouseListByRegion(user.getId(), request.getRegion());
         return ResponseEntity.ok(responses);
     }
 
@@ -124,7 +124,7 @@ public class HouseController {
             description = "등록자의 집 목록 조회에 성공하였습니다."
     )
     @GetMapping("/list/user")
-    public ResponseEntity<List<HouseResponse>> getByUser(@AuthenticationPrincipal User user){
+    public ResponseEntity<List<HouseResponse>> getByUser(@AuthenticationPrincipal User user) {
         List<HouseResponse> responses = houseService.getHouseListByUserId(user.getId());
         return ResponseEntity.ok(responses);
     }

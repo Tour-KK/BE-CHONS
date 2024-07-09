@@ -1,7 +1,6 @@
 package konkuk.tourkk.chons.domain.review.application;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import konkuk.tourkk.chons.domain.house.application.HouseService;
 import konkuk.tourkk.chons.domain.review.domain.entity.Review;
 import konkuk.tourkk.chons.domain.review.exception.ReviewException;
 import konkuk.tourkk.chons.domain.review.infrastructure.ReviewRepository;
@@ -16,6 +15,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -23,17 +25,18 @@ public class ReivewService {
 
     private final ReviewRepository reviewRepository;
     private final UserService userService;
+    private final HouseService houseService;
 
     public ReviewResponse createReview(Long userId, ReviewRequest request) {
         User user = userService.findUserById(userId);
-        // TODO: house 존재하는지 확인 필요
+        houseService.getHouse(request.getHouseId());
         Review review = Review.builder()
-            .content(request.getContent())
-            .star(request.getStar())
-            .userId(userId)
-            .houseId(request.getHouseId())
-            .userName(user.getName())
-            .build();
+                .content(request.getContent())
+                .star(request.getStar())
+                .userId(userId)
+                .houseId(request.getHouseId())
+                .userName(user.getName())
+                .build();
         return ReviewResponse.from(reviewRepository.save(review));
     }
 
@@ -44,7 +47,7 @@ public class ReivewService {
     }
 
     public ReviewUpdateResponse updateReview(Long userId, Long reviewId,
-        ReviewUpdateRequest request) {
+                                             ReviewUpdateRequest request) {
         userService.findUserById(userId);
 
         Review review = checkAccess(userId, reviewId);
@@ -62,20 +65,20 @@ public class ReivewService {
     }
 
     public List<ReviewResponse> getByHouseId(Long houseId) {
-        // TODO: house가 존재하는지 확인
+        houseService.getHouse(houseId);
         return reviewRepository.findByHouseId(houseId)
-            .stream()
-            .map(ReviewResponse::from)
-            .collect(Collectors.toList());
+                .stream()
+                .map(ReviewResponse::from)
+                .collect(Collectors.toList());
     }
 
     public List<ReviewResponse> getByUserId(Long userId) {
         userService.findUserById(userId);
 
         return reviewRepository.findByUserId(userId)
-            .stream()
-            .map(ReviewResponse::from)
-            .collect(Collectors.toList());
+                .stream()
+                .map(ReviewResponse::from)
+                .collect(Collectors.toList());
     }
 
     private Review checkAccess(Long userId, Long reviewId) {
@@ -88,6 +91,6 @@ public class ReivewService {
 
     private Review findReviewById(Long reviewId) {
         return reviewRepository.findById(reviewId)
-            .orElseThrow(() -> new ReviewException(ErrorCode.REVIEW_NOT_FOUND));
+                .orElseThrow(() -> new ReviewException(ErrorCode.REVIEW_NOT_FOUND));
     }
 }
