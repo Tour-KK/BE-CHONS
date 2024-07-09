@@ -1,10 +1,6 @@
 package konkuk.tourkk.chons.global.auth.application;
 
-import static konkuk.tourkk.chons.global.auth.application.formatter.DateFormatter.toLocalDateFormat;
-
-import java.time.LocalDate;
 import java.util.Optional;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import konkuk.tourkk.chons.domain.user.application.UserService;
@@ -34,14 +30,13 @@ public class AuthService {
     public LoginResponse login(LoginRequest request) {
         String email = request.getEmail();
         SocialType socialType = request.getSocialType();
-        String birthYear = request.getBirthYear();
-        String birthDay = request.getBirthDay();
         String name = request.getName();
         String socialId = request.getSocialId();
         String phoneNum = request.getPhoneNum();
 
         String accessToken = jwtService.createAccessToken(email);
         String refreshToken = jwtService.createRefreshToken();
+        jwtService.updateRefreshToken(refreshToken, email);
         Optional<User> userOptional = userRepository.findByEmail(email);
         if (userOptional.isEmpty()) {
             User newUser = userService.registerUser(name, email, socialId,
