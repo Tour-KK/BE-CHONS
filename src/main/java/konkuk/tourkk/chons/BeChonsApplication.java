@@ -24,6 +24,7 @@ public class BeChonsApplication {
     @Bean
     public CommandLineRunner commandLineRunner() {
         areaSigunguService.saveAreas();
-        return args -> {};
+        return args -> {
+        };
     }
 }

@@ -21,11 +21,11 @@ public class UserInfoResponse {
 
     public static UserInfoResponse from(User user) {
         return UserInfoResponse.builder()
-            .id(user.getId())
-            .name(user.getName())
-            .email(user.getEmail())
-            .phoneNum(user.getPhoneNum())
-            .role(user.getRole())
-            .build();
+                .id(user.getId())
+                .name(user.getName())
+                .email(user.getEmail())
+                .phoneNum(user.getPhoneNum())
+                .role(user.getRole())
+                .build();
     }
 }

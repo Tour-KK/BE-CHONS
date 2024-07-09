@@ -1,10 +1,10 @@
 package konkuk.tourkk.chons.global.common.webclient;
 
+import org.springframework.stereotype.Component;
+
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 @Component
 public class JsonResponseParser {

@@ -1,7 +1,7 @@
 package konkuk.tourkk.chons.domain.house.application;
 
-import konkuk.tourkk.chons.domain.areasigungu.application.service.AreaSigunguService;
 import konkuk.tourkk.chons.domain.areasigungu.application.dto.res.AreaListResponse;
+import konkuk.tourkk.chons.domain.areasigungu.application.service.AreaSigunguService;
 import konkuk.tourkk.chons.domain.house.domain.entity.House;
 import konkuk.tourkk.chons.domain.house.exception.HouseException;
 import konkuk.tourkk.chons.domain.house.infrastructure.HouseRepository;
@@ -59,18 +59,18 @@ public class HouseService {
         return HouseResponse.from(house);
     }
 
-    public void deleteHouse(Long userId,Long houseId){
+    public void deleteHouse(Long userId, Long houseId) {
         userService.findUserById(userId);
 
-        House house = checkAccess(userId,houseId);
+        House house = checkAccess(userId, houseId);
         houseRepository.delete(house);
     }
 
-    public HouseResponse updateHouse(Long userId,Long houseId,HouseRequest request){
+    public HouseResponse updateHouse(Long userId, Long houseId, HouseRequest request) {
         userService.findUserById(userId);
 
-        House house = checkAccess(userId,houseId);
-        changeHouse(house,request);
+        House house = checkAccess(userId, houseId);
+        changeHouse(house, request);
         return HouseResponse.from(house);
     }
 
@@ -89,30 +89,32 @@ public class HouseService {
     }
 
 
-    private House checkAccess(Long userId,Long houseId){
+    private House checkAccess(Long userId, Long houseId) {
         House house = findHouseById(houseId);
-        if(!house.getRegistrantId().equals(userId))
+        if (!house.getRegistrantId().equals(userId))
             throw new HouseException(ErrorCode.HOUSE_DELETE_ACCESS_DENIED);
         return house;
     }
 
-    private void changeHouse(House house,HouseRequest request){
+    private void changeHouse(House house, HouseRequest request) {
         house.changeHostName(request.getHostName());
         house.changeHouseIntroduction(request.getHouseIntroduction());
         house.changeFreeService(request.getFreeService());
         house.changePhoneNumber(request.getPhoneNumber());
         house.changeFacilityPhotos(request.getFacilityPhotos());
         house.changeAddress(request.getAddress());
-        house.changeRegion(createRegion(request.getAddress(),areaSigunguService.getAreaList()));
+        house.changeRegion(createRegion(request.getAddress(), areaSigunguService.getAreaList()));
     }
-    public List<HouseResponse> getHouseListByRegion(Long userId, String region){
+
+    public List<HouseResponse> getHouseListByRegion(Long userId, String region) {
         userService.findUserById(userId);
         return houseRepository.findByRegion(region)
                 .stream()
                 .map(HouseResponse::from)
                 .collect(Collectors.toList());
     }
-    public List<HouseResponse> getHouseListByUserId(Long userId){
+
+    public List<HouseResponse> getHouseListByUserId(Long userId) {
         userService.findUserById(userId);
         return houseRepository.findByRegistrantId(userId)
                 .stream()

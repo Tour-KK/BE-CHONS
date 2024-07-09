@@ -1,6 +1,5 @@
 package konkuk.tourkk.chons.global.auth.application;
 
-import java.util.Optional;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import konkuk.tourkk.chons.domain.user.application.UserService;
@@ -14,9 +13,10 @@ import konkuk.tourkk.chons.global.auth.presentation.dto.req.LoginRequest;
 import konkuk.tourkk.chons.global.auth.presentation.dto.res.LoginResponse;
 import konkuk.tourkk.chons.global.exception.properties.ErrorCode;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -40,7 +40,7 @@ public class AuthService {
         Optional<User> userOptional = userRepository.findByEmail(email);
         if (userOptional.isEmpty()) {
             User newUser = userService.registerUser(name, email, socialId,
-                socialType, Role.USER, phoneNum);
+                    socialType, Role.USER, phoneNum);
             return LoginResponse.of(newUser.getId(), accessToken, refreshToken, email, false);
         }
 

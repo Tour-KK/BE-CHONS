@@ -3,6 +3,7 @@ package konkuk.tourkk.chons.domain.house.presentation.dto.res;
 import konkuk.tourkk.chons.domain.house.domain.entity.House;
 import lombok.Builder;
 import lombok.Getter;
+
 import java.util.List;
 
 @Getter
@@ -33,7 +34,7 @@ public class HouseResponse {
 
     private String region;
 
-    public static HouseResponse from(House house){
+    public static HouseResponse from(House house) {
         return HouseResponse.builder()
                 .id(house.getId())
                 .hostName(house.getHostName())

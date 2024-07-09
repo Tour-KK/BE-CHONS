@@ -1,7 +1,5 @@
 package konkuk.tourkk.chons.domain.like.application;
 
-import java.util.Optional;
-
 import konkuk.tourkk.chons.domain.house.application.HouseService;
 import konkuk.tourkk.chons.domain.like.domain.entity.Like;
 import konkuk.tourkk.chons.domain.like.exception.LikeException;
@@ -12,6 +10,8 @@ import konkuk.tourkk.chons.global.exception.properties.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,9 +28,9 @@ public class LikeService {
         houseService.getHouse(houseId);
 
         Like like = Like.builder()
-            .userId(userId)
-            .houseId(houseId)
-            .build();
+                .userId(userId)
+                .houseId(houseId)
+                .build();
         likeRepository.save(like);
 
         return LikeResponse.from(like);
@@ -53,6 +53,6 @@ public class LikeService {
 
     private Like findByUserIdAndHouseId(Long userId, Long houseId) {
         return likeRepository.findByUserIdAndHouseId(userId, houseId)
-            .orElseThrow(() -> new LikeException(ErrorCode.LIKE_NOT_FOUND));
+                .orElseThrow(() -> new LikeException(ErrorCode.LIKE_NOT_FOUND));
     }
 }
