@@ -1,6 +1,8 @@
 package konkuk.tourkk.chons.domain.like.application;
 
 import java.util.Optional;
+
+import konkuk.tourkk.chons.domain.house.application.HouseService;
 import konkuk.tourkk.chons.domain.like.domain.entity.Like;
 import konkuk.tourkk.chons.domain.like.exception.LikeException;
 import konkuk.tourkk.chons.domain.like.infrastructure.LikeRepository;
@@ -18,11 +20,12 @@ public class LikeService {
 
     private final LikeRepository likeRepository;
     private final UserService userService;
+    private final HouseService houseService;
 
     public LikeResponse like(Long userId, Long houseId) {
         isExist(userId, houseId);
         userService.findUserById(userId);
-        // TODO: 집 존재 여부 확인
+        houseService.getHouse(houseId);
 
         Like like = Like.builder()
             .userId(userId)
@@ -35,16 +38,11 @@ public class LikeService {
 
     public void cancelLike(Long userId, Long houseId) {
         userService.findUserById(userId);
-        // TODO: 집 존재 여부 확인
+        houseService.getHouse(houseId);
 
         Like like = findByUserIdAndHouseId(userId, houseId);
         likeRepository.delete(like);
     }
-
-    // TODO: house에서 구현
-//    public List<HouseResponse> getLikeHousesByUser(Long userId) {
-//
-//    }
 
     private void isExist(Long userId, Long houseId) {
         Optional<Like> like = likeRepository.findByUserIdAndHouseId(userId, houseId);
@@ -54,9 +52,7 @@ public class LikeService {
     }
 
     private Like findByUserIdAndHouseId(Long userId, Long houseId) {
-        Like like = likeRepository.findByUserIdAndHouseId(userId, houseId)
+        return likeRepository.findByUserIdAndHouseId(userId, houseId)
             .orElseThrow(() -> new LikeException(ErrorCode.LIKE_NOT_FOUND));
-
-        return like;
     }
 }
