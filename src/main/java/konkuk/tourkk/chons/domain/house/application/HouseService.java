@@ -1,12 +1,14 @@
 package konkuk.tourkk.chons.domain.house.application;
 
+import konkuk.tourkk.chons.domain.house.presentation.controller.dto.req.HouseListRequest;
+import konkuk.tourkk.chons.domain.review.presentation.dto.res.ReviewResponse;
 import konkuk.tourkk.chons.domain.sigungu.application.AreaSigunguService;
 import konkuk.tourkk.chons.domain.house.application.apiresponse.AreaListResponse;
 import konkuk.tourkk.chons.domain.house.domain.entity.House;
 import konkuk.tourkk.chons.domain.house.exception.HouseException;
 import konkuk.tourkk.chons.domain.house.infrastructure.HouseRepository;
-import konkuk.tourkk.chons.domain.house.presentation.dto.req.HouseRequest;
-import konkuk.tourkk.chons.domain.house.presentation.dto.res.HouseResponse;
+import konkuk.tourkk.chons.domain.house.presentation.controller.dto.req.HouseRequest;
+import konkuk.tourkk.chons.domain.house.presentation.controller.dto.res.HouseResponse;
 import konkuk.tourkk.chons.domain.user.application.UserService;
 import konkuk.tourkk.chons.global.exception.properties.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -88,6 +90,7 @@ public class HouseService {
         throw new HouseException(ErrorCode.AREA_NOT_FOUND); // 지역을 찾지 못하면 예외 발생
     }
 
+
     private House checkAccess(Long userId,Long houseId){
         House house = findHouseById(houseId);
         if(!house.getRegistrantId().equals(userId))
@@ -103,5 +106,19 @@ public class HouseService {
         house.changeFacilityPhotos(request.getFacilityPhotos());
         house.changeAddress(request.getAddress());
         house.changeRegion(createRegion(request.getAddress(),areaSigunguService.getAreaList()));
+    }
+    public List<HouseResponse> getHouseListByRegion(Long userId, String region){
+        userService.findUserById(userId);
+        return houseRepository.findByRegion(region)
+                .stream()
+                .map(HouseResponse::from)
+                .collect(Collectors.toList());
+    }
+    public List<HouseResponse> getHouseListByUserId(Long userId){
+        userService.findUserById(userId);
+        return houseRepository.findByRegistrantId(userId)
+                .stream()
+                .map(HouseResponse::from)
+                .collect(Collectors.toList());
     }
 }

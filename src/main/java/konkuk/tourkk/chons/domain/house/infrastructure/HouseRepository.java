@@ -7,5 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface HouseRepository extends JpaRepository<House,Long> {
-
+    List<House> findByRegistrantId(Long registrantId);
+    List<House> findByRegion(String region);
 }
