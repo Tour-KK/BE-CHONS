@@ -48,7 +48,7 @@ public class ReivewService {
                 .userName(user.getName())
                 .photos(photoUrls)
                 .build();
-
+        log.info("뭔데");
         return ReviewResponse.from(reviewRepository.save(review));
     }
 
