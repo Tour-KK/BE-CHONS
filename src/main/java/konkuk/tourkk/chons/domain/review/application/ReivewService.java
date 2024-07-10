@@ -39,16 +39,16 @@ public class ReivewService {
     public ReviewResponse createReview(Long userId, List<MultipartFile> photos, ReviewRequest request) {
         User user = userService.findUserById(userId);
         houseService.getHouse(request.getHouseId());
-      
+
         List<String> photoUrls = photoService.savePhotos(photos, REVIEW_BUCKET_FOLDER);
         Review review = Review.builder()
-            .content(request.getContent())
-            .star(request.getStar())
-            .userId(userId)
-            .houseId(request.getHouseId())
-            .userName(user.getName())
+                .content(request.getContent())
+                .star(request.getStar())
+                .userId(userId)
+                .houseId(request.getHouseId())
+                .userName(user.getName())
                 .photos(photoUrls)
-            .build();
+                .build();
 
         return ReviewResponse.from(reviewRepository.save(review));
     }
@@ -60,8 +60,7 @@ public class ReivewService {
     }
 
     public ReviewUpdateResponse updateReview(Long userId, Long reviewId,
-                                             List<MultipartFile> photos,
-                                             ReviewUpdateRequest request) {
+                                             List<MultipartFile> photos, ReviewUpdateRequest request) {
         userService.findUserById(userId);
 
         Review review = checkAccess(userId, reviewId);
@@ -73,7 +72,6 @@ public class ReivewService {
 
         return ReviewUpdateResponse.of(reviewId, review.getContent(), review.getStar());
     }
-
     public void deleteReview(Long userId, Long reviewId) {
         log.info("service1" + userId);
         userService.findUserById(userId);
@@ -87,7 +85,6 @@ public class ReivewService {
         log.info("사진 삭제");
         reviewRepository.delete(review);
     }
-
     public List<ReviewResponse> getByHouseId(Long houseId) {
         houseService.getHouse(houseId);
         return reviewRepository.findByHouseId(houseId)

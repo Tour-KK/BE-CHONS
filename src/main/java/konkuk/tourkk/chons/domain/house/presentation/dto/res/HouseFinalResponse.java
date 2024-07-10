@@ -3,13 +3,12 @@ package konkuk.tourkk.chons.domain.house.presentation.dto.res;
 import konkuk.tourkk.chons.domain.house.domain.entity.House;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
-
 @Getter
 @Builder
-public class HouseResponse {
-
+public class HouseFinalResponse {
     private Long id;
 
     private String hostName;
@@ -25,7 +24,7 @@ public class HouseResponse {
     private Long pricePerNight;
 
     private Long registrantId;
-//잠시 아웃
+    //잠시 아웃
 //    private int operationalStatus;
 //
     private List<String> availableReservationDates;
@@ -36,9 +35,12 @@ public class HouseResponse {
 
     private int maxNumPeople;
 
+    private Long meanStar;
 
-    public static HouseResponse from(House house) {
-        return HouseResponse.builder()
+    private int numStar;
+
+    public static HouseFinalResponse from(House house, Long meanStar, int numStar) {
+        return HouseFinalResponse.builder()
                 .id(house.getId())
                 .hostName(house.getHostName())
                 .houseIntroduction(house.getHouseIntroduction())
@@ -52,6 +54,9 @@ public class HouseResponse {
                 .availableReservationDates(house.getAvailableReservationDates())
                 .region(house.getRegion())
                 .maxNumPeople(house.getMaxNumPeople())
+                .meanStar(meanStar)
+                .numStar(numStar)
                 .build();
     }
+
 }

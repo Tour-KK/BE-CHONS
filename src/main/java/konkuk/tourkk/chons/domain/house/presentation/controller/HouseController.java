@@ -8,6 +8,7 @@ import konkuk.tourkk.chons.domain.areasigungu.application.service.AreaSigunguSer
 import konkuk.tourkk.chons.domain.house.application.HouseService;
 import konkuk.tourkk.chons.domain.house.presentation.dto.req.HouseListRequest;
 import konkuk.tourkk.chons.domain.house.presentation.dto.req.HouseRequest;
+import konkuk.tourkk.chons.domain.house.presentation.dto.res.HouseFinalResponse;
 import konkuk.tourkk.chons.domain.house.presentation.dto.res.HouseResponse;
 import konkuk.tourkk.chons.domain.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -52,7 +53,7 @@ public class HouseController {
             description = "집 상세 조회에 성공하였습니다."
     )
     @GetMapping("/{houseId}")
-    public ResponseEntity<HouseResponse> getHouse(@PathVariable Long houseId) {
+    public ResponseEntity<HouseFinalResponse> getHouse(@PathVariable Long houseId) {
         return ResponseEntity.ok(houseService.getHouse(houseId));
     }
 

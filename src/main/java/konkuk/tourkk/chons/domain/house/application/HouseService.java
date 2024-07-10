@@ -6,7 +6,10 @@ import konkuk.tourkk.chons.domain.house.domain.entity.House;
 import konkuk.tourkk.chons.domain.house.exception.HouseException;
 import konkuk.tourkk.chons.domain.house.infrastructure.HouseRepository;
 import konkuk.tourkk.chons.domain.house.presentation.dto.req.HouseRequest;
+import konkuk.tourkk.chons.domain.house.presentation.dto.res.HouseFinalResponse;
 import konkuk.tourkk.chons.domain.house.presentation.dto.res.HouseResponse;
+import konkuk.tourkk.chons.domain.review.infrastructure.ReviewRepository;
+import konkuk.tourkk.chons.domain.review.presentation.dto.res.ReviewResponse;
 import konkuk.tourkk.chons.domain.user.application.UserService;
 import konkuk.tourkk.chons.global.exception.properties.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +27,7 @@ public class HouseService {
     private final HouseRepository houseRepository;
     private final AreaSigunguService areaSigunguService;
     private final UserService userService;
+    private final ReviewRepository reviewRepository;
 
     public HouseResponse createHouse(Long userId, HouseRequest request) {
         List<AreaListResponse> areaList = areaSigunguService.getAreaList();
@@ -41,22 +45,19 @@ public class HouseService {
                 .pricePerNight(request.getPricePerNight())
                 .registrantId(userId)
 //                .operationalStatus(request.getOperationalStatus())
-//                .availableReservationDates(request.getAvailableReservationDates())
-                .region(region) // 지역 정보 추가
+                .availableReservationDates(request.getAvailableReservationDates())
+                .region(region)
+                .maxNumPeople(request.getMaxNumPeople())
                 .build();
 
         return HouseResponse.from(houseRepository.save(house));
     }
 
     @Transactional(readOnly = true)
-    public List<HouseResponse> getAllHouses() {
-        return houseRepository.findAll().stream().map(HouseResponse::from).collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
-    public HouseResponse getHouse(Long houseId) {
+    public HouseFinalResponse getHouse(Long houseId) {
         House house = findHouseById(houseId);
-        return HouseResponse.from(house);
+        return HouseFinalResponse.from(house,findMeanStarByhouseId(houseId)
+                ,findNumStarByhouseId(houseId));
     }
 
     public void deleteHouse(Long userId, Long houseId) {
@@ -83,7 +84,6 @@ public class HouseService {
         String[] addressParts = address.split(" ");
         if (addressParts.length > 0) {
             String firstWord = addressParts[0];
-            // 첫 번째 단어가 areaList에 포함되는지 확인
             for (AreaListResponse area : areaList) {
                 if (firstWord.equals(area.getAreaName())) {
                     return area.getAreaName();
@@ -126,6 +126,31 @@ public class HouseService {
         return houseRepository.findByRegistrantId(userId)
                 .stream()
                 .map(HouseResponse::from)
+                .collect(Collectors.toList());
+    }
+    private Long findMeanStarByhouseId(Long houseId) {
+        List<ReviewResponse> reviewList = getByHouseId(houseId);
+
+        if (reviewList.isEmpty()) {
+            return 0L; // 리뷰가 없으면 평균 평점은 0으로 반환
+        }
+
+        double sumStars = reviewList.stream()
+                .mapToDouble(review -> review.getStar().getKey()) // Star enum에서 키 값을 가져옴
+                .sum();
+
+        return Math.round(sumStars / reviewList.size());
+    }
+
+
+    private int findNumStarByhouseId(Long houseId) {
+        List<ReviewResponse> reviewList = getByHouseId(houseId);
+        return reviewList.size();
+    }
+    private List<ReviewResponse> getByHouseId(Long houseId) {
+        return reviewRepository.findByHouseId(houseId)
+                .stream()
+                .map(ReviewResponse::from)
                 .collect(Collectors.toList());
     }
 }
