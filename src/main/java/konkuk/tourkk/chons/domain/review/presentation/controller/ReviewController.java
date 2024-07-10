@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @Tag(name = "Review", description = "Review 관련 API. 토큰이 필요합니다.")
@@ -33,10 +33,9 @@ public class ReviewController {
             description = "리뷰 등록에 성공하였습니다."
     )
     @PostMapping
-    public ResponseEntity<ReviewResponse> createReview(@AuthenticationPrincipal User user,
-                                                       @RequestBody
-                                                       ReviewRequest request) {
-        ReviewResponse response = reviewService.createReview(user.getId(), request);
+    public ResponseEntity<ReviewResponse> createReview(@AuthenticationPrincipal User user, @RequestPart(value = "photos") List<MultipartFile> photos,
+        @RequestPart(value = "dto") ReviewRequest request) {
+        ReviewResponse response = reviewService.createReview(user.getId(), photos, request);
         return ResponseEntity.ok(response);
     }
 
@@ -63,8 +62,9 @@ public class ReviewController {
     )
     @PutMapping("/{reviewId}")
     public ResponseEntity<ReviewUpdateResponse> updateReview(@AuthenticationPrincipal User user,
-                                                             @PathVariable Long reviewId, @RequestBody ReviewUpdateRequest request) {
-        ReviewUpdateResponse response = reviewService.updateReview(user.getId(), reviewId, request);
+        @PathVariable Long reviewId, @RequestPart(value = "photos") List<MultipartFile> photos,
+                                                             @RequestPart(value = "dto") ReviewUpdateRequest request) {
+        ReviewUpdateResponse response = reviewService.updateReview(user.getId(), reviewId, photos, request);
         return ResponseEntity.ok(response);
     }
 
@@ -77,9 +77,9 @@ public class ReviewController {
             description = "리뷰 삭제에 성공하였습니다."
     )
     @DeleteMapping("/{reviewId}")
-    public ResponseEntity<Void> deleteReview(@AuthenticationPrincipal Long userId,
-                                             @PathVariable Long reviewId) {
-        reviewService.deleteReview(userId, reviewId);
+    public ResponseEntity<Void> deleteReview(@AuthenticationPrincipal User user,
+        @PathVariable Long reviewId) {
+        reviewService.deleteReview(user.getId(), reviewId);
         return ResponseEntity.noContent().build();
     }
 

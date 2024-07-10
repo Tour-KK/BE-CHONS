@@ -12,6 +12,7 @@ public enum ErrorCode {
 
     // 400
     REFRESH_TOKEN_REQUIRED(BAD_REQUEST, "refresh token이 필요합니다."),
+    FAILED_TO_SAVE_PHOTO(BAD_REQUEST, "스토리지에 사진을 저장하는 데 실패했습니다."),
     EMAIL_NOT_EXTRACTED(BAD_REQUEST, "이메일을 추출할 수 없습니다."),
 
     // 401
