@@ -28,7 +28,7 @@ public class HouseResponse {
 //잠시 아웃
 //    private int operationalStatus;
 //
-    private List<String> availableReservationDates;
+//    private List<String> availableReservationDates;
 
     private String address;
 
