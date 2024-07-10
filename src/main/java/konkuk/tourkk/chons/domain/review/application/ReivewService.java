@@ -13,7 +13,6 @@ import konkuk.tourkk.chons.domain.user.domain.entity.User;
 import konkuk.tourkk.chons.global.common.photo.application.PhotoService;
 import konkuk.tourkk.chons.global.exception.properties.ErrorCode;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,7 +25,6 @@ import static konkuk.tourkk.chons.global.common.photo.application.PhotoService.R
 @Service
 @Transactional
 @RequiredArgsConstructor
-@Slf4j
 public class ReivewService {
 
     private final ReviewRepository reviewRepository;
@@ -35,7 +33,6 @@ public class ReivewService {
     private final HouseService houseService;
 
     public ReviewResponse createReview(Long userId, List<MultipartFile> photos, ReviewRequest request) {
-        log.info("응??");
         User user = userService.findUserById(userId);
         houseService.getHouse(request.getHouseId());
 
@@ -48,7 +45,7 @@ public class ReivewService {
                 .userName(user.getName())
                 .photos(photoUrls)
                 .build();
-        log.info("뭔데");
+
         return ReviewResponse.from(reviewRepository.save(review));
     }
 
