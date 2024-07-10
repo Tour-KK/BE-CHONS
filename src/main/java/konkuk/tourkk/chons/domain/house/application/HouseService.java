@@ -80,9 +80,14 @@ public class HouseService {
     }
 
     private String createRegion(String address, List<AreaListResponse> areaList) {
-        for (AreaListResponse area : areaList) {
-            if (address.contains(area.getAreaName())) {
-                return area.getAreaName();
+        String[] addressParts = address.split(" ");
+        if (addressParts.length > 0) {
+            String firstWord = addressParts[0];
+            // 첫 번째 단어가 areaList에 포함되는지 확인
+            for (AreaListResponse area : areaList) {
+                if (firstWord.equals(area.getAreaName())) {
+                    return area.getAreaName();
+                }
             }
         }
         throw new HouseException(ErrorCode.AREA_NOT_FOUND); // 지역을 찾지 못하면 예외 발생
@@ -104,6 +109,8 @@ public class HouseService {
         house.changeFacilityPhotos(request.getFacilityPhotos());
         house.changeAddress(request.getAddress());
         house.changeRegion(createRegion(request.getAddress(), areaSigunguService.getAreaList()));
+        house.changeMaxNumPeople(request.getMaxNumPeople());
+        house.changePricePerNight(request.getPricePerNight());
     }
 
     public List<HouseResponse> getHouseListByRegion(Long userId, String region) {

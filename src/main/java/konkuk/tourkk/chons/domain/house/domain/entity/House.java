@@ -5,7 +5,9 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -37,26 +39,32 @@ public class House {
     private String phoneNumber;
 
     @Column(nullable = false)
-    private int pricePerNight;
+    private Long pricePerNight;
 
     @Column(nullable = false)
     private Long registrantId;
+
+    @Column(nullable = false)
+    private int maxNumPeople;
     //잠시 아웃
 //    @Column(nullable = true)
 //    private int operationalStatus;
 //
-//    @ElementCollection
-//    @Column(nullable = true)
-//    private List<String> availableReservationDates;
+    @Column(nullable = true)
+    private List<String> availableReservationDates;
 
     @Column(nullable = false)
     private String region;
 
+    @CreationTimestamp
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
+
     @Builder
     public House(String hostName, String houseIntroduction, String freeService,
                  List<String> facilityPhotos, String address, String phoneNumber,
-                 int pricePerNight, Long registrantId, int operationalStatus,
-                 List<String> availableReservationDates, String region) {
+                 Long pricePerNight, Long registrantId, String region,int maxNumPeople,
+                 List<String> availableReservationDates) {
         this.hostName = hostName;
         this.houseIntroduction = houseIntroduction;
         this.freeService = freeService;
@@ -66,8 +74,9 @@ public class House {
         this.pricePerNight = pricePerNight;
         this.registrantId = registrantId;
 //        this.operationalStatus = operationalStatus;
-//        this.availableReservationDates = availableReservationDates;
+        this.availableReservationDates = availableReservationDates;
         this.region = region;
+        this.maxNumPeople = maxNumPeople;
     }
 
     public void changeHostName(String hostName) {
@@ -94,11 +103,15 @@ public class House {
         this.phoneNumber = phoneNumber;
     }
 
-    public void changePricePerNight(int pricePerNight) {
+    public void changePricePerNight(Long pricePerNight) {
         this.pricePerNight = pricePerNight;
     }
 
-    public void changeRegion(String region) {
-        this.region = region;
+    public void changeRegion(String region) { this.region = region; }
+
+    public void changeMaxNumPeople(int maxNumPeople){this.maxNumPeople = maxNumPeople;}
+
+    public void changeAvailableReservationDates(List<String> availableReservationDates){
+        this.availableReservationDates = availableReservationDates;
     }
 }

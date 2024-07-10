@@ -22,17 +22,19 @@ public class HouseResponse {
 
     private String phoneNumber;
 
-    private int pricePerNight;
+    private Long pricePerNight;
 
     private Long registrantId;
 //잠시 아웃
 //    private int operationalStatus;
 //
-//    private List<String> availableReservationDates;
+    private List<String> availableReservationDates;
 
     private String address;
 
     private String region;
+
+    private int maxNumPeople;
 
     public static HouseResponse from(House house) {
         return HouseResponse.builder()
@@ -46,8 +48,9 @@ public class HouseResponse {
                 .pricePerNight(house.getPricePerNight())
                 .registrantId(house.getRegistrantId())
 //                .operationalStatus(house.getOperationalStatus())
-//                .availableReservationDates(house.getAvailableReservationDates())
+                .availableReservationDates(house.getAvailableReservationDates())
                 .region(house.getRegion())
+                .maxNumPeople(house.getMaxNumPeople())
                 .build();
     }
 }
