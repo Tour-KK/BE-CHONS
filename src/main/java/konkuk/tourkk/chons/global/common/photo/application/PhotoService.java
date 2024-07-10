@@ -1,11 +1,7 @@
 package konkuk.tourkk.chons.global.common.photo.application;
 
 import com.amazonaws.SdkClientException;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -16,7 +12,6 @@ import konkuk.tourkk.chons.global.exception.properties.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -43,7 +38,7 @@ public class PhotoService {
 
     public List<String> savePhotos(List<MultipartFile> photos, String folderName) {
         List<String> photoUrls = new ArrayList<>();
-        for(MultipartFile photo : photos) {
+        for (MultipartFile photo : photos) {
             ObjectMetadata objectMetadata = new ObjectMetadata();
             objectMetadata.setContentLength(photo.getSize());
             objectMetadata.setContentType(photo.getContentType());
@@ -63,7 +58,7 @@ public class PhotoService {
     }
 
     public void deleteReviewPhotos(List<String> photos) {
-        for(String url : photos) {
+        for (String url : photos) {
             int index = url.indexOf(bucketName + "/");
             String photoName = url.substring(index + bucketName.length() + 1);
             try {

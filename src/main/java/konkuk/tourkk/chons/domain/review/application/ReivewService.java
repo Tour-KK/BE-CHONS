@@ -1,7 +1,5 @@
 package konkuk.tourkk.chons.domain.review.application;
 
-import java.util.List;
-import java.util.stream.Collectors;
 import konkuk.tourkk.chons.domain.house.application.HouseService;
 import konkuk.tourkk.chons.domain.review.domain.entity.Review;
 import konkuk.tourkk.chons.domain.review.exception.ReviewException;
@@ -19,10 +17,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import static konkuk.tourkk.chons.global.common.photo.application.PhotoService.REVIEW_BUCKET_FOLDER;
-
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static konkuk.tourkk.chons.global.common.photo.application.PhotoService.REVIEW_BUCKET_FOLDER;
 
 @Service
 @Transactional
@@ -37,16 +35,16 @@ public class ReivewService {
     public ReviewResponse createReview(Long userId, List<MultipartFile> photos, ReviewRequest request) {
         User user = userService.findUserById(userId);
         houseService.getHouse(request.getHouseId());
-      
+
         List<String> photoUrls = photoService.savePhotos(photos, REVIEW_BUCKET_FOLDER);
         Review review = Review.builder()
-            .content(request.getContent())
-            .star(request.getStar())
-            .userId(userId)
-            .houseId(request.getHouseId())
-            .userName(user.getName())
+                .content(request.getContent())
+                .star(request.getStar())
+                .userId(userId)
+                .houseId(request.getHouseId())
+                .userName(user.getName())
                 .photos(photoUrls)
-            .build();
+                .build();
 
         return ReviewResponse.from(reviewRepository.save(review));
     }
