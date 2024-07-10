@@ -1,7 +1,6 @@
 package konkuk.tourkk.chons.domain.house.domain.entity;
 
 import jakarta.persistence.*;
-import konkuk.tourkk.chons.domain.review.domain.entity.Review;
 import konkuk.tourkk.chons.domain.review.domain.enums.Star;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -32,7 +31,7 @@ public class House {
     private String freeService;
 
     @ElementCollection
-    private List<String> facilityPhotos;
+    private List<String> photos;
 
     @Column(nullable = false)
     private String address;
@@ -70,12 +69,12 @@ public class House {
 
     @Builder
     public House(String hostName, String houseIntroduction, String freeService,
-                 List<String> facilityPhotos, String address, String phoneNumber,
+                 List<String> photos, String address, String phoneNumber,
                  Long pricePerNight, Long registrantId, String region,int maxNumPeople, int reviewNum, double starAvg) {
         this.hostName = hostName;
         this.houseIntroduction = houseIntroduction;
         this.freeService = freeService;
-        this.facilityPhotos = facilityPhotos;
+        this.photos = photos;
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.pricePerNight = pricePerNight;
@@ -99,8 +98,8 @@ public class House {
         this.freeService = freeService;
     }
 
-    public void changeFacilityPhotos(List<String> facilityPhotos) {
-        this.facilityPhotos = facilityPhotos;
+    public void changePhotos(List<String> photos) {
+        this.photos = photos;
     }
 
     public void changeAddress(String address) {

@@ -13,7 +13,7 @@ public class HouseRequest {
 
     private String freeService;
 
-    private List<String> facilityPhotos;
+    private List<String> photos;
 
     private String phoneNumber;
 

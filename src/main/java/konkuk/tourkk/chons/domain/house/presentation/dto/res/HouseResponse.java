@@ -18,7 +18,7 @@ public class HouseResponse {
 
     private String freeService;
 
-    private List<String> facilityPhotos;
+    private List<String> photos;
 
     private String phoneNumber;
 
@@ -48,7 +48,7 @@ public class HouseResponse {
                 .hostName(house.getHostName())
                 .houseIntroduction(house.getHouseIntroduction())
                 .freeService(house.getFreeService())
-                .facilityPhotos(house.getFacilityPhotos())
+                .photos(house.getPhotos())
                 .address(house.getAddress())
                 .phoneNumber(house.getPhoneNumber())
                 .pricePerNight(house.getPricePerNight())

@@ -1,5 +1,7 @@
 package konkuk.tourkk.chons.domain.house.application;
 
+import static konkuk.tourkk.chons.global.common.photo.application.PhotoService.HOUSE_BUCKET_FOLDER;
+
 import java.util.Optional;
 import konkuk.tourkk.chons.domain.areasigungu.application.dto.res.AreaListResponse;
 import konkuk.tourkk.chons.domain.areasigungu.application.service.AreaSigunguService;
@@ -8,10 +10,10 @@ import konkuk.tourkk.chons.domain.house.exception.HouseException;
 import konkuk.tourkk.chons.domain.house.infrastructure.HouseRepository;
 import konkuk.tourkk.chons.domain.house.presentation.dto.req.HouseRequest;
 import konkuk.tourkk.chons.domain.house.presentation.dto.res.HouseResponse;
-import konkuk.tourkk.chons.domain.like.application.LikeService;
 import konkuk.tourkk.chons.domain.like.domain.entity.Like;
 import konkuk.tourkk.chons.domain.like.infrastructure.LikeRepository;
 import konkuk.tourkk.chons.domain.user.application.UserService;
+import konkuk.tourkk.chons.global.common.photo.application.PhotoService;
 import konkuk.tourkk.chons.global.exception.properties.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.web.multipart.MultipartFile;
 
 @Transactional
 @Service
@@ -29,14 +32,16 @@ public class HouseService {
     private final AreaSigunguService areaSigunguService;
     private final UserService userService;
     private final LikeRepository likeRepository;
+    private final PhotoService photoService;
 
-    public HouseResponse createHouse(Long userId, HouseRequest request) {
+    public HouseResponse createHouse(Long userId, List<MultipartFile> photos, HouseRequest request) {
         List<AreaListResponse> areaList = areaSigunguService.getAreaList();
         String address = request.getAddress();
         String region = createRegion(address, areaList);
-
+        List<String> photoUrls = photoService.savePhotos(photos, HOUSE_BUCKET_FOLDER);
         House house = House.builder()
                 .hostName(request.getHostName())
+                .photos(photoUrls)
                 .houseIntroduction(request.getHouseIntroduction())
                 .freeService(request.getFreeService())
                 .address(request.getAddress())
@@ -74,13 +79,16 @@ public class HouseService {
         userService.findUserById(userId);
 
         House house = checkAccess(userId, houseId);
+        photoService.deletePhotos(house.getPhotos());
         houseRepository.delete(house);
     }
 
-    public HouseResponse updateHouse(Long userId, Long houseId, HouseRequest request) {
+    public HouseResponse updateHouse(Long userId, Long houseId, List<MultipartFile> photos, HouseRequest request) {
         userService.findUserById(userId);
-
         House house = checkAccess(userId, houseId);
+
+        photoService.deletePhotos(house.getPhotos());
+        photoService.savePhotos(photos, HOUSE_BUCKET_FOLDER);
         changeHouse(house, request);
         boolean isLiked = isLikedHouse(userId, houseId);
         return HouseResponse.of(house, isLiked);
@@ -151,7 +159,7 @@ public class HouseService {
         house.changeHouseIntroduction(request.getHouseIntroduction());
         house.changeFreeService(request.getFreeService());
         house.changePhoneNumber(request.getPhoneNumber());
-        house.changeFacilityPhotos(request.getFacilityPhotos());
+        house.changePhotos(request.getPhotos());
         house.changeAddress(request.getAddress());
         house.changeRegion(createRegion(request.getAddress(), areaSigunguService.getAreaList()));
         house.changeMaxNumPeople(request.getMaxNumPeople());

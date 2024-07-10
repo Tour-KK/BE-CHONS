@@ -39,9 +39,11 @@ public class PhotoService {
     public static final String REVIEW_BUCKET_FOLDER = "review/";
 
     public List<String> savePhotos(List<MultipartFile> photos, String folderName) {
-        log.info("응?1");
         List<String> photoUrls = new ArrayList<>();
         for (MultipartFile photo : photos) {
+            if(photo.getSize() == 0) {
+                continue;
+            }
             ObjectMetadata objectMetadata = new ObjectMetadata();
             objectMetadata.setContentLength(photo.getSize());
             objectMetadata.setContentType(photo.getContentType());
@@ -51,7 +53,7 @@ public class PhotoService {
                         .withCannedAcl(CannedAccessControlList.PublicRead);
                 s3.putObject(putObjectRequest);
             } catch (SdkClientException | IOException e) {
-                throw new PhotoException(ErrorCode.FAILED_TO_SAVE_PHOTO, e.getMessage());
+                throw new PhotoException(ErrorCode.PHOTO_NETWORK_ERROR, e.getMessage());
             }
 
             photoUrls.add(endPoint + "/" + folderName + photoName);
@@ -60,14 +62,14 @@ public class PhotoService {
         return photoUrls;
     }
 
-    public void deleteReviewPhotos(List<String> photos) {
+    public void deletePhotos(List<String> photos) {
         for (String url : photos) {
             int index = url.indexOf(bucketName + "/");
             String photoName = url.substring(index + bucketName.length() + 1);
             try {
                 s3.deleteObject(bucketName, photoName);
             } catch (AmazonS3Exception e) {
-                throw new PhotoException(ErrorCode.FAILED_TO_SAVE_PHOTO, e.getMessage());
+                throw new PhotoException(ErrorCode.PHOTO_NETWORK_ERROR, e.getMessage());
             }
         }
     }

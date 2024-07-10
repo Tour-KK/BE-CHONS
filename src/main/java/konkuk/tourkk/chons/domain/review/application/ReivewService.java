@@ -1,10 +1,8 @@
 package konkuk.tourkk.chons.domain.review.application;
 
-import konkuk.tourkk.chons.domain.house.application.HouseService;
 import konkuk.tourkk.chons.domain.house.domain.entity.House;
 import konkuk.tourkk.chons.domain.house.exception.HouseException;
 import konkuk.tourkk.chons.domain.house.infrastructure.HouseRepository;
-import konkuk.tourkk.chons.domain.house.presentation.dto.res.HouseResponse;
 import konkuk.tourkk.chons.domain.review.domain.entity.Review;
 import konkuk.tourkk.chons.domain.review.exception.ReviewException;
 import konkuk.tourkk.chons.domain.review.infrastructure.ReviewRepository;
@@ -66,7 +64,7 @@ public class ReivewService {
         userService.findUserById(userId);
         Review review = checkAccess(userId, reviewId);
 
-        photoService.deleteReviewPhotos(review.getPhotos());
+        photoService.deletePhotos(review.getPhotos());
         photoService.savePhotos(photos, REVIEW_BUCKET_FOLDER);
         review.changeContent(request.getContent());
         review.changeStar(request.getStar());
@@ -79,7 +77,7 @@ public class ReivewService {
         findReviewById(reviewId);
 
         Review review = checkAccess(userId, reviewId);
-        photoService.deleteReviewPhotos(review.getPhotos());
+        photoService.deletePhotos(review.getPhotos());
         reviewRepository.delete(review);
     }
 

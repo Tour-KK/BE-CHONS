@@ -9,6 +9,7 @@ import konkuk.tourkk.chons.domain.house.application.HouseService;
 import konkuk.tourkk.chons.domain.house.presentation.dto.req.HouseListRequest;
 import konkuk.tourkk.chons.domain.house.presentation.dto.req.HouseRequest;
 import konkuk.tourkk.chons.domain.house.presentation.dto.res.HouseResponse;
+import konkuk.tourkk.chons.domain.review.presentation.dto.req.ReviewRequest;
 import konkuk.tourkk.chons.domain.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "House", description = "집 관련 API. 토큰이 필요합니다.")
 @RequestMapping("/api/v1/house")
@@ -35,10 +37,10 @@ public class HouseController {
             description = "집 등록에 성공하였습니다."
     )
     @PostMapping
-    public ResponseEntity<HouseResponse> createHouse(@AuthenticationPrincipal User user,
-                                                     @RequestBody HouseRequest request) {
+    public ResponseEntity<HouseResponse> createHouse(@AuthenticationPrincipal User user, @RequestPart(value = "photos") List<MultipartFile> photos,
+        @RequestPart(value = "dto") HouseRequest request) {
 
-        HouseResponse response = houseService.createHouse(user.getId(), request);
+        HouseResponse response = houseService.createHouse(user.getId(), photos, request);
         return ResponseEntity.ok(response);
     }
 
@@ -93,8 +95,9 @@ public class HouseController {
     )
     @PutMapping("/{houseId}")
     public ResponseEntity<HouseResponse> updateHouse(@AuthenticationPrincipal User user,
-                                                     @PathVariable Long houseId, @RequestBody HouseRequest request) {
-        HouseResponse response = houseService.updateHouse(user.getId(), houseId, request);
+                                                     @PathVariable Long houseId, @RequestPart(value = "photos") List<MultipartFile> photos,
+                                                    @RequestBody HouseRequest request) {
+        HouseResponse response = houseService.updateHouse(user.getId(), houseId, photos, request);
         return ResponseEntity.ok(response);
     }
 
