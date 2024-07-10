@@ -104,6 +104,8 @@ public class HouseService {
         house.changeFacilityPhotos(request.getFacilityPhotos());
         house.changeAddress(request.getAddress());
         house.changeRegion(createRegion(request.getAddress(), areaSigunguService.getAreaList()));
+        house.changeMaxNumPeople(request.getMaxNumPeople());
+        house.changePricePerNight(request.getPricePerNight());
     }
 
     public List<HouseResponse> getHouseListByRegion(Long userId, String region) {

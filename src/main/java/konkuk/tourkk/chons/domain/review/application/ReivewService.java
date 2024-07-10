@@ -60,7 +60,7 @@ public class ReivewService {
     }
 
     public ReviewUpdateResponse updateReview(Long userId, Long reviewId,
-                                             List<MultipartFile> photos, ReviewUpdateRequest request) {
+                                             List<MultipartFile> photos,
                                              ReviewUpdateRequest request) {
         userService.findUserById(userId);
 
