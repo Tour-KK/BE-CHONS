@@ -9,11 +9,7 @@ import konkuk.tourkk.chons.domain.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Like", description = "좋아요 관련 API. 토큰이 필요합니다.")
 @RestController
@@ -33,7 +29,7 @@ public class LikeController {
     )
     @PostMapping("/{houseId}")
     public ResponseEntity<LikeResponse> like(@AuthenticationPrincipal User user,
-        @PathVariable Long houseId) {
+                                             @PathVariable Long houseId) {
         LikeResponse response = likeService.like(user.getId(), houseId);
         return ResponseEntity.ok(response);
     }
@@ -48,7 +44,7 @@ public class LikeController {
     )
     @DeleteMapping("/{houseId}")
     public ResponseEntity<Void> cancelLike(@AuthenticationPrincipal User user,
-        @PathVariable Long houseId) {
+                                           @PathVariable Long houseId) {
         likeService.cancelLike(user.getId(), houseId);
         return ResponseEntity.noContent().build();
     }

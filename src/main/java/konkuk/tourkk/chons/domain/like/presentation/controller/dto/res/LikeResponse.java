@@ -14,8 +14,8 @@ public class LikeResponse {
 
     public static LikeResponse from(Like like) {
         return LikeResponse.builder()
-            .houseId(like.getHouseId())
-            .userId(like.getUserId())
-            .build();
+                .houseId(like.getHouseId())
+                .userId(like.getUserId())
+                .build();
     }
 }

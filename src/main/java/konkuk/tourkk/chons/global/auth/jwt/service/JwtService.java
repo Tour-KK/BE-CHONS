@@ -4,9 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import jakarta.servlet.http.HttpServletRequest;
-import java.time.Duration;
-import java.util.Date;
-import java.util.Optional;
+import jakarta.servlet.http.HttpServletResponse;
 import konkuk.tourkk.chons.domain.user.infrastructure.UserRepository;
 import konkuk.tourkk.chons.global.auth.exception.AuthException;
 import konkuk.tourkk.chons.global.common.redis.RedisService;
@@ -15,6 +13,10 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.time.Duration;
+import java.util.Date;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -48,18 +50,18 @@ public class JwtService {
     public String createAccessToken(String email) {
         Date now = new Date();
         return JWT.create()
-            .withSubject(ACCESS_TOKEN_SUBJECT)
-            .withExpiresAt(new Date(now.getTime() + accessTokenExpirationPeriod))
-            .withClaim(EMAIL_CLAIM, email)
-            .sign(Algorithm.HMAC512(secretKey));
+                .withSubject(ACCESS_TOKEN_SUBJECT)
+                .withExpiresAt(new Date(now.getTime() + accessTokenExpirationPeriod))
+                .withClaim(EMAIL_CLAIM, email)
+                .sign(Algorithm.HMAC512(secretKey));
     }
 
     public String createRefreshToken() {
         Date now = new Date();
         return JWT.create()
-            .withSubject(REFRESH_TOKEN_SUBJECT)
-            .withExpiresAt(new Date(now.getTime() + refreshTokenExpirationPeriod))
-            .sign(Algorithm.HMAC512(secretKey));
+                .withSubject(REFRESH_TOKEN_SUBJECT)
+                .withExpiresAt(new Date(now.getTime() + refreshTokenExpirationPeriod))
+                .sign(Algorithm.HMAC512(secretKey));
     }
 
     public String reissueRefreshToken(String email) {
@@ -70,23 +72,23 @@ public class JwtService {
 
     public Optional<String> extractRefreshToken(HttpServletRequest request) {
         return Optional.ofNullable(request.getHeader(refreshHeader))
-            .filter(refreshToken -> refreshToken.startsWith(BEARER))
-            .map(refreshToken -> refreshToken.replace(BEARER, ""));
+                .filter(refreshToken -> refreshToken.startsWith(BEARER))
+                .map(refreshToken -> refreshToken.replace(BEARER, ""));
     }
 
     public Optional<String> extractAccessToken(HttpServletRequest request) {
         return Optional.ofNullable(request.getHeader(accessHeader))
-            .filter(accessToken -> accessToken.startsWith(BEARER))
-            .map(accessToken -> accessToken.replace(BEARER, ""));
+                .filter(accessToken -> accessToken.startsWith(BEARER))
+                .map(accessToken -> accessToken.replace(BEARER, ""));
     }
 
     public Optional<String> extractEmail(String accessToken) {
         try {
             return Optional.ofNullable(JWT.require(Algorithm.HMAC512(secretKey))
-                .build()
-                .verify(accessToken) //검증
-                .getClaim(EMAIL_CLAIM) //추출
-                .asString());
+                    .build()
+                    .verify(accessToken) //검증
+                    .getClaim(EMAIL_CLAIM) //추출
+                    .asString());
         } catch (JWTVerificationException e) {
             throw new AuthException(ErrorCode.SECURITY_UNAUTHORIZED);
         }
@@ -95,7 +97,7 @@ public class JwtService {
     //RefreshToken redis 저장
     public void updateRefreshToken(String refreshToken, String email) {
         redisService.setValues(refreshToken, email,
-            Duration.ofMillis(refreshTokenExpirationPeriod));
+                Duration.ofMillis(refreshTokenExpirationPeriod));
     }
 
     public boolean isTokenValid(String token) {
@@ -116,7 +118,7 @@ public class JwtService {
 
     public void invalidAccessToken(String accessToken) {
         redisService.setValues(accessToken, "logout",
-            Duration.ofMillis(accessTokenExpirationPeriod));
+                Duration.ofMillis(accessTokenExpirationPeriod));
     }
 
     public String findRefreshTokenAndExtractEmail(String refreshToken) {
@@ -126,5 +128,19 @@ public class JwtService {
             throw new AuthException(ErrorCode.SECURITY_INVALID_REFRESH_TOKEN);
         }
         return email;
+    }
+
+    private void sendTokens(HttpServletResponse response, String reissuedAccessToken,
+                            String reissuedRefreshToken) {
+        response.setHeader(accessHeader, BEARER + reissuedAccessToken);
+        response.setHeader(refreshHeader, BEARER + reissuedRefreshToken);
+    }
+
+    public void reissueAndSendTokens(HttpServletResponse response, String refreshToken) {
+        String email = findRefreshTokenAndExtractEmail(refreshToken);
+        String reissuedRefreshToken = reissueRefreshToken(email);
+        String reissuedAccessToken = createAccessToken(email);
+
+        sendTokens(response, reissuedAccessToken, reissuedRefreshToken);
     }
 }

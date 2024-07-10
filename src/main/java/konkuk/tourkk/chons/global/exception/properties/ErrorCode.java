@@ -1,15 +1,10 @@
 package konkuk.tourkk.chons.global.exception.properties;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.CONFLICT;
-import static org.springframework.http.HttpStatus.FORBIDDEN;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
+
+import static org.springframework.http.HttpStatus.*;
 
 @Getter
 @AllArgsConstructor
@@ -17,6 +12,8 @@ public enum ErrorCode {
 
     // 400
     REFRESH_TOKEN_REQUIRED(BAD_REQUEST, "refresh token이 필요합니다."),
+    PHOTO_NETWORK_ERROR(BAD_REQUEST, "스토리지에 사진을 저장하는 데 실패했습니다."),
+    EMAIL_NOT_EXTRACTED(BAD_REQUEST, "이메일을 추출할 수 없습니다."),
 
     // 401
     SECURITY_UNAUTHORIZED(UNAUTHORIZED, "인증 정보가 유효하지 않습니다"),

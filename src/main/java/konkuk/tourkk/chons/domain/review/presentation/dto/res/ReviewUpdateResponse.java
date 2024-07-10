@@ -16,9 +16,9 @@ public class ReviewUpdateResponse {
 
     public static ReviewUpdateResponse of(Long reviewId, String content, Star star) {
         return ReviewUpdateResponse.builder()
-            .reviewId(reviewId)
-            .content(content)
-            .star(star)
-            .build();
+                .reviewId(reviewId)
+                .content(content)
+                .star(star)
+                .build();
     }
 }

@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.Optional;
 import konkuk.tourkk.chons.domain.user.application.UserService;
 import konkuk.tourkk.chons.domain.user.domain.entity.User;
 import konkuk.tourkk.chons.domain.user.presentation.dto.res.UserInfoResponse;
@@ -16,6 +15,8 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Optional;
 
 @Tag(name = "User", description = "User 관련 API. 토큰이 필요합니다.")
 @RestController
@@ -50,7 +51,7 @@ public class UserController {
     )
     @DeleteMapping
     public ResponseEntity<Void> withdraw(HttpServletRequest request,
-        @AuthenticationPrincipal User user) {
+                                         @AuthenticationPrincipal User user) {
         Optional<String> accessToken = jwtService.extractAccessToken(request);
         Optional<String> refreshToken = jwtService.extractRefreshToken(request);
         userService.withdraw(user.getId(), accessToken, refreshToken);

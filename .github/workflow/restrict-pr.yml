@@ -1,0 +1,15 @@
+name: Restrict PRs
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  restrict_pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Target Branch
+        if: github.event.pull_request.base.ref != 'develop'
+        run: |
+          echo "Pull requests can only be merged into 'develop'."
+          exit 1

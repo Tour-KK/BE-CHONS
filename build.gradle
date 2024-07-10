@@ -35,6 +35,12 @@ dependencies {
     // Spring Webflux
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
+    // aws s3 sdk
+    implementation 'com.amazonaws:aws-java-sdk-s3:1.11.238'
+    implementation 'javax.xml.bind:jaxb-api:2.3.1'
+    implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.1'
+    implementation 'com.sun.xml.bind:jaxb-core:2.3.0.1'
+    implementation 'com.sun.xml.bind:jaxb-impl:2.3.1'
     //JWT
     implementation 'com.auth0:java-jwt:4.2.1'
     //swagger

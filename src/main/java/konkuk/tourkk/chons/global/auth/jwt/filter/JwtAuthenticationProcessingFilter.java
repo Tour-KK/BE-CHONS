@@ -4,7 +4,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import konkuk.tourkk.chons.domain.user.domain.entity.User;
 import konkuk.tourkk.chons.domain.user.infrastructure.UserRepository;
 import konkuk.tourkk.chons.global.auth.exception.AuthException;
@@ -20,6 +19,8 @@ import org.springframework.security.core.authority.mapping.NullAuthoritiesMapper
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import java.io.IOException;
+
 @RequiredArgsConstructor
 @Slf4j
 public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
@@ -32,15 +33,15 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-        FilterChain filterChain) throws ServletException, IOException {
+                                    FilterChain filterChain) throws ServletException, IOException {
         checkLogout(request); //로그아웃한 사용자면 인증 처리 안함
 
         jwtService.extractAccessToken(request)
-            .ifPresent(accessToken -> {
-                if (!jwtService.isTokenValid(accessToken)) { //accessToken 만료 시
-                    throw new AuthException(ErrorCode.SECURITY_INVALID_ACCESS_TOKEN);
-                }
-            });
+                .ifPresent(accessToken -> {
+                    if (!jwtService.isTokenValid(accessToken)) { //accessToken 만료 시
+                        throw new AuthException(ErrorCode.SECURITY_INVALID_ACCESS_TOKEN);
+                    }
+                });
         checkAccessTokenAndSaveAuthentication(request, response, filterChain);
     }
 
@@ -54,10 +55,10 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     }
 
     private void checkAccessTokenAndSaveAuthentication(HttpServletRequest request,
-        HttpServletResponse response, FilterChain filterChain) {
+                                                       HttpServletResponse response, FilterChain filterChain) {
         jwtService.extractAccessToken(request)
-            .flatMap(jwtService::extractEmail)
-            .flatMap(userRepository::findByEmail).ifPresent(this::saveAuthentication);
+                .flatMap(jwtService::extractEmail)
+                .flatMap(userRepository::findByEmail).ifPresent(this::saveAuthentication);
 
         try {
             filterChain.doFilter(request, response);
@@ -68,7 +69,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     private void saveAuthentication(User myUser) {
         Authentication authentication = new UsernamePasswordAuthenticationToken(myUser, null,
-            authoritiesMapper.mapAuthorities(myUser.getAuthorities()));
+                authoritiesMapper.mapAuthorities(myUser.getAuthorities()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }

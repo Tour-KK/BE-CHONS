@@ -20,6 +20,8 @@ import konkuk.tourkk.chons.global.exception.properties.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import static java.lang.Integer.parseInt;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -135,7 +137,7 @@ public class ReservationService {
         House house = houseRepository.findById(houseId)
                 .orElseThrow(() -> new HouseException(ErrorCode.HOUSE_NOT_FOUND));
 
-        int pricePerNight = house.getPricePerNight();
+        int pricePerNight = house.getPricePerNight().intValue();
         int totalPrice = 0;
 
         LocalDate currentDate = startAt;

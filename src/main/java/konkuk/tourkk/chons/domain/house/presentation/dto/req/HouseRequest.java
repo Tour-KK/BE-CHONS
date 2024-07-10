@@ -3,6 +3,7 @@ package konkuk.tourkk.chons.domain.house.presentation.dto.req;
 import lombok.Getter;
 
 import java.util.List;
+
 @Getter
 public class HouseRequest {
 
@@ -12,11 +13,11 @@ public class HouseRequest {
 
     private String freeService;
 
-    private List<String> facilityPhotos;
+    private List<String> photos;
 
     private String phoneNumber;
 
-    private int pricePerNight;
+    private Long pricePerNight;
 
     private Long registrantId;
 //잠시 아웃
@@ -25,4 +26,5 @@ public class HouseRequest {
 //    private List<String> availableReservationDates;
 
     private String address;
+    private int maxNumPeople;
 }
