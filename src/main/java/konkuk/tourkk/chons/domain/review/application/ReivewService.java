@@ -15,7 +15,6 @@ import konkuk.tourkk.chons.domain.user.domain.entity.User;
 import konkuk.tourkk.chons.global.common.photo.application.PhotoService;
 import konkuk.tourkk.chons.global.exception.properties.ErrorCode;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,7 +27,6 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @RequiredArgsConstructor
-@Slf4j
 public class ReivewService {
 
     private final ReviewRepository reviewRepository;
@@ -61,7 +59,6 @@ public class ReivewService {
 
     public ReviewUpdateResponse updateReview(Long userId, Long reviewId,
                                              List<MultipartFile> photos, ReviewUpdateRequest request) {
-                                             ReviewUpdateRequest request) {
         userService.findUserById(userId);
 
         Review review = checkAccess(userId, reviewId);
@@ -75,16 +72,11 @@ public class ReivewService {
     }
 
     public void deleteReview(Long userId, Long reviewId) {
-        log.info("service1" + userId);
         userService.findUserById(userId);
-        log.info("service2");
         findReviewById(reviewId);
 
-        log.info("service3");
         Review review = checkAccess(userId, reviewId);
-        log.info("check");
         photoService.deleteReviewPhotos(review.getPhotos());
-        log.info("사진 삭제");
         reviewRepository.delete(review);
     }
 
