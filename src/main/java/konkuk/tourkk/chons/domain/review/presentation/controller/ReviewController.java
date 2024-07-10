@@ -1,11 +1,8 @@
 package konkuk.tourkk.chons.domain.review.presentation.controller;
 
-import java.util.List;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import konkuk.tourkk.chons.domain.house.application.apiresponse.AreaListResponse;
 import konkuk.tourkk.chons.domain.review.application.ReivewService;
 import konkuk.tourkk.chons.domain.review.presentation.dto.req.ReviewRequest;
 import konkuk.tourkk.chons.domain.review.presentation.dto.req.ReviewUpdateRequest;
@@ -17,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import java.util.List;
 
 @Tag(name = "Review", description = "Review 관련 API. 토큰이 필요합니다.")
 @RestController

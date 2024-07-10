@@ -1,16 +1,18 @@
 package konkuk.tourkk.chons.domain.house.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "house_TB")
-public class House{
+public class House {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -67,27 +69,35 @@ public class House{
 //        this.availableReservationDates = availableReservationDates;
         this.region = region;
     }
+
     public void changeHostName(String hostName) {
         this.hostName = hostName;
     }
+
     public void changeHouseIntroduction(String houseIntroduction) {
         this.houseIntroduction = houseIntroduction;
     }
+
     public void changeFreeService(String freeService) {
         this.freeService = freeService;
     }
+
     public void changeFacilityPhotos(List<String> facilityPhotos) {
         this.facilityPhotos = facilityPhotos;
     }
+
     public void changeAddress(String address) {
         this.address = address;
     }
+
     public void changePhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+
     public void changePricePerNight(int pricePerNight) {
         this.pricePerNight = pricePerNight;
     }
+
     public void changeRegion(String region) {
         this.region = region;
     }
