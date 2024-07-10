@@ -25,7 +25,7 @@ public class LikeService {
     public LikeResponse like(Long userId, Long houseId) {
         isExist(userId, houseId);
         userService.findUserById(userId);
-        houseService.getHouse(houseId);
+        houseService.getHouse(userId, houseId);
 
         Like like = Like.builder()
                 .userId(userId)
@@ -38,7 +38,7 @@ public class LikeService {
 
     public void cancelLike(Long userId, Long houseId) {
         userService.findUserById(userId);
-        houseService.getHouse(houseId);
+        houseService.getHouse(userId, houseId);
 
         Like like = findByUserIdAndHouseId(userId, houseId);
         likeRepository.delete(like);

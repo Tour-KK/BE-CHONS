@@ -1,5 +1,6 @@
 package konkuk.tourkk.chons.domain.house.application;
 
+import java.util.Optional;
 import konkuk.tourkk.chons.domain.areasigungu.application.dto.res.AreaListResponse;
 import konkuk.tourkk.chons.domain.areasigungu.application.service.AreaSigunguService;
 import konkuk.tourkk.chons.domain.house.domain.entity.House;
@@ -7,6 +8,9 @@ import konkuk.tourkk.chons.domain.house.exception.HouseException;
 import konkuk.tourkk.chons.domain.house.infrastructure.HouseRepository;
 import konkuk.tourkk.chons.domain.house.presentation.dto.req.HouseRequest;
 import konkuk.tourkk.chons.domain.house.presentation.dto.res.HouseResponse;
+import konkuk.tourkk.chons.domain.like.application.LikeService;
+import konkuk.tourkk.chons.domain.like.domain.entity.Like;
+import konkuk.tourkk.chons.domain.like.infrastructure.LikeRepository;
 import konkuk.tourkk.chons.domain.user.application.UserService;
 import konkuk.tourkk.chons.global.exception.properties.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -24,39 +28,40 @@ public class HouseService {
     private final HouseRepository houseRepository;
     private final AreaSigunguService areaSigunguService;
     private final UserService userService;
+    private final LikeRepository likeRepository;
 
     public HouseResponse createHouse(Long userId, HouseRequest request) {
         List<AreaListResponse> areaList = areaSigunguService.getAreaList();
         String address = request.getAddress();
         String region = createRegion(address, areaList);
 
-        //시설 사진 db에 저장하는 법 추가해야함
         House house = House.builder()
                 .hostName(request.getHostName())
                 .houseIntroduction(request.getHouseIntroduction())
                 .freeService(request.getFreeService())
-                .facilityPhotos(request.getFacilityPhotos())
                 .address(request.getAddress())
                 .phoneNumber(request.getPhoneNumber())
                 .pricePerNight(request.getPricePerNight())
                 .registrantId(userId)
-//                .operationalStatus(request.getOperationalStatus())
-//                .availableReservationDates(request.getAvailableReservationDates())
+                .maxNumPeople(request.getMaxNumPeople())
+                .reviewNum(0)
+                .starAvg(0.0)
                 .region(region) // 지역 정보 추가
                 .build();
 
-        return HouseResponse.from(houseRepository.save(house));
+        return HouseResponse.of(houseRepository.save(house), false);
     }
 
-    @Transactional(readOnly = true)
-    public List<HouseResponse> getAllHouses() {
-        return houseRepository.findAll().stream().map(HouseResponse::from).collect(Collectors.toList());
-    }
+//    @Transactional(readOnly = true)
+//    public List<HouseResponse> getAllHouses() {
+//        return houseRepository.findAll().stream().map(HouseResponse::of).collect(Collectors.toList());
+//    }
 
     @Transactional(readOnly = true)
-    public HouseResponse getHouse(Long houseId) {
+    public HouseResponse getHouse(Long userId, Long houseId) {
         House house = findHouseById(houseId);
-        return HouseResponse.from(house);
+        boolean isLiked = isLikedHouse(userId, houseId);
+        return HouseResponse.of(house, isLiked);
     }
 
     public void deleteHouse(Long userId, Long houseId) {
@@ -71,7 +76,8 @@ public class HouseService {
 
         House house = checkAccess(userId, houseId);
         changeHouse(house, request);
-        return HouseResponse.from(house);
+        boolean isLiked = isLikedHouse(userId, houseId);
+        return HouseResponse.of(house, isLiked);
     }
 
     private House findHouseById(Long houseId) {
@@ -85,7 +91,7 @@ public class HouseService {
             String firstWord = addressParts[0];
             // 첫 번째 단어가 areaList에 포함되는지 확인
             for (AreaListResponse area : areaList) {
-                if (firstWord.equals(area.getAreaName())) {
+                if (firstWord.contains(area.getAreaName())) {
                     return area.getAreaName();
                 }
             }
@@ -117,7 +123,10 @@ public class HouseService {
         userService.findUserById(userId);
         return houseRepository.findByRegion(region)
                 .stream()
-                .map(HouseResponse::from)
+                .map(house -> {
+                    boolean isLiked = isLikedHouse(userId, house.getId());
+                    return HouseResponse.of(house, isLiked);
+                })
                 .collect(Collectors.toList());
     }
 
@@ -125,7 +134,15 @@ public class HouseService {
         userService.findUserById(userId);
         return houseRepository.findByRegistrantId(userId)
                 .stream()
-                .map(HouseResponse::from)
+                .map(house -> {
+                    boolean isLiked = isLikedHouse(userId, house.getId());
+                    return HouseResponse.of(house, isLiked);
+                })
                 .collect(Collectors.toList());
+    }
+
+    private boolean isLikedHouse(Long userId, Long houseId) {
+        Optional<Like> like = likeRepository.findByUserIdAndHouseId(userId, houseId);
+        return like.isPresent();
     }
 }

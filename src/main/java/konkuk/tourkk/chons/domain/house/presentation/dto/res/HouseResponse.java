@@ -36,7 +36,13 @@ public class HouseResponse {
 
     private int maxNumPeople;
 
-    public static HouseResponse from(House house) {
+    private double starAvg;
+
+    private int reviewNum;
+
+    private boolean isLiked;
+
+    public static HouseResponse of(House house, boolean isLiked) {
         return HouseResponse.builder()
                 .id(house.getId())
                 .hostName(house.getHostName())
@@ -48,9 +54,11 @@ public class HouseResponse {
                 .pricePerNight(house.getPricePerNight())
                 .registrantId(house.getRegistrantId())
 //                .operationalStatus(house.getOperationalStatus())
-                .availableReservationDates(house.getAvailableReservationDates())
                 .region(house.getRegion())
                 .maxNumPeople(house.getMaxNumPeople())
+                .reviewNum(house.getReviewNum())
+                .starAvg(house.getStarAvg())
+                .isLiked(isLiked)
                 .build();
     }
 }

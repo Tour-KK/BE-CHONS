@@ -1,6 +1,8 @@
 package konkuk.tourkk.chons.domain.house.domain.entity;
 
 import jakarta.persistence.*;
+import konkuk.tourkk.chons.domain.review.domain.entity.Review;
+import konkuk.tourkk.chons.domain.review.domain.enums.Star;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,7 +31,7 @@ public class House {
     @Column(nullable = false)
     private String freeService;
 
-    @Column(nullable = true)
+    @ElementCollection
     private List<String> facilityPhotos;
 
     @Column(nullable = false)
@@ -46,13 +48,19 @@ public class House {
 
     @Column(nullable = false)
     private int maxNumPeople;
+
+    @Column(nullable = false)
+    private int reviewNum;
+
+    @Column(nullable = false)
+    private double starAvg;
+
+    @Column(nullable = false)
+    private double totalStar;
     //잠시 아웃
 //    @Column(nullable = true)
 //    private int operationalStatus;
 //
-    @Column(nullable = true)
-    private List<String> availableReservationDates;
-
     @Column(nullable = false)
     private String region;
 
@@ -63,8 +71,7 @@ public class House {
     @Builder
     public House(String hostName, String houseIntroduction, String freeService,
                  List<String> facilityPhotos, String address, String phoneNumber,
-                 Long pricePerNight, Long registrantId, String region,int maxNumPeople,
-                 List<String> availableReservationDates) {
+                 Long pricePerNight, Long registrantId, String region,int maxNumPeople, int reviewNum, double starAvg) {
         this.hostName = hostName;
         this.houseIntroduction = houseIntroduction;
         this.freeService = freeService;
@@ -74,9 +81,10 @@ public class House {
         this.pricePerNight = pricePerNight;
         this.registrantId = registrantId;
 //        this.operationalStatus = operationalStatus;
-        this.availableReservationDates = availableReservationDates;
         this.region = region;
         this.maxNumPeople = maxNumPeople;
+        this.reviewNum = reviewNum;
+        this.starAvg = starAvg;
     }
 
     public void changeHostName(String hostName) {
@@ -111,7 +119,20 @@ public class House {
 
     public void changeMaxNumPeople(int maxNumPeople){this.maxNumPeople = maxNumPeople;}
 
-    public void changeAvailableReservationDates(List<String> availableReservationDates){
-        this.availableReservationDates = availableReservationDates;
+    public void addReviewNum() {
+        this.reviewNum ++;
+    }
+
+    public void changeStarAvg(Star star) {
+        double originalTotal;
+        if(reviewNum - 1 == 0) {
+            originalTotal = 0;
+        } else {
+            originalTotal = starAvg * (reviewNum - 1);
+        }
+        totalStar = originalTotal + star.getKey();
+
+        double result = totalStar/reviewNum;
+        this.starAvg = Math.round(result * 1000) / 1000.0;
     }
 }

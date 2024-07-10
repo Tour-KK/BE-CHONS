@@ -52,8 +52,8 @@ public class HouseController {
             description = "집 상세 조회에 성공하였습니다."
     )
     @GetMapping("/{houseId}")
-    public ResponseEntity<HouseResponse> getHouse(@PathVariable Long houseId) {
-        return ResponseEntity.ok(houseService.getHouse(houseId));
+    public ResponseEntity<HouseResponse> getHouse(@AuthenticationPrincipal User user, @PathVariable Long houseId) {
+        return ResponseEntity.ok(houseService.getHouse(user.getId(), houseId));
     }
 
     @Operation(
