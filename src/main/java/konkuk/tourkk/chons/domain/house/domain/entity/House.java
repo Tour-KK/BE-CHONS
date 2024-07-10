@@ -43,7 +43,6 @@ public class House{
 //    @Column(nullable = true)
 //    private int operationalStatus;
 //
-//    @ElementCollection
 //    @Column(nullable = true)
 //    private List<String> availableReservationDates;
 

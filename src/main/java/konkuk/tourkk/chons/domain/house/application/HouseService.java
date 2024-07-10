@@ -1,5 +1,6 @@
 package konkuk.tourkk.chons.domain.house.application;
 
+import konkuk.tourkk.chons.domain.reservation.application.BookableDateService;
 import konkuk.tourkk.chons.domain.sigungu.application.AreaSigunguService;
 import konkuk.tourkk.chons.domain.house.application.apiresponse.AreaListResponse;
 import konkuk.tourkk.chons.domain.house.domain.entity.House;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,13 +26,14 @@ public class HouseService {
     private final HouseRepository houseRepository;
     private final AreaSigunguService areaSigunguService;
     private final UserService userService;
+    private final BookableDateService bookableDateService;
 
     public HouseResponse createHouse(Long userId, HouseRequest request) {
         List<AreaListResponse> areaList = areaSigunguService.getAreaList();
         String address = request.getAddress();
         String region = createRegion(address, areaList);
 
-        //시설 사진 db에 저장하는 법 추가해야함
+
         House house = House.builder()
                 .hostName(request.getHostName())
                 .houseIntroduction(request.getHouseIntroduction())
@@ -41,9 +44,13 @@ public class HouseService {
                 .pricePerNight(request.getPricePerNight())
                 .registrantId(userId)
 //                .operationalStatus(request.getOperationalStatus())
-//                .availableReservationDates(request.getAvailableReservationDates())
+ //               .availableReservationDates(availableDates) // 여기서 직접 설정
                 .region(region) // 지역 정보 추가
                 .build();
+
+
+
+
 
         return HouseResponse.from(houseRepository.save(house));
     }

@@ -46,7 +46,7 @@ public class ReservationService {
         );
         bookabledateService.checkAvailability(houseId, request.getStartAt(), request.getEndAt());
         Reservation savedReservation = reservationRepository.save(reservation);
-        bookabledateService.saveBookableDates(houseId, request.getStartAt(), request.getEndAt(), savedReservation.getId());
+        bookabledateService.saveBookableDates(houseId, request.getStartAt(), request.getEndAt());
 
         ReservationResponse reservationResponse = new ReservationResponse(savedReservation);
 
@@ -85,25 +85,35 @@ public class ReservationService {
 
     @Transactional
     public ReservationResponse updateReservation(EditRequest request, Long reservationId, User currentUser) {
-
         Long userId = currentUser.getId();
         Reservation reservation = checkAccess(userId, reservationId, false);
-        bookabledateService.editCheckAvailability(reservation, request, reservationId);
 
-        // 기존 날짜를 available하게 변경하기
-        bookabledateService.deleteBookableDates(reservation.getHouseId(), reservation.getStartAt(), reservation.getEndAt());
+        LocalDate originalStartAt = reservation.getStartAt();
+        LocalDate originalEndAt = reservation.getEndAt();
+        Long houseId = reservation.getHouseId();
 
+        try {
+            // 기존 날짜를 available하게 변경하기
+            bookabledateService.deleteBookableDates(houseId, originalStartAt, originalEndAt);
 
-        // 예약 정보 업데이트
-        reservation.setPrice(calculatePrice(reservation.getHouseId(), request.getStartAt(), request.getEndAt()));
-        reservation.setStartAt(request.getStartAt());
-        reservation.setEndAt(request.getEndAt());
-        reservation.setPersonNum(request.getPersonNum());
+            // 예약 정보 업데이트
+            reservation.setPrice(calculatePrice(houseId, request.getStartAt(), request.getEndAt()));
+            reservation.setStartAt(request.getStartAt());
+            reservation.setEndAt(request.getEndAt());
+            reservation.setPersonNum(request.getPersonNum());
 
-        Reservation updatedReservation = reservationRepository.save(reservation);
-        bookabledateService.saveBookableDates(reservation.getHouseId(), request.getStartAt(), request.getEndAt(), reservation.getId());
+            bookabledateService.checkAvailability(houseId, request.getStartAt(), request.getEndAt());
+            Reservation updatedReservation = reservationRepository.save(reservation);
 
-        return new ReservationResponse(updatedReservation);
+            // 새로운 날짜를 unavailable하게 변경하기
+            bookabledateService.saveBookableDates(houseId, request.getStartAt(), request.getEndAt());
+
+            return new ReservationResponse(updatedReservation);
+        } catch (Exception e) {
+            // 예외 발생 시 기존 날짜를 다시 unavailable하게 변경
+            bookabledateService.saveBookableDates(houseId, originalStartAt, originalEndAt);
+            throw new ReservationException(ErrorCode.DATE_ALREADY_RESERVED);
+        }
     }
 
     private Reservation checkAccess(Long userId, Long reservationId, boolean isDelete) {

@@ -22,13 +22,12 @@ public class BookableDate {
     @Column(name = "house_id", nullable = false)
     private Long houseId;
 
-    @Column(name = "reservation_id", nullable = false)
-    private Long reservationId;
-
-    public BookableDate(LocalDate availableDate, Long houseId, Long reservationId) {
+    @Column(name = "isPossible", nullable = false)
+    private boolean isPossible;
+    public BookableDate(LocalDate availableDate, Long houseId, boolean isPossible) {
         this.availableDate = availableDate;
         this.houseId = houseId;
-        this.reservationId = reservationId;
+        this.isPossible = isPossible;
     }
 
     public void setId(Long id) {
@@ -43,8 +42,8 @@ public class BookableDate {
         this.houseId = houseId;
     }
 
-    public void setRevervationId(Long reservationId) {
-        this.reservationId = reservationId;
+    public void setIsPossible(boolean isPossible) {
+        this.isPossible = isPossible;
     }
 
 }

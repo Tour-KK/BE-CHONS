@@ -18,8 +18,9 @@ public interface BookableDateRepository extends JpaRepository<BookableDate, Long
 
     @Query("SELECT bd FROM BookableDate bd " +
             "WHERE bd.houseId = :houseId " +
-            "AND bd.availableDate BETWEEN :startAt AND :endAt ")
-    List<BookableDate> findByHouseIdandAvailable(
+            "AND bd.availableDate BETWEEN :startAt AND :endAt " +
+            "AND bd.isPossible = FALSE")
+    List<BookableDate> findDatesByHouseId(
             @Param("houseId") Long houseId,
             @Param("startAt") LocalDate startAt,
             @Param("endAt") LocalDate endAt
