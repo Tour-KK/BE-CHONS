@@ -2,6 +2,7 @@ package konkuk.tourkk.chons.domain.review.application;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
 import konkuk.tourkk.chons.domain.review.domain.entity.Review;
 import konkuk.tourkk.chons.domain.review.exception.ReviewException;
 import konkuk.tourkk.chons.domain.review.infrastructure.ReviewRepository;
@@ -11,28 +12,37 @@ import konkuk.tourkk.chons.domain.review.presentation.dto.res.ReviewResponse;
 import konkuk.tourkk.chons.domain.review.presentation.dto.res.ReviewUpdateResponse;
 import konkuk.tourkk.chons.domain.user.application.UserService;
 import konkuk.tourkk.chons.domain.user.domain.entity.User;
+import konkuk.tourkk.chons.global.common.photo.application.PhotoService;
 import konkuk.tourkk.chons.global.exception.properties.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import static konkuk.tourkk.chons.global.common.photo.application.PhotoService.REVIEW_BUCKET_FOLDER;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class ReivewService {
 
     private final ReviewRepository reviewRepository;
     private final UserService userService;
+    private final PhotoService photoService;
 
-    public ReviewResponse createReview(Long userId, ReviewRequest request) {
+    public ReviewResponse createReview(Long userId, List<MultipartFile> photos, ReviewRequest request) {
         User user = userService.findUserById(userId);
         // TODO: house 존재하는지 확인 필요
+        List<String> photoUrls = photoService.savePhotos(photos, REVIEW_BUCKET_FOLDER);
         Review review = Review.builder()
             .content(request.getContent())
             .star(request.getStar())
             .userId(userId)
             .houseId(request.getHouseId())
             .userName(user.getName())
+                .photos(photoUrls)
             .build();
         return ReviewResponse.from(reviewRepository.save(review));
     }
@@ -44,10 +54,13 @@ public class ReivewService {
     }
 
     public ReviewUpdateResponse updateReview(Long userId, Long reviewId,
-        ReviewUpdateRequest request) {
+                                             List<MultipartFile> photos, ReviewUpdateRequest request) {
         userService.findUserById(userId);
 
         Review review = checkAccess(userId, reviewId);
+
+        photoService.deleteReviewPhotos(review.getPhotos());
+        photoService.savePhotos(photos, REVIEW_BUCKET_FOLDER);
         review.changeContent(request.getContent());
         review.changeStar(request.getStar());
 
@@ -55,9 +68,16 @@ public class ReivewService {
     }
 
     public void deleteReview(Long userId, Long reviewId) {
+        log.info("service1" + userId);
         userService.findUserById(userId);
+        log.info("service2");
+        findReviewById(reviewId);
 
+        log.info("service3");
         Review review = checkAccess(userId, reviewId);
+        log.info("check");
+        photoService.deleteReviewPhotos(review.getPhotos());
+        log.info("사진 삭제");
         reviewRepository.delete(review);
     }
 
