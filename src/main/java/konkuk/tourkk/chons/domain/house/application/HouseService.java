@@ -52,10 +52,16 @@ public class HouseService {
         return HouseResponse.of(houseRepository.save(house), false);
     }
 
-//    @Transactional(readOnly = true)
-//    public List<HouseResponse> getAllHouses() {
-//        return houseRepository.findAll().stream().map(HouseResponse::of).collect(Collectors.toList());
-//    }
+    @Transactional(readOnly = true)
+    public List<HouseResponse> getAllHouses(Long userId) {
+        return houseRepository.findAll()
+            .stream()
+            .map(house -> {
+            boolean isLiked = isLikedHouse(userId, house.getId());
+            return HouseResponse.of(house, isLiked);
+        })
+            .collect(Collectors.toList());
+    }
 
     @Transactional(readOnly = true)
     public HouseResponse getHouse(Long userId, Long houseId) {

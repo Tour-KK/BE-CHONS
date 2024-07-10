@@ -42,6 +42,18 @@ public class HouseController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(
+        summary = "집 전체 목록 조회",
+        description = "집 전체 목록을 조회합니다."
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "집 전체 목록 조회에 성공하였습니다."
+    )
+    @GetMapping("/list")
+    public ResponseEntity<List<HouseResponse>> getHouse(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(houseService.getAllHouses(user.getId()));
+    }
 
     @Operation(
             summary = "집 상세 조회",
