@@ -86,6 +86,39 @@ public class HouseService {
         return HouseResponse.of(house, isLiked);
     }
 
+    public List<HouseResponse> getHouseListByRegion(Long userId, String region) {
+        userService.findUserById(userId);
+        return houseRepository.findByRegion(region)
+            .stream()
+            .map(house -> {
+                boolean isLiked = isLikedHouse(userId, house.getId());
+                return HouseResponse.of(house, isLiked);
+            })
+            .collect(Collectors.toList());
+    }
+
+    public List<HouseResponse> getHouseListByUserId(Long userId) {
+        userService.findUserById(userId);
+        return houseRepository.findByRegistrantId(userId)
+            .stream()
+            .map(house -> {
+                boolean isLiked = isLikedHouse(userId, house.getId());
+                return HouseResponse.of(house, isLiked);
+            })
+            .collect(Collectors.toList());
+    }
+
+    public List<HouseResponse> getLikedHouseList(Long userId) {
+        userService.findUserById(userId);
+        return likeRepository.findByUserId(userId)
+            .stream()
+            .map(like -> {
+                House house = findHouseById(like.getHouseId());
+                return HouseResponse.of(house, true);
+            })
+            .collect(Collectors.toList());
+    }
+
     private House findHouseById(Long houseId) {
         return houseRepository.findById(houseId)
                 .orElseThrow(() -> new HouseException(ErrorCode.HOUSE_NOT_FOUND));
@@ -123,28 +156,6 @@ public class HouseService {
         house.changeRegion(createRegion(request.getAddress(), areaSigunguService.getAreaList()));
         house.changeMaxNumPeople(request.getMaxNumPeople());
         house.changePricePerNight(request.getPricePerNight());
-    }
-
-    public List<HouseResponse> getHouseListByRegion(Long userId, String region) {
-        userService.findUserById(userId);
-        return houseRepository.findByRegion(region)
-                .stream()
-                .map(house -> {
-                    boolean isLiked = isLikedHouse(userId, house.getId());
-                    return HouseResponse.of(house, isLiked);
-                })
-                .collect(Collectors.toList());
-    }
-
-    public List<HouseResponse> getHouseListByUserId(Long userId) {
-        userService.findUserById(userId);
-        return houseRepository.findByRegistrantId(userId)
-                .stream()
-                .map(house -> {
-                    boolean isLiked = isLikedHouse(userId, house.getId());
-                    return HouseResponse.of(house, isLiked);
-                })
-                .collect(Collectors.toList());
     }
 
     private boolean isLikedHouse(Long userId, Long houseId) {

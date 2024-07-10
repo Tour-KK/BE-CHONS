@@ -140,4 +140,18 @@ public class HouseController {
         List<HouseResponse> responses = houseService.getHouseListByUserId(user.getId());
         return ResponseEntity.ok(responses);
     }
+
+    @Operation(
+        summary = "사용자가 좋아요한 집 목록 조회",
+        description = "사용자가 좋아요한 집 목록을 조회합니다."
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "사용자가 좋아요한 집 목록 조회에 성공하였습니다."
+    )
+    @GetMapping("/list/like")
+    public ResponseEntity<List<HouseResponse>> getLiked(@AuthenticationPrincipal User user) {
+        List<HouseResponse> responses = houseService.getLikedHouseList(user.getId());
+        return ResponseEntity.ok(responses);
+    }
 }
