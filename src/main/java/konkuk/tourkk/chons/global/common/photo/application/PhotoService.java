@@ -10,6 +10,7 @@ import jakarta.transaction.Transactional;
 import konkuk.tourkk.chons.global.common.photo.exception.PhotoException;
 import konkuk.tourkk.chons.global.exception.properties.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,6 +23,7 @@ import java.util.UUID;
 @Component
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class PhotoService {
 
     private final AmazonS3 s3;
@@ -37,6 +39,7 @@ public class PhotoService {
     public static final String REVIEW_BUCKET_FOLDER = "review/";
 
     public List<String> savePhotos(List<MultipartFile> photos, String folderName) {
+        log.info("응?1");
         List<String> photoUrls = new ArrayList<>();
         for (MultipartFile photo : photos) {
             ObjectMetadata objectMetadata = new ObjectMetadata();
