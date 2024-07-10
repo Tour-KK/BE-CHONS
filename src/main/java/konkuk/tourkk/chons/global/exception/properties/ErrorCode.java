@@ -17,6 +17,7 @@ public enum ErrorCode {
 
     // 400
     REFRESH_TOKEN_REQUIRED(BAD_REQUEST, "refresh token이 필요합니다."),
+    FAILED_TO_SAVE_PHOTO(BAD_REQUEST, "스토리지에 사진을 저장하는 데 실패했습니다."),
 
     // 401
     SECURITY_UNAUTHORIZED(UNAUTHORIZED, "인증 정보가 유효하지 않습니다"),
