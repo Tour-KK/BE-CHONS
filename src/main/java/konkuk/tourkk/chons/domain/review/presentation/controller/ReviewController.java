@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 
 @Tag(name = "Review", description = "Review 관련 API. 토큰이 필요합니다.")
@@ -34,7 +35,7 @@ public class ReviewController {
     )
     @PostMapping
     public ResponseEntity<ReviewResponse> createReview(@AuthenticationPrincipal User user, @RequestPart(value = "photos") List<MultipartFile> photos,
-        @RequestPart(value = "dto") ReviewRequest request) {
+                                                       @RequestPart(value = "dto") ReviewRequest request) {
         ReviewResponse response = reviewService.createReview(user.getId(), photos, request);
         return ResponseEntity.ok(response);
     }
@@ -62,7 +63,7 @@ public class ReviewController {
     )
     @PutMapping("/{reviewId}")
     public ResponseEntity<ReviewUpdateResponse> updateReview(@AuthenticationPrincipal User user,
-        @PathVariable Long reviewId, @RequestPart(value = "photos") List<MultipartFile> photos,
+                                                             @PathVariable Long reviewId, @RequestPart(value = "photos") List<MultipartFile> photos,
                                                              @RequestPart(value = "dto") ReviewUpdateRequest request) {
         ReviewUpdateResponse response = reviewService.updateReview(user.getId(), reviewId, photos, request);
         return ResponseEntity.ok(response);
@@ -78,7 +79,7 @@ public class ReviewController {
     )
     @DeleteMapping("/{reviewId}")
     public ResponseEntity<Void> deleteReview(@AuthenticationPrincipal User user,
-        @PathVariable Long reviewId) {
+                                             @PathVariable Long reviewId) {
         reviewService.deleteReview(user.getId(), reviewId);
         return ResponseEntity.noContent().build();
     }

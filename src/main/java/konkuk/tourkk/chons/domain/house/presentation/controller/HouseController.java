@@ -9,6 +9,7 @@ import konkuk.tourkk.chons.domain.house.application.HouseService;
 import konkuk.tourkk.chons.domain.house.presentation.dto.req.HouseListRequest;
 import konkuk.tourkk.chons.domain.house.presentation.dto.req.HouseRequest;
 import konkuk.tourkk.chons.domain.house.presentation.dto.res.HouseResponse;
+import konkuk.tourkk.chons.domain.review.presentation.dto.req.ReviewRequest;
 import konkuk.tourkk.chons.domain.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "House", description = "집 관련 API. 토큰이 필요합니다.")
 @RequestMapping("/api/v1/house")
@@ -35,13 +37,25 @@ public class HouseController {
             description = "집 등록에 성공하였습니다."
     )
     @PostMapping
-    public ResponseEntity<HouseResponse> createHouse(@AuthenticationPrincipal User user,
-                                                     @RequestBody HouseRequest request) {
+    public ResponseEntity<HouseResponse> createHouse(@AuthenticationPrincipal User user, @RequestPart(value = "photos") List<MultipartFile> photos,
+        @RequestPart(value = "dto") HouseRequest request) {
 
-        HouseResponse response = houseService.createHouse(user.getId(), request);
+        HouseResponse response = houseService.createHouse(user.getId(), photos, request);
         return ResponseEntity.ok(response);
     }
 
+    @Operation(
+        summary = "집 전체 목록 조회",
+        description = "집 전체 목록을 조회합니다."
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "집 전체 목록 조회에 성공하였습니다."
+    )
+    @GetMapping("/list")
+    public ResponseEntity<List<HouseResponse>> getHouse(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(houseService.getAllHouses(user.getId()));
+    }
 
     @Operation(
             summary = "집 상세 조회",
@@ -51,9 +65,10 @@ public class HouseController {
             responseCode = "200",
             description = "집 상세 조회에 성공하였습니다."
     )
+
     @GetMapping("/{houseId}")
-    public ResponseEntity<HouseResponse> getHouse(@PathVariable Long houseId) {
-        return ResponseEntity.ok(houseService.getHouse(houseId));
+    public ResponseEntity<HouseResponse> getHouse(@AuthenticationPrincipal User user, @PathVariable Long houseId) {
+        return ResponseEntity.ok(houseService.getHouse(user.getId(), houseId));
     }
 
     @Operation(
@@ -81,8 +96,9 @@ public class HouseController {
     )
     @PutMapping("/{houseId}")
     public ResponseEntity<HouseResponse> updateHouse(@AuthenticationPrincipal User user,
-                                                     @PathVariable Long houseId, @RequestBody HouseRequest request) {
-        HouseResponse response = houseService.updateHouse(user.getId(), houseId, request);
+                                                     @PathVariable Long houseId, @RequestPart(value = "photos") List<MultipartFile> photos,
+                                                    @RequestBody HouseRequest request) {
+        HouseResponse response = houseService.updateHouse(user.getId(), houseId, photos, request);
         return ResponseEntity.ok(response);
     }
 
@@ -128,4 +144,20 @@ public class HouseController {
         List<HouseResponse> responses = houseService.getHouseListByUserId(user.getId());
         return ResponseEntity.ok(responses);
     }
+
+
+    @Operation(
+        summary = "사용자가 좋아요한 집 목록 조회",
+        description = "사용자가 좋아요한 집 목록을 조회합니다."
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "사용자가 좋아요한 집 목록 조회에 성공하였습니다."
+    )
+    @GetMapping("/list/like")
+    public ResponseEntity<List<HouseResponse>> getLiked(@AuthenticationPrincipal User user) {
+        List<HouseResponse> responses = houseService.getLikedHouseList(user.getId());
+        return ResponseEntity.ok(responses);
+    }
+
 }

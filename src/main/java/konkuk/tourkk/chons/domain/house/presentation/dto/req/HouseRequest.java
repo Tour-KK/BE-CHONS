@@ -13,11 +13,11 @@ public class HouseRequest {
 
     private String freeService;
 
-    private List<String> facilityPhotos;
+    private List<String> photos;
 
     private String phoneNumber;
 
-    private int pricePerNight;
+    private Long pricePerNight;
 
     private Long registrantId;
 //잠시 아웃
@@ -26,4 +26,5 @@ public class HouseRequest {
 //    private List<String> availableReservationDates;
 
     private String address;
+    private int maxNumPeople;
 }

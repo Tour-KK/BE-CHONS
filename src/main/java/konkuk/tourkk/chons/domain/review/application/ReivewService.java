@@ -1,8 +1,8 @@
 package konkuk.tourkk.chons.domain.review.application;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import konkuk.tourkk.chons.domain.house.application.HouseService;
+import konkuk.tourkk.chons.domain.house.domain.entity.House;
+import konkuk.tourkk.chons.domain.house.exception.HouseException;
+import konkuk.tourkk.chons.domain.house.infrastructure.HouseRepository;
 import konkuk.tourkk.chons.domain.review.domain.entity.Review;
 import konkuk.tourkk.chons.domain.review.exception.ReviewException;
 import konkuk.tourkk.chons.domain.review.infrastructure.ReviewRepository;
@@ -20,10 +20,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import static konkuk.tourkk.chons.global.common.photo.application.PhotoService.REVIEW_BUCKET_FOLDER;
-
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static konkuk.tourkk.chons.global.common.photo.application.PhotoService.REVIEW_BUCKET_FOLDER;
 
 @Service
 @Transactional
@@ -34,39 +34,37 @@ public class ReivewService {
     private final ReviewRepository reviewRepository;
     private final UserService userService;
     private final PhotoService photoService;
-    private final HouseService houseService;
+    private final HouseRepository houseRepository;
 
     public ReviewResponse createReview(Long userId, List<MultipartFile> photos, ReviewRequest request) {
         User user = userService.findUserById(userId);
-        houseService.getHouse(request.getHouseId());
-      
+        House house = findHouseById(request.getHouseId());
+        house.addReviewNum();
+        house.changeStarAvg(request.getStar());
         List<String> photoUrls = photoService.savePhotos(photos, REVIEW_BUCKET_FOLDER);
         Review review = Review.builder()
-            .content(request.getContent())
-            .star(request.getStar())
-            .userId(userId)
-            .houseId(request.getHouseId())
-            .userName(user.getName())
+                .content(request.getContent())
+                .star(request.getStar())
+                .userId(userId)
+                .houseId(request.getHouseId())
+                .userName(user.getName())
                 .photos(photoUrls)
-            .build();
+                .build();
 
         return ReviewResponse.from(reviewRepository.save(review));
     }
 
     public ReviewResponse getReview(Long reviewId) {
         Review review = findReviewById(reviewId);
-
         return ReviewResponse.from(review);
     }
 
     public ReviewUpdateResponse updateReview(Long userId, Long reviewId,
                                              List<MultipartFile> photos, ReviewUpdateRequest request) {
-                                             ReviewUpdateRequest request) {
         userService.findUserById(userId);
-
         Review review = checkAccess(userId, reviewId);
 
-        photoService.deleteReviewPhotos(review.getPhotos());
+        photoService.deletePhotos(review.getPhotos());
         photoService.savePhotos(photos, REVIEW_BUCKET_FOLDER);
         review.changeContent(request.getContent());
         review.changeStar(request.getStar());
@@ -75,21 +73,16 @@ public class ReivewService {
     }
 
     public void deleteReview(Long userId, Long reviewId) {
-        log.info("service1" + userId);
         userService.findUserById(userId);
-        log.info("service2");
         findReviewById(reviewId);
 
-        log.info("service3");
         Review review = checkAccess(userId, reviewId);
-        log.info("check");
-        photoService.deleteReviewPhotos(review.getPhotos());
-        log.info("사진 삭제");
+        photoService.deletePhotos(review.getPhotos());
         reviewRepository.delete(review);
     }
 
     public List<ReviewResponse> getByHouseId(Long houseId) {
-        houseService.getHouse(houseId);
+        House house = findHouseById(houseId);
         return reviewRepository.findByHouseId(houseId)
                 .stream()
                 .map(ReviewResponse::from)
@@ -116,5 +109,10 @@ public class ReivewService {
     private Review findReviewById(Long reviewId) {
         return reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new ReviewException(ErrorCode.REVIEW_NOT_FOUND));
+    }
+
+    private House findHouseById(Long houseId) {
+        return houseRepository.findById(houseId)
+            .orElseThrow(() -> new HouseException(ErrorCode.HOUSE_NOT_FOUND));
     }
 }

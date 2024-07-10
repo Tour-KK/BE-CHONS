@@ -18,11 +18,11 @@ public class HouseResponse {
 
     private String freeService;
 
-    private List<String> facilityPhotos;
+    private List<String> photos;
 
     private String phoneNumber;
 
-    private int pricePerNight;
+    private Long pricePerNight;
 
     private Long registrantId;
 //잠시 아웃
@@ -34,20 +34,31 @@ public class HouseResponse {
 
     private String region;
 
-    public static HouseResponse from(House house) {
+    private int maxNumPeople;
+
+    private double starAvg;
+
+    private int reviewNum;
+
+    private boolean isLiked;
+
+    public static HouseResponse of(House house, boolean isLiked) {
         return HouseResponse.builder()
                 .id(house.getId())
                 .hostName(house.getHostName())
                 .houseIntroduction(house.getHouseIntroduction())
                 .freeService(house.getFreeService())
-                .facilityPhotos(house.getFacilityPhotos())
+                .photos(house.getPhotos())
                 .address(house.getAddress())
                 .phoneNumber(house.getPhoneNumber())
                 .pricePerNight(house.getPricePerNight())
                 .registrantId(house.getRegistrantId())
 //                .operationalStatus(house.getOperationalStatus())
-//                .availableReservationDates(house.getAvailableReservationDates())
                 .region(house.getRegion())
+                .maxNumPeople(house.getMaxNumPeople())
+                .reviewNum(house.getReviewNum())
+                .starAvg(house.getStarAvg())
+                .isLiked(isLiked)
                 .build();
     }
 }
