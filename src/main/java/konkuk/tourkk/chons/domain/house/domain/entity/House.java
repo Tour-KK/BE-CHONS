@@ -73,7 +73,6 @@ public class House {
         this.phoneNumber = phoneNumber;
         this.pricePerNight = pricePerNight;
         this.registrantId = registrantId;
-//        this.operationalStatus = operationalStatus;
         this.availableReservationDates = availableReservationDates;
         this.region = region;
         this.maxNumPeople = maxNumPeople;
