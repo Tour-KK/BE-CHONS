@@ -60,13 +60,13 @@ public class House {
 //    @Column(nullable = true)
 //    private int operationalStatus;
 //
-
     @Column(nullable = false)
     private String region;
 
     @CreationTimestamp
     @Column(nullable = false)
     private LocalDateTime createdAt;
+
 
     @Builder
     public House(String hostName, String houseIntroduction, String freeService,
@@ -135,5 +135,4 @@ public class House {
         double result = totalStar/reviewNum;
         this.starAvg = Math.round(result * 1000) / 1000.0;
     }
-
 }

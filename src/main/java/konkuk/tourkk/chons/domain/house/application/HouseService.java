@@ -2,6 +2,7 @@ package konkuk.tourkk.chons.domain.house.application;
 
 import static konkuk.tourkk.chons.global.common.photo.application.PhotoService.HOUSE_BUCKET_FOLDER;
 
+
 import java.util.Optional;
 import konkuk.tourkk.chons.domain.areasigungu.application.dto.res.AreaListResponse;
 import konkuk.tourkk.chons.domain.areasigungu.application.service.AreaSigunguService;
@@ -35,12 +36,10 @@ public class HouseService {
     private final LikeRepository likeRepository;
     private final PhotoService photoService;
 
-
     public HouseResponse createHouse(Long userId, List<MultipartFile> photos, HouseRequest request) {
         List<AreaListResponse> areaList = areaSigunguService.getAreaList();
         String address = request.getAddress();
         String region = createRegion(address, areaList);
-
         List<String> photoUrls = photoService.savePhotos(photos, HOUSE_BUCKET_FOLDER);
         House house = House.builder()
                 .hostName(request.getHostName())
@@ -58,7 +57,6 @@ public class HouseService {
                 .build();
 
         return HouseResponse.of(houseRepository.save(house), false);
-
     }
 
     @Transactional(readOnly = true)
