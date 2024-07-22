@@ -12,6 +12,7 @@ import konkuk.tourkk.chons.domain.house.presentation.dto.res.HouseResponse;
 import konkuk.tourkk.chons.domain.review.presentation.dto.req.ReviewRequest;
 import konkuk.tourkk.chons.domain.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/v1/house")
 @RequiredArgsConstructor
 @RestController
+@Slf4j
 public class HouseController {
 
     private final HouseService houseService;
@@ -39,7 +41,7 @@ public class HouseController {
     @PostMapping
     public ResponseEntity<HouseResponse> createHouse(@AuthenticationPrincipal User user, @RequestPart(value = "photos") List<MultipartFile> photos,
         @RequestPart(value = "dto") HouseRequest request) {
-
+        log.info("통과");
         HouseResponse response = houseService.createHouse(user.getId(), photos, request);
         return ResponseEntity.ok(response);
     }
