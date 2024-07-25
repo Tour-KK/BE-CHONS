@@ -36,8 +36,6 @@ public class PhotoService {
 
     public static final String HOUSE_BUCKET_FOLDER = "house/";
 
-    public static final String TEST_BUCKET_FOLDER = "test/";
-
     public static final String REVIEW_BUCKET_FOLDER = "review/";
 
     public List<String> savePhotos(List<MultipartFile> photos, String folderName) {
