@@ -140,7 +140,7 @@ public class HouseService {
             String firstWord = addressParts[0];
             // 첫 번째 단어가 areaList에 포함되는지 확인
             for (AreaListResponse area : areaList) {
-                if (firstWord.contains(area.getAreaName())) {
+                if (area.getAreaName().contains(firstWord)) {
                     return area.getAreaName();
                 }
             }
