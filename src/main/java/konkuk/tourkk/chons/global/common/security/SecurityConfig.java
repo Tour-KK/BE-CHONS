@@ -39,7 +39,7 @@ public class SecurityConfig {
                         httpSecuritySessionManagementConfigurer.sessionCreationPolicy(
                                 SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/h2-console/**").permitAll()
+                        .requestMatchers("/h2-console/**", "/actuator/**").permitAll()
                         .requestMatchers("/api/v1/auth/login", "/api/v1/auth/reissue").permitAll()
                         .requestMatchers("/api/v1/**").authenticated()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll())

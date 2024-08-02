@@ -1,7 +1,6 @@
 package konkuk.tourkk.chons.domain.house.domain.entity;
 
 import jakarta.persistence.*;
-import konkuk.tourkk.chons.domain.review.domain.enums.Star;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -123,14 +122,14 @@ public class House {
         this.reviewNum ++;
     }
 
-    public void changeStarAvg(Star star) {
+    public void changeStarAvg(Integer star) {
         double originalTotal;
         if(reviewNum - 1 == 0) {
             originalTotal = 0;
         } else {
             originalTotal = starAvg * (reviewNum - 1);
         }
-        totalStar = originalTotal + star.getKey();
+        totalStar = originalTotal + star;
 
         double result = totalStar/reviewNum;
         this.starAvg = Math.round(result * 1000) / 1000.0;
