@@ -134,4 +134,8 @@ public class House {
         double result = totalStar/reviewNum;
         this.starAvg = Math.round(result * 1000) / 1000.0;
     }
+
+    public void reduceReviewNum() {
+        this.reviewNum--;
+    }
 }
