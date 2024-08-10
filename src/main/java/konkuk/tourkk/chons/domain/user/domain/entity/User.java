@@ -34,7 +34,7 @@ public class User implements UserDetails {
     @Email
     private String email;
 
-    @Column(nullable = false, length = 20)
+    @Column(length = 20)
     private String phoneNum;
 
     @Enumerated(EnumType.STRING)

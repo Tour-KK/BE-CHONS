@@ -24,6 +24,4 @@ public class LoginRequest {
     private String birthYear;
 
     private String birthDay;
-
-    private String phoneNum;
 }

@@ -23,9 +23,8 @@ public class UserService {
     private final JwtService jwtService;
 
     public User registerUser(String name, String email, String socialId, SocialType socialType,
-                             Role role, String phoneNum) {
+                             Role role) {
         User user = User.builder()
-                .phoneNum(phoneNum)
                 .role(role)
                 .socialType(socialType)
                 .socialId(socialId)
