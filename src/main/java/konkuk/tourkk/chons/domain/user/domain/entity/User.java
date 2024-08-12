@@ -34,9 +34,6 @@ public class User implements UserDetails {
     @Email
     private String email;
 
-    @Column(length = 20)
-    private String phoneNum;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
@@ -55,14 +52,13 @@ public class User implements UserDetails {
     private LocalDateTime deletedAt;
 
     @Builder
-    private User(String phoneNum, String name, String email, Role role,
+    private User(String name, String email, Role role,
                  String socialId, SocialType socialType) {
         this.name = name;
         this.email = email;
         this.role = role;
         this.socialId = socialId;
         this.socialType = socialType;
-        this.phoneNum = phoneNum;
     }
 
     public void delete() {
