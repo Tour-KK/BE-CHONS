@@ -68,10 +68,14 @@ public class House {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
+
+    @Column(nullable = false)
+    private List<String> dates;
+
     @Builder
     public House(String hostName, String houseIntroduction, String freeService,
                  List<String> photos, String address, String phoneNumber,
-                 Long pricePerNight, Long registrantId, String region,int maxNumPeople, int reviewNum, double starAvg) {
+                 Long pricePerNight, Long registrantId, String region,int maxNumPeople, int reviewNum, double starAvg, List<String> dates) {
         this.hostName = hostName;
         this.houseIntroduction = houseIntroduction;
         this.freeService = freeService;
@@ -85,8 +89,11 @@ public class House {
         this.maxNumPeople = maxNumPeople;
         this.reviewNum = reviewNum;
         this.starAvg = starAvg;
+        this.dates=dates;
     }
 
+
+    //INSERT INTO area_TB (code, name) VALUES (1, '경기도');
     public void changeHostName(String hostName) {
         this.hostName = hostName;
     }

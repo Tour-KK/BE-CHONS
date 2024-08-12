@@ -8,7 +8,6 @@ import konkuk.tourkk.chons.domain.reservation.domain.entity.Reservation;
 import konkuk.tourkk.chons.domain.reservation.exception.ReservationException;
 import konkuk.tourkk.chons.domain.reservation.infrastructure.BookableDateRepository;
 import konkuk.tourkk.chons.domain.reservation.infrastructure.ReservationRepository;
-import konkuk.tourkk.chons.domain.reservation.presentation.dto.req.EditRequest;
 import konkuk.tourkk.chons.global.exception.properties.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -35,7 +36,7 @@ public class BookableDateService {
         House house = houseRepository.findById(houseId)
                 .orElseThrow(() -> new HouseException(ErrorCode.HOUSE_NOT_FOUND));
 
-        List<BookableDate> bookableDates = bookableDateRepository.findDatesByHouseId(houseId, startAt, endAt);
+        List<BookableDate> bookableDates = bookableDateRepository.findPossibleDatesByHouseId(houseId, startAt, endAt);
 
         for (BookableDate bookableDate : bookableDates) {
             bookableDate.setIsPossible(false);
@@ -50,21 +51,26 @@ public class BookableDateService {
         House house = houseRepository.findById(houseId)
                 .orElseThrow(() -> new HouseException(ErrorCode.HOUSE_NOT_FOUND));
 
-        List<BookableDate> unavailableDates = bookableDateRepository.findDatesByHouseId(
-                houseId, startAt, endAt);
+        List<BookableDate> allBookableDates = bookableDateRepository.findAllByHouseId(houseId);
 
-        if (!unavailableDates.isEmpty()) {
-            throw new ReservationException(ErrorCode.DATE_ALREADY_RESERVED);
+        Map<LocalDate, Boolean> dateAvailabilityMap = allBookableDates.stream()
+                .collect(Collectors.toMap(BookableDate::getAvailableDate, BookableDate::isPossible));
+
+        LocalDate currentDate = startAt;
+        while (!currentDate.isAfter(endAt)) {
+            if (!dateAvailabilityMap.containsKey(currentDate) || !dateAvailabilityMap.get(currentDate)) {
+                throw new ReservationException(ErrorCode.DATE_ALREADY_RESERVED);
+            }
+            currentDate = currentDate.plusDays(1);
         }
     }
-
-    //예액 삭제시 예약가능 테이블에서도 삭제하는 기능
+    //예액 삭제시 삭제하는 기능
     @Transactional
     public void deleteBookableDates(Long houseId, LocalDate startAt, LocalDate endAt) {
         House house = houseRepository.findById(houseId)
                 .orElseThrow(() -> new HouseException(ErrorCode.HOUSE_NOT_FOUND));
 
-        List<BookableDate> bookableDates = bookableDateRepository.findDatesByHouseId(houseId, startAt, endAt);
+        List<BookableDate> bookableDates = bookableDateRepository.findImpossibleDatesByHouseId(houseId, startAt, endAt);
 
         for (BookableDate bookableDate : bookableDates) {
             bookableDate.setIsPossible(true);
@@ -74,7 +80,7 @@ public class BookableDateService {
     }
 
 
-   /* @Transactional
+   @Transactional
     public void addBookableDates(Long houseId, List<String> dateStrings) {
         House house = houseRepository.findById(houseId)
                 .orElseThrow(() -> new HouseException(ErrorCode.HOUSE_NOT_FOUND));
@@ -89,5 +95,5 @@ public class BookableDateService {
         }
 
         bookableDateRepository.saveAll(bookableDates);
-    }*/
+    }
 }

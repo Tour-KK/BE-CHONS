@@ -41,14 +41,17 @@ public class Reservation {
     @Column(nullable = false)
     private int personNum;
 
+    @Column(nullable = false)
+    private String phoneNum;
 
-    public Reservation(Long userId, Long houseId, int price, LocalDate startAt, LocalDate endAt, int personNum) {
+    public Reservation(Long userId, Long houseId, int price, LocalDate startAt, LocalDate endAt, int personNum, String phoneNum) {
         this.userId = userId;
         this.houseId = houseId;
         this.price = price;
         this.startAt = startAt;
         this.endAt = endAt;
         this.personNum = personNum;
+        this.phoneNum=phoneNum;
     }
 
     public Long getId() {

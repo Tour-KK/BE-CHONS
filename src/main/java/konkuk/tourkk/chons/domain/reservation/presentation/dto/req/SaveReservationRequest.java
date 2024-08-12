@@ -10,22 +10,21 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 @Getter
-public class EditRequest {
+public class SaveReservationRequest {
 
-    private Long houseId;
     private LocalDate startAt;
     private LocalDate endAt;
     private int personNum;
+    private String phoneNum;
 
-    public EditRequest(Long houseId, String startAt, String endAt, int personNum) {
-        this.houseId=houseId;
+    public SaveReservationRequest(String startAt, String endAt, int personNum, String phoneNum) {
         setStartAt(startAt);
         setEndAt(endAt);
         setPersonNum(personNum);
+        setPhoneNum(phoneNum);
         validateDates();
+        validPhoneNumber();
     }
-
-    public void setHouseId(Long houseId){this.houseId=houseId;}
     public void setStartAt(String startAt) {
         this.startAt = parseDate(startAt);
     }
@@ -37,6 +36,8 @@ public class EditRequest {
     public void setPersonNum(int personNum) {
         this.personNum = personNum;
     }
+
+    public void setPhoneNum(String phoneNum){ this.phoneNum = phoneNum;}
 
     private LocalDate parseDate(String dateString) {
         try {
@@ -50,4 +51,11 @@ public class EditRequest {
             throw new ReservationException(ErrorCode.INVALID_DATE_RANGE);
         }
     }
+
+    private void validPhoneNumber() {
+        if( phoneNum != null && phoneNum.matches("\\d{11}")){
+            throw new ReservationException(ErrorCode.NUMBER_FORMAT_CONFLICT);
+        }
+    }
+
 }

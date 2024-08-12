@@ -1,6 +1,5 @@
 package konkuk.tourkk.chons.domain.reservation.presentation.dto.req;
 
-import konkuk.tourkk.chons.domain.reservation.domain.entity.Reservation;
 import konkuk.tourkk.chons.domain.reservation.exception.ReservationException;
 import konkuk.tourkk.chons.global.exception.properties.ErrorCode;
 import lombok.Getter;
@@ -10,13 +9,13 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 @Getter
-public class ReservationRequest {
+public class EditReservationRequest {
 
     private LocalDate startAt;
     private LocalDate endAt;
     private int personNum;
 
-    public ReservationRequest(String startAt, String endAt, int personNum) {
+    public EditReservationRequest(String startAt, String endAt, int personNum) {
         setStartAt(startAt);
         setEndAt(endAt);
         setPersonNum(personNum);

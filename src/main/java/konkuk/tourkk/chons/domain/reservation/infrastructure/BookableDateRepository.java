@@ -13,24 +13,27 @@ public interface BookableDateRepository extends JpaRepository<BookableDate, Long
 
     @Query("SELECT bd FROM BookableDate bd " +
             "WHERE bd.houseId = :houseId ")
-    List<BookableDate> findByHouseId(
+    List<BookableDate> findAllByHouseId(
             @Param("houseId") Long houseId);
 
     @Query("SELECT bd FROM BookableDate bd " +
             "WHERE bd.houseId = :houseId " +
             "AND bd.availableDate BETWEEN :startAt AND :endAt " +
-            "AND bd.isPossible = FALSE")
-    List<BookableDate> findDatesByHouseId(
+            "AND bd.isPossible = TRUE")
+    List<BookableDate> findPossibleDatesByHouseId(
             @Param("houseId") Long houseId,
             @Param("startAt") LocalDate startAt,
             @Param("endAt") LocalDate endAt
     );
 
-    @Modifying
-    @Query("DELETE FROM BookableDate bd WHERE bd.houseId = :houseId AND bd.availableDate BETWEEN :startAt AND :endAt")
-    void deleteByHouseIdAndDateBetween(@Param("houseId") Long houseId,
-                                       @Param("startAt") LocalDate startAt,
-                                       @Param("endAt") LocalDate endAt);
-
+    @Query("SELECT bd FROM BookableDate bd " +
+            "WHERE bd.houseId = :houseId " +
+            "AND bd.availableDate BETWEEN :startAt AND :endAt " +
+            "AND bd.isPossible = FALSE")
+    List<BookableDate> findImpossibleDatesByHouseId(
+            @Param("houseId") Long houseId,
+            @Param("startAt") LocalDate startAt,
+            @Param("endAt") LocalDate endAt
+    );
 
 }
