@@ -1,7 +1,6 @@
 package konkuk.tourkk.chons.domain.review.domain.entity;
 
 import jakarta.persistence.*;
-import konkuk.tourkk.chons.domain.review.domain.enums.Star;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,9 +23,8 @@ public class Review {
     @Lob
     private String content;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Star star;
+    private Integer star;
 
     @Column(nullable = false)
     private Long userId;
@@ -45,7 +43,7 @@ public class Review {
     private LocalDateTime createdAt;
 
     @Builder
-    private Review(String content, Star star, Long userId, Long houseId, String userName, List<String> photos) {
+    private Review(String content, Integer star, Long userId, Long houseId, String userName, List<String> photos) {
         this.content = content;
         this.star = star;
         this.userId = userId;
@@ -58,7 +56,7 @@ public class Review {
         this.content = content;
     }
 
-    public void changeStar(Star star) {
+    public void changeStar(Integer star) {
         this.star = star;
     }
 }

@@ -3,6 +3,7 @@ package konkuk.tourkk.chons.domain.house.application;
 import static konkuk.tourkk.chons.global.common.photo.application.PhotoService.HOUSE_BUCKET_FOLDER;
 
 import java.util.Arrays;
+
 import java.util.Optional;
 import konkuk.tourkk.chons.domain.areasigungu.application.dto.res.AreaListResponse;
 import konkuk.tourkk.chons.domain.areasigungu.application.service.AreaSigunguService;
@@ -40,13 +41,13 @@ public class HouseService {
 
 
 
-
     public HouseResponse createHouse(Long userId, List<MultipartFile> photos, HouseRequest request) {
         List<AreaListResponse> areaList = areaSigunguService.getAreaList();
         String address = request.getAddress();
         String region = createRegion(address, areaList);
 
         // List<String> availableDates = Arrays.asList("2024-07-01", "2024-07-02", "2024-07-05", "2024-07-10", "2024-07-11");
+
 
         List<String> photoUrls = photoService.savePhotos(photos, HOUSE_BUCKET_FOLDER);
         House house = House.builder()
@@ -69,6 +70,7 @@ public class HouseService {
         // bookableDateService.addBookableDates(house.getId(), availableDates);
 
         return houseresponse;
+
 
     }
 
@@ -153,7 +155,7 @@ public class HouseService {
             String firstWord = addressParts[0];
             // 첫 번째 단어가 areaList에 포함되는지 확인
             for (AreaListResponse area : areaList) {
-                if (firstWord.contains(area.getAreaName())) {
+                if (area.getAreaName().contains(firstWord)) {
                     return area.getAreaName();
                 }
             }

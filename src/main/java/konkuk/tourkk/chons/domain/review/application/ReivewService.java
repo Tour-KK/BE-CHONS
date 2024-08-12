@@ -78,6 +78,8 @@ public class ReivewService {
 
         Review review = checkAccess(userId, reviewId);
         photoService.deletePhotos(review.getPhotos());
+        House house = findHouseById(review.getHouseId());
+        house.reduceReviewNum();
         reviewRepository.delete(review);
     }
 

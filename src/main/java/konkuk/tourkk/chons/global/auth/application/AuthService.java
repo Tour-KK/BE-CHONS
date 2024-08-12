@@ -32,7 +32,6 @@ public class AuthService {
         SocialType socialType = request.getSocialType();
         String name = request.getName();
         String socialId = request.getSocialId();
-        String phoneNum = request.getPhoneNum();
 
         String accessToken = jwtService.createAccessToken(email);
         String refreshToken = jwtService.createRefreshToken();
@@ -40,7 +39,7 @@ public class AuthService {
         Optional<User> userOptional = userRepository.findByEmail(email);
         if (userOptional.isEmpty()) {
             User newUser = userService.registerUser(name, email, socialId,
-                    socialType, Role.USER, phoneNum);
+                    socialType, Role.USER);
             return LoginResponse.of(newUser.getId(), accessToken, refreshToken, email, false);
         }
 

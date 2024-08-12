@@ -24,7 +24,6 @@ public class UserInfoResponse {
                 .id(user.getId())
                 .name(user.getName())
                 .email(user.getEmail())
-                .phoneNum(user.getPhoneNum())
                 .role(user.getRole())
                 .build();
     }
