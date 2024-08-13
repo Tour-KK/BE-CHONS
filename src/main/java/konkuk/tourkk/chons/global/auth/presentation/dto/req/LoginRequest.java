@@ -19,8 +19,6 @@ public class LoginRequest {
 
     private SocialType socialType;
 
-    private String nickname;
-
     private String birthYear;
 
     private String birthDay;
