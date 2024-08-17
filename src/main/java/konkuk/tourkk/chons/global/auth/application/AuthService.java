@@ -60,7 +60,7 @@ public class AuthService {
         jwtService.updateRefreshToken(refreshToken, id);
         User user = userRepository.findByEmail(id)
                 .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
-        if(pw.equals(user.getSocialId())) {
+        if(!pw.equals(user.getSocialId())) {
             throw new UserException(ErrorCode.ADMIN_PASSWORD_INCORRECT);
         }
 

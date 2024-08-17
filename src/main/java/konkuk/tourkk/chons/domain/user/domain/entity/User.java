@@ -39,7 +39,6 @@ public class User implements UserDetails {
     private Role role;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private SocialType socialType;
 
     @Column(nullable = false)
