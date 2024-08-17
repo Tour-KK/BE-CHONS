@@ -6,10 +6,13 @@ import konkuk.tourkk.chons.domain.user.application.UserService;
 import konkuk.tourkk.chons.domain.user.domain.entity.User;
 import konkuk.tourkk.chons.domain.user.domain.enums.Role;
 import konkuk.tourkk.chons.domain.user.domain.enums.SocialType;
+import konkuk.tourkk.chons.domain.user.exception.UserException;
 import konkuk.tourkk.chons.domain.user.infrastructure.UserRepository;
 import konkuk.tourkk.chons.global.auth.exception.AuthException;
 import konkuk.tourkk.chons.global.auth.jwt.service.JwtService;
+import konkuk.tourkk.chons.global.auth.presentation.dto.req.AdminLoginRequest;
 import konkuk.tourkk.chons.global.auth.presentation.dto.req.LoginRequest;
+import konkuk.tourkk.chons.global.auth.presentation.dto.res.AdminLoginResponse;
 import konkuk.tourkk.chons.global.auth.presentation.dto.res.LoginResponse;
 import konkuk.tourkk.chons.global.exception.properties.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +48,27 @@ public class AuthService {
 
         User user = userOptional.get();
         return LoginResponse.of(user.getId(), accessToken, refreshToken, email, true);
+    }
+
+    public AdminLoginResponse adminLogin(AdminLoginRequest request) {
+
+        String id = request.getId();
+        String pw = request.getPw();
+
+        String accessToken = jwtService.createAccessToken(id);
+        String refreshToken = jwtService.createRefreshToken();
+        jwtService.updateRefreshToken(refreshToken, id);
+        User user = userRepository.findByEmail(id)
+                .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
+        if(pw.equals(user.getSocialId())) {
+            throw new UserException(ErrorCode.ADMIN_PASSWORD_INCORRECT);
+        }
+
+        return AdminLoginResponse.builder()
+                .userId(user.getId())
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
     }
 
     public void reissueTokens(HttpServletRequest request, HttpServletResponse response) {

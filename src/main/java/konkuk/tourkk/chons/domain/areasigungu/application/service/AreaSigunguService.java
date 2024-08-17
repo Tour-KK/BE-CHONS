@@ -40,7 +40,7 @@ public class AreaSigunguService {
                                 .name(name)
                                 .code(Long.parseLong(code))
                                 .build();
-                        areaRepository.save(area);
+//                        areaRepository.save(area);
                         saveSigungus(area.getCode());
                     }
                 });

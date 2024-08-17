@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import konkuk.tourkk.chons.global.auth.application.AuthService;
 import konkuk.tourkk.chons.global.auth.jwt.service.JwtService;
+import konkuk.tourkk.chons.global.auth.presentation.dto.req.AdminLoginRequest;
 import konkuk.tourkk.chons.global.auth.presentation.dto.req.LoginRequest;
 import konkuk.tourkk.chons.global.auth.presentation.dto.res.LoginResponse;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,11 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
+    }
+
+    @PostMapping("/login/admin")
+    public ResponseEntity<LoginResponse> adminLogin(@RequestBody AdminLoginRequest request) {
+
     }
 
     @Operation(
