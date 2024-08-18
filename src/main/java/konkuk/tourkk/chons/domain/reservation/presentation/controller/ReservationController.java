@@ -1,7 +1,7 @@
 package konkuk.tourkk.chons.domain.reservation.presentation.controller;
 import konkuk.tourkk.chons.domain.reservation.application.ReservationService;
-import konkuk.tourkk.chons.domain.reservation.presentation.dto.req.EditRequest;
-import konkuk.tourkk.chons.domain.reservation.presentation.dto.req.ReservationRequest;
+import konkuk.tourkk.chons.domain.reservation.presentation.dto.req.EditReservationRequest;
+import konkuk.tourkk.chons.domain.reservation.presentation.dto.req.SaveReservationRequest;
 import konkuk.tourkk.chons.domain.reservation.presentation.dto.res.ReservationResponse;
 import konkuk.tourkk.chons.domain.user.domain.entity.User;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +24,7 @@ public class ReservationController {
     @PostMapping("/{houseId}")
     public ResponseEntity<ReservationResponse> registerReservation(
             @PathVariable Long houseId,
-            @RequestBody ReservationRequest request,
+            @RequestBody SaveReservationRequest request,
             @AuthenticationPrincipal User currentUser) {
 
         ReservationResponse response = reservationService.saveReservation(request, currentUser, houseId);
@@ -63,7 +63,7 @@ public class ReservationController {
     // 예약 수정
     @PatchMapping("/{reservationId}")
     public ResponseEntity<ReservationResponse> editReservation(
-            @RequestBody EditRequest request,
+            @RequestBody EditReservationRequest request,
             @PathVariable Long reservationId,
             @AuthenticationPrincipal User currentUser) {
 

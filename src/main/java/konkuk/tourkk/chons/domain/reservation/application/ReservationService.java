@@ -10,8 +10,8 @@ import konkuk.tourkk.chons.domain.house.infrastructure.HouseRepository;
 import konkuk.tourkk.chons.domain.reservation.domain.entity.Reservation;
 import konkuk.tourkk.chons.domain.reservation.exception.ReservationException;
 import konkuk.tourkk.chons.domain.reservation.infrastructure.ReservationRepository;
-import konkuk.tourkk.chons.domain.reservation.presentation.dto.req.EditRequest;
-import konkuk.tourkk.chons.domain.reservation.presentation.dto.req.ReservationRequest;
+import konkuk.tourkk.chons.domain.reservation.presentation.dto.req.EditReservationRequest;
+import konkuk.tourkk.chons.domain.reservation.presentation.dto.req.SaveReservationRequest;
 import konkuk.tourkk.chons.domain.reservation.presentation.dto.res.ReservationResponse;
 import konkuk.tourkk.chons.domain.user.domain.entity.User;
 
@@ -33,7 +33,7 @@ public class ReservationService {
 
 
     @Transactional
-    public ReservationResponse saveReservation(ReservationRequest request, User currentUser, Long houseId){
+    public ReservationResponse saveReservation(SaveReservationRequest request, User currentUser, Long houseId){
 
         House house = houseRepository.findById(houseId)
                 .orElseThrow(() -> new HouseException(ErrorCode.HOUSE_NOT_FOUND));
@@ -44,7 +44,8 @@ public class ReservationService {
                 calculatePrice(houseId, request.getStartAt(), request.getEndAt()),
                 request.getStartAt(),
                 request.getEndAt(),
-                request.getPersonNum()
+                request.getPersonNum(),
+                request.getPhoneNum()
         );
         bookabledateService.checkAvailability(houseId, request.getStartAt(), request.getEndAt());
         Reservation savedReservation = reservationRepository.save(reservation);
@@ -86,7 +87,7 @@ public class ReservationService {
     }
 
     @Transactional
-    public ReservationResponse updateReservation(EditRequest request, Long reservationId, User currentUser) {
+    public ReservationResponse updateReservation(EditReservationRequest request, Long reservationId, User currentUser) {
         Long userId = currentUser.getId();
         Reservation reservation = checkAccess(userId, reservationId, false);
 

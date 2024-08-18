@@ -2,6 +2,7 @@ package konkuk.tourkk.chons.domain.house.application;
 
 import static konkuk.tourkk.chons.global.common.photo.application.PhotoService.HOUSE_BUCKET_FOLDER;
 
+import java.util.Arrays;
 
 import java.util.Optional;
 import konkuk.tourkk.chons.domain.areasigungu.application.dto.res.AreaListResponse;
@@ -13,6 +14,7 @@ import konkuk.tourkk.chons.domain.house.presentation.dto.req.HouseRequest;
 import konkuk.tourkk.chons.domain.house.presentation.dto.res.HouseResponse;
 import konkuk.tourkk.chons.domain.like.domain.entity.Like;
 import konkuk.tourkk.chons.domain.like.infrastructure.LikeRepository;
+import konkuk.tourkk.chons.domain.reservation.application.BookableDateService;
 import konkuk.tourkk.chons.domain.user.application.UserService;
 import konkuk.tourkk.chons.global.common.photo.application.PhotoService;
 import konkuk.tourkk.chons.global.exception.properties.ErrorCode;
@@ -35,11 +37,18 @@ public class HouseService {
     private final UserService userService;
     private final LikeRepository likeRepository;
     private final PhotoService photoService;
+    private final BookableDateService bookableDateService;
+
+
 
     public HouseResponse createHouse(Long userId, List<MultipartFile> photos, HouseRequest request) {
         List<AreaListResponse> areaList = areaSigunguService.getAreaList();
         String address = request.getAddress();
         String region = createRegion(address, areaList);
+
+        // List<String> availableDates = Arrays.asList("2024-07-01", "2024-07-02", "2024-07-05", "2024-07-10", "2024-07-11");
+
+
         List<String> photoUrls = photoService.savePhotos(photos, HOUSE_BUCKET_FOLDER);
         House house = House.builder()
                 .hostName(request.getHostName())
@@ -54,9 +63,15 @@ public class HouseService {
                 .reviewNum(0)
                 .starAvg(0.0)
                 .region(region) // 지역 정보 추가
+     //          .dates(availableDates)
                 .build();
 
-        return HouseResponse.of(houseRepository.save(house), false);
+        HouseResponse houseresponse = HouseResponse.of(houseRepository.save(house), false);
+        // bookableDateService.addBookableDates(house.getId(), availableDates);
+
+        return houseresponse;
+
+
     }
 
     @Transactional(readOnly = true)
