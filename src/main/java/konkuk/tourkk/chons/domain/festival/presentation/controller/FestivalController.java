@@ -31,8 +31,8 @@ public class FestivalController {
     )
     @GetMapping("/around")
     public ResponseEntity<List<FestivalResponse>> getAroundFestivals(
-            @RequestBody FestivalRequest request) {
-        List<FestivalResponse> responses = festivalService.getFestivalList(request);
+        @RequestParam String addr1, @RequestParam String addr2) {
+        List<FestivalResponse> responses = festivalService.getFestivalList(addr1, addr2);
         return ResponseEntity.ok(responses);
     }
 

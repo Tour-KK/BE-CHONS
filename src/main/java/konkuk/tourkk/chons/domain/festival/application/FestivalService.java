@@ -32,9 +32,9 @@ public class FestivalService {
     private final AreaRepository areaRepository;
     private final SigunguRepository sigunguRepository;
 
-    public List<FestivalResponse> getFestivalList(FestivalRequest request) {
-        Area area = getArea(request);
-        Sigungu sigungu = getSigungu(area.getCode(), request);
+    public List<FestivalResponse> getFestivalList(String addr1, String addr2) {
+        Area area = getArea(addr1);
+        Sigungu sigungu = getSigungu(area.getCode(), addr2);
 
         return webClientService.getAroundFestivals(area, sigungu)
                 .map(response -> getFestivalResponses(response, YYYYMMDD_DATE_FORMATTER))
@@ -48,13 +48,13 @@ public class FestivalService {
     }
 
 
-    private Sigungu getSigungu(Long areaCode, FestivalRequest request) {
-        return sigunguRepository.findByNameAndAreaCode(request.getAddr2(), areaCode)
+    private Sigungu getSigungu(Long areaCode, String addr2) {
+        return sigunguRepository.findByNameAndAreaCode(addr2, areaCode)
                 .orElseThrow(() -> new FestivalException(ErrorCode.SIGUNGU_NOT_FOUND));
     }
 
-    private Area getArea(FestivalRequest request) {
-        return areaRepository.findByName(request.getAddr1())
+    private Area getArea(String addr1) {
+        return areaRepository.findByName(addr1)
                 .orElseThrow(() -> new FestivalException(ErrorCode.AREA_NOT_FOUND));
     }
 
