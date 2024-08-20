@@ -13,7 +13,7 @@ public class FestivalResponse {
 
     String detailAddress;
 
-    String contentId;
+    Long contentId;
 
     String startDate;
 
@@ -33,7 +33,7 @@ public class FestivalResponse {
         return FestivalResponse.builder()
                 .address(item.get("addr1"))
                 .detailAddress(item.get("addr2"))
-                .contentId(item.get("contentid"))
+                .contentId(Long.parseLong(item.get("contentid")))
                 .startDate(item.get("eventstartdate"))
                 .endDate(item.get("eventenddate"))
                 .imageUrl(item.get("firstimage"))
