@@ -16,6 +16,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     @Query("SELECT r FROM Reservation r WHERE r.userId = :userId")
     List<Reservation> findByUserId(Long userId);
 
+    void deleteByHouseId(Long houseId);
+
 
     /*@Query("SELECT r FROM Reservation r WHERE r.houseID = :houseID")
     Optional<Reservation> findByHouseId(Long houseId);*/

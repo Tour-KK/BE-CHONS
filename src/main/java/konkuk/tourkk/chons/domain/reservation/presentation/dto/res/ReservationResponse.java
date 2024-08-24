@@ -18,6 +18,7 @@ public class ReservationResponse {
     private String startAt;
     private String endAt;
     private int personNum;
+    private String phoneNum;
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
 
@@ -29,18 +30,17 @@ public class ReservationResponse {
         this.startAt = formatDate(reservation.getStartAt());
         this.endAt = formatDate(reservation.getEndAt());
         this.personNum = reservation.getPersonNum();
+        this.phoneNum = reservation.getPhoneNum();
     }
 
-    private String formatDate(LocalDate date) {
+    public String formatDate(LocalDate date) {
         if (date == null) {
             return null;
         }
         try {
             return date.format(DATE_FORMATTER);
         } catch (DateTimeParseException e) {
-           throw new ReservationException(ErrorCode.DATE_FORMAT_CONFLICT);
+            throw new ReservationException(ErrorCode.DATE_FORMAT_CONFLICT);
         }
     }
-
-
 }

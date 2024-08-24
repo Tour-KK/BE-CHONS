@@ -28,7 +28,7 @@ public class HouseResponse {
 //잠시 아웃
 //    private int operationalStatus;
 //
-//    private List<String> availableReservationDates;
+    private List<String> availableDates;
 
     private String address;
 
@@ -54,6 +54,7 @@ public class HouseResponse {
                 .pricePerNight(house.getPricePerNight())
                 .registrantId(house.getRegistrantId())
 //                .operationalStatus(house.getOperationalStatus())
+                .availableDates(house.getAvailableDates())
                 .region(house.getRegion())
                 .maxNumPeople(house.getMaxNumPeople())
                 .reviewNum(house.getReviewNum())

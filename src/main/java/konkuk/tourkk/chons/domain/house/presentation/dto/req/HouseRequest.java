@@ -23,8 +23,9 @@ public class HouseRequest {
 //잠시 아웃
 //    private int operationalStatus;
 //
-//    private List<String> availableReservationDates;
+    private List<String> availableDates;
 
     private String address;
+
     private int maxNumPeople;
 }
