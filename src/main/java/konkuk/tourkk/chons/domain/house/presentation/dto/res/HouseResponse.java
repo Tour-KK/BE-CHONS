@@ -25,10 +25,6 @@ public class HouseResponse {
     private Long pricePerNight;
 
     private Long registrantId;
-//잠시 아웃
-//    private int operationalStatus;
-//
-    private List<String> availableDates;
 
     private String address;
 
@@ -53,8 +49,6 @@ public class HouseResponse {
                 .phoneNumber(house.getPhoneNumber())
                 .pricePerNight(house.getPricePerNight())
                 .registrantId(house.getRegistrantId())
-//                .operationalStatus(house.getOperationalStatus())
-                .availableDates(house.getAvailableDates())
                 .region(house.getRegion())
                 .maxNumPeople(house.getMaxNumPeople())
                 .reviewNum(house.getReviewNum())

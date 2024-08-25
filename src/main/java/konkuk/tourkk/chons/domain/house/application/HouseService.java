@@ -43,13 +43,10 @@ public class HouseService {
     private final ReservationRepository reservationRepository;
 
 
-
     public HouseResponse createHouse(Long userId, List<MultipartFile> photos, HouseRequest request) {
         List<AreaListResponse> areaList = areaSigunguService.getAreaList();
         String address = request.getAddress();
         String region = createRegion(address, areaList);
-        // List<String> availableDates = Arrays.asList("2024-07-01", "2024-07-02", "2024-07-05", "2024-07-10", "2024-07-11");
-
 
         List<String> photoUrls = photoService.savePhotos(photos, HOUSE_BUCKET_FOLDER);
         House house = House.builder()
@@ -65,15 +62,11 @@ public class HouseService {
                 .reviewNum(0)
                 .starAvg(0.0)
                 .region(region) // 지역 정보 추가
-                .availableDates(request.getAvailableDates())
                 .build();
 
         HouseResponse houseresponse = HouseResponse.of(houseRepository.save(house), false);
-        bookableDateService.addBookableDates(house.getId(), request.getAvailableDates());
 
         return houseresponse;
-
-
     }
 
     @Transactional(readOnly = true)
@@ -127,6 +120,28 @@ public class HouseService {
             .collect(Collectors.toList());
     }
 
+    public List<HouseResponse> getHouseListByPrice(Long userId, int startPrice, int endPrice) {
+        userService.findUserById(userId);
+        return houseRepository.findByPriceBetween(startPrice,endPrice)
+                .stream()
+                .map(house -> {
+                    boolean isLiked = isLikedHouse(userId, house.getId());
+                    return HouseResponse.of(house, isLiked);
+                })
+                .collect(Collectors.toList());
+    }
+
+    public List<HouseResponse> getHouseListByNumPeople(Long userId, int numPeople) {
+        userService.findUserById(userId);
+        return houseRepository.findByNumPeople(numPeople)
+                .stream()
+                .map(house -> {
+                    boolean isLiked = isLikedHouse(userId, house.getId());
+                    return HouseResponse.of(house, isLiked);
+                })
+                .collect(Collectors.toList());
+    }
+
     public List<HouseResponse> getHouseListByUserId(Long userId) {
         userService.findUserById(userId);
         return houseRepository.findByRegistrantId(userId)
@@ -157,8 +172,8 @@ public class HouseService {
     private String createRegion(String address, List<AreaListResponse> areaList) {
         String[] addressParts = address.split(" ");
         if (addressParts.length > 0) {
-            String firstWord = addressParts[0];
-            // 첫 번째 단어가 areaList에 포함되는지 확인
+            String firstWord = addressParts[1];
+            // 두 번째 단어가 areaList에 포함되는지 확인
             for (AreaListResponse area : areaList) {
                 if (area.getAreaName().contains(firstWord)) {
                     return area.getAreaName();
@@ -186,7 +201,6 @@ public class HouseService {
         house.changeRegion(createRegion(request.getAddress(), areaSigunguService.getAreaList()));
         house.changeMaxNumPeople(request.getMaxNumPeople());
         house.changePricePerNight(request.getPricePerNight());
-        house.changeAvailableDate(request.getAvailableDates());
     }
 
     private boolean isLikedHouse(Long userId, Long houseId) {
