@@ -55,20 +55,13 @@ public class House {
 
     @Column(nullable = false)
     private double totalStar;
-    //잠시 아웃
-//    @Column(nullable = true)
-//    private int operationalStatus;
-//
+
     @Column(nullable = false)
     private String region;
 
     @CreationTimestamp
     @Column(nullable = false)
     private LocalDateTime createdAt;
-
-
-    @Column(nullable = false)
-    private List<String> dates;
 
     @Builder
     public House(String hostName, String houseIntroduction, String freeService,
@@ -82,12 +75,10 @@ public class House {
         this.phoneNumber = phoneNumber;
         this.pricePerNight = pricePerNight;
         this.registrantId = registrantId;
-//        this.operationalStatus = operationalStatus;
         this.region = region;
         this.maxNumPeople = maxNumPeople;
         this.reviewNum = reviewNum;
         this.starAvg = starAvg;
-        this.dates=dates;
     }
 
 
