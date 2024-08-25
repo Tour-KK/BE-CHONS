@@ -122,6 +122,27 @@ public class HouseService {
             .collect(Collectors.toList());
     }
 
+    public List<HouseResponse> getHouseListByPrice(Long userId, int startPrice, int endPrice) {
+        userService.findUserById(userId);
+        return houseRepository.findByPriceBetween(startPrice,endPrice)
+                .stream()
+                .map(house -> {
+                    boolean isLiked = isLikedHouse(userId, house.getId());
+                    return HouseResponse.of(house, isLiked);
+                })
+                .collect(Collectors.toList());
+    }
+    public List<HouseResponse> getHouseListByNumPeople(Long userId, int numPeople) {
+        userService.findUserById(userId);
+        return houseRepository.findByNumPeople(numPeople)
+                .stream()
+                .map(house -> {
+                    boolean isLiked = isLikedHouse(userId, house.getId());
+                    return HouseResponse.of(house, isLiked);
+                })
+                .collect(Collectors.toList());
+    }
+
     public List<HouseResponse> getHouseListByUserId(Long userId) {
         userService.findUserById(userId);
         return houseRepository.findByRegistrantId(userId)
@@ -152,8 +173,8 @@ public class HouseService {
     private String createRegion(String address, List<AreaListResponse> areaList) {
         String[] addressParts = address.split(" ");
         if (addressParts.length > 0) {
-            String firstWord = addressParts[0];
-            // 첫 번째 단어가 areaList에 포함되는지 확인
+            String firstWord = addressParts[1];
+            // 두 번째 단어가 areaList에 포함되는지 확인
             for (AreaListResponse area : areaList) {
                 if (area.getAreaName().contains(firstWord)) {
                     return area.getAreaName();

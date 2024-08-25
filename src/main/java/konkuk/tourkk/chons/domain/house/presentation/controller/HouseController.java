@@ -162,4 +162,33 @@ public class HouseController {
         return ResponseEntity.ok(responses);
     }
 
+    @Operation(
+            summary = "가격별 집 조회",
+            description = "가격별로 집을 조회합니다."
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "가격별 집 조회에 성공하였습니다."
+    )
+    @GetMapping("/list/price")
+    public ResponseEntity<List<HouseResponse>> getByPrice(@AuthenticationPrincipal User user,
+                                                           @RequestBody HouseListRequest request) {
+        List<HouseResponse> responses = houseService.getHouseListByPrice(user.getId(), request.getStartPrice(),request.getEndPrice());
+        return ResponseEntity.ok(responses);
+    }
+
+    @Operation(
+            summary = "지역별 집 조회",
+            description = "인원별로 집을 조회합니다."
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "인원별 집 조회에 성공하였습니다."
+    )
+    @GetMapping("/list/numPeople")
+    public ResponseEntity<List<HouseResponse>> getByPeopleNum(@AuthenticationPrincipal User user,
+                                                          @RequestBody HouseListRequest request) {
+        List<HouseResponse> responses = houseService.getHouseListByNumPeople(user.getId(), request.getNumPeople());
+        return ResponseEntity.ok(responses);
+    }
 }

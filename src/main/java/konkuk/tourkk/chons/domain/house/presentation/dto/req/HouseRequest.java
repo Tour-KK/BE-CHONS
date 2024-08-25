@@ -26,5 +26,7 @@ public class HouseRequest {
 //    private List<String> availableReservationDates;
 
     private String address;
+
     private int maxNumPeople;
+
 }

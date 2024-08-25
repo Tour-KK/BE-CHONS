@@ -79,7 +79,6 @@ public class BookableDateService {
         bookableDateRepository.saveAll(bookableDates);
     }
 
-
    @Transactional
     public void addBookableDates(Long houseId, List<String> dateStrings) {
         House house = houseRepository.findById(houseId)
