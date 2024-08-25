@@ -36,4 +36,7 @@ public interface BookableDateRepository extends JpaRepository<BookableDate, Long
             @Param("endAt") LocalDate endAt
     );
 
+    void deleteByHouseId(Long houseId);
+
+
 }

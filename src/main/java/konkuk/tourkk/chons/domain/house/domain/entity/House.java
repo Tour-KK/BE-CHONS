@@ -68,12 +68,12 @@ public class House {
 
 
     @Column(nullable = false)
-    private List<String> dates;
+    private List<String> availableDates;
 
     @Builder
     public House(String hostName, String houseIntroduction, String freeService,
                  List<String> photos, String address, String phoneNumber,
-                 Long pricePerNight, Long registrantId, String region,int maxNumPeople, int reviewNum, double starAvg, List<String> dates) {
+                 Long pricePerNight, Long registrantId, String region,int maxNumPeople, int reviewNum, double starAvg, List<String> availableDates) {
         this.hostName = hostName;
         this.houseIntroduction = houseIntroduction;
         this.freeService = freeService;
@@ -87,7 +87,7 @@ public class House {
         this.maxNumPeople = maxNumPeople;
         this.reviewNum = reviewNum;
         this.starAvg = starAvg;
-        this.dates=dates;
+        this.availableDates=availableDates;
     }
 
 
@@ -123,6 +123,8 @@ public class House {
     public void changeRegion(String region) { this.region = region; }
 
     public void changeMaxNumPeople(int maxNumPeople){this.maxNumPeople = maxNumPeople;}
+
+    public void changeAvailableDate(List<String> availableDates){this.availableDates = availableDates;}
 
     public void addReviewNum() {
         this.reviewNum ++;
