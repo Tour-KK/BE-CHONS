@@ -46,7 +46,7 @@ public enum ErrorCode {
     INVALID_DATE_RANGE(CONFLICT, "예약 시작일이 종료일보다 늦을 수 없습니다."),
     DATE_ALREADY_RESERVED(CONFLICT, "이미 예약되어 있거나 예약이 불가능한 날짜입니다."),
     INVALID_HOUSE_ID(CONFLICT, "불가능한 집입니다."),
-    NUMBER_FORMAT_CONFLICT(CONFLICT, "번화번호 형식이 올바르지 않습니다."),
+    NUMBER_FORMAT_CONFLICT(CONFLICT, "전화번호 형식이 올바르지 않습니다."),
 
     // 500
     SERVER_ERROR(INTERNAL_SERVER_ERROR, "예상치 못한 서버 에러가 발생하였습니다.");

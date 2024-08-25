@@ -67,7 +67,7 @@ public class House {
     private LocalDateTime createdAt;
 
 
-    @Column(nullable = true)
+    @Column(nullable = false)
     private List<String> dates;
 
     @Builder

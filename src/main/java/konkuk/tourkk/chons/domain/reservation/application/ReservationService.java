@@ -7,11 +7,12 @@ import jakarta.transaction.Transactional;
 import konkuk.tourkk.chons.domain.house.domain.entity.House;
 import konkuk.tourkk.chons.domain.house.exception.HouseException;
 import konkuk.tourkk.chons.domain.house.infrastructure.HouseRepository;
+import konkuk.tourkk.chons.domain.reservation.application.util.Passer;
+import konkuk.tourkk.chons.domain.reservation.application.util.Validation;
 import konkuk.tourkk.chons.domain.reservation.domain.entity.Reservation;
 import konkuk.tourkk.chons.domain.reservation.exception.ReservationException;
 import konkuk.tourkk.chons.domain.reservation.infrastructure.ReservationRepository;
-import konkuk.tourkk.chons.domain.reservation.presentation.dto.req.EditReservationRequest;
-import konkuk.tourkk.chons.domain.reservation.presentation.dto.req.SaveReservationRequest;
+import konkuk.tourkk.chons.domain.reservation.presentation.dto.req.ReservationRequest;
 import konkuk.tourkk.chons.domain.reservation.presentation.dto.res.ReservationResponse;
 import konkuk.tourkk.chons.domain.user.domain.entity.User;
 
@@ -30,26 +31,35 @@ public class ReservationService {
     private final UserRepository userRepository;
     private final HouseRepository houseRepository;
     private final BookableDateService bookabledateService;
+    private final Passer passer;
+    private final Validation validation;
 
 
     @Transactional
-    public ReservationResponse saveReservation(SaveReservationRequest request, User currentUser, Long houseId){
+    public ReservationResponse saveReservation(ReservationRequest request, User currentUser, Long houseId){
 
         House house = houseRepository.findById(houseId)
                 .orElseThrow(() -> new HouseException(ErrorCode.HOUSE_NOT_FOUND));
         Long userId = currentUser.getId();
+
+        // 파싱 후 유효성 검사
+        LocalDate StartAt = passer.parseDate(request.getStartAt());
+        LocalDate EndAt = passer.parseDate(request.getEndAt());
+        String phoneNum = request.getPhoneNum();
+        validation.validate(StartAt, EndAt, phoneNum);
+
         Reservation reservation = new Reservation(
                 userId,
                 houseId,
-                calculatePrice(houseId, request.getStartAt(), request.getEndAt()),
-                request.getStartAt(),
-                request.getEndAt(),
+                calculatePrice(houseId, StartAt, EndAt),
+                StartAt,
+                EndAt,
                 request.getPersonNum(),
-                request.getPhoneNum()
+                phoneNum
         );
-        bookabledateService.checkAvailability(houseId, request.getStartAt(), request.getEndAt());
+        bookabledateService.checkAvailability(houseId, StartAt, EndAt);
         Reservation savedReservation = reservationRepository.save(reservation);
-        bookabledateService.saveBookableDates(houseId, request.getStartAt(), request.getEndAt());
+        bookabledateService.saveBookableDates(houseId, StartAt, EndAt);
 
         ReservationResponse reservationResponse = new ReservationResponse(savedReservation);
 
@@ -82,12 +92,12 @@ public class ReservationService {
         Long userId = currentUser.getId();
         Reservation reservation = checkAccess(userId, reservationId, true);
 
-        bookabledateService.deleteBookableDates(reservation.getHouseId(), reservation.getStartAt(), reservation.getEndAt());
+        bookabledateService.setPossibleBookableDates(reservation.getHouseId(), reservation.getStartAt(), reservation.getEndAt());
         reservationRepository.delete(reservation);
     }
 
     @Transactional
-    public ReservationResponse updateReservation(EditReservationRequest request, Long reservationId, User currentUser) {
+    public ReservationResponse updateReservation(ReservationRequest request, Long reservationId, User currentUser) {
         Long userId = currentUser.getId();
         Reservation reservation = checkAccess(userId, reservationId, false);
 
@@ -97,19 +107,25 @@ public class ReservationService {
 
         try {
             // 기존 날짜를 available하게 변경하기
-            bookabledateService.deleteBookableDates(houseId, originalStartAt, originalEndAt);
+            bookabledateService.setPossibleBookableDates(houseId, originalStartAt, originalEndAt);
+
+            // 파싱 후 유효성 검사
+            LocalDate newStartAt = passer.parseDate(request.getStartAt());
+            LocalDate newEndAt = passer.parseDate(request.getEndAt());
+            String phoneNum = request.getPhoneNum();
+            validation.validate(newStartAt, newEndAt, phoneNum);
 
             // 예약 정보 업데이트
-            reservation.setPrice(calculatePrice(houseId, request.getStartAt(), request.getEndAt()));
-            reservation.setStartAt(request.getStartAt());
-            reservation.setEndAt(request.getEndAt());
+            reservation.setPrice(calculatePrice(houseId, newStartAt, newEndAt));
+            reservation.setStartAt(newStartAt);
+            reservation.setEndAt(newEndAt);
             reservation.setPersonNum(request.getPersonNum());
 
-            bookabledateService.checkAvailability(houseId, request.getStartAt(), request.getEndAt());
+            bookabledateService.checkAvailability(houseId, newStartAt, newEndAt);
             Reservation updatedReservation = reservationRepository.save(reservation);
 
             // 새로운 날짜를 unavailable하게 변경하기
-            bookabledateService.saveBookableDates(houseId, request.getStartAt(), request.getEndAt());
+            bookabledateService.saveBookableDates(houseId, newStartAt, newEndAt);
 
             return new ReservationResponse(updatedReservation);
         } catch (Exception e) {

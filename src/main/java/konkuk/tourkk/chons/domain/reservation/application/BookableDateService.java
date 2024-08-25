@@ -64,9 +64,10 @@ public class BookableDateService {
             currentDate = currentDate.plusDays(1);
         }
     }
-    //예액 삭제시 삭제하는 기능
+
+    //예액 삭제시 예약 불가능하게 만듬
     @Transactional
-    public void deleteBookableDates(Long houseId, LocalDate startAt, LocalDate endAt) {
+    public void setPossibleBookableDates(Long houseId, LocalDate startAt, LocalDate endAt) {
         House house = houseRepository.findById(houseId)
                 .orElseThrow(() -> new HouseException(ErrorCode.HOUSE_NOT_FOUND));
 
@@ -95,4 +96,14 @@ public class BookableDateService {
 
         bookableDateRepository.saveAll(bookableDates);
     }
+
+    // 집 삭제시 예약 가능 날짜도 삭제하는 기능
+    @Transactional
+    public void deleteBookableDates(Long houseId) {
+        House house = houseRepository.findById(houseId)
+                .orElseThrow(() -> new HouseException(ErrorCode.HOUSE_NOT_FOUND));
+
+        bookableDateRepository.deleteByHouseId(houseId);
+    }
+
 }
