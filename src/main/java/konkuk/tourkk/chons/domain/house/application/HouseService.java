@@ -2,6 +2,7 @@ package konkuk.tourkk.chons.domain.house.application;
 
 import static konkuk.tourkk.chons.global.common.photo.application.PhotoService.HOUSE_BUCKET_FOLDER;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 
 import java.util.Optional;
@@ -12,15 +13,20 @@ import konkuk.tourkk.chons.domain.house.exception.HouseException;
 import konkuk.tourkk.chons.domain.house.infrastructure.HouseRepository;
 import konkuk.tourkk.chons.domain.house.presentation.dto.req.HouseRequest;
 import konkuk.tourkk.chons.domain.house.presentation.dto.res.HouseResponse;
+import konkuk.tourkk.chons.domain.house.presentation.dto.res.SavedHouseResponse;
 import konkuk.tourkk.chons.domain.like.domain.entity.Like;
 import konkuk.tourkk.chons.domain.like.infrastructure.LikeRepository;
 import konkuk.tourkk.chons.domain.reservation.application.BookableDateService;
 import konkuk.tourkk.chons.domain.reservation.application.ReservationService;
+import konkuk.tourkk.chons.domain.reservation.domain.entity.BookableDate;
+import konkuk.tourkk.chons.domain.reservation.infrastructure.BookableDateRepository;
 import konkuk.tourkk.chons.domain.reservation.infrastructure.ReservationRepository;
 import konkuk.tourkk.chons.domain.user.application.UserService;
 import konkuk.tourkk.chons.global.common.photo.application.PhotoService;
 import konkuk.tourkk.chons.global.exception.properties.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,15 +46,18 @@ public class HouseService {
     private final LikeRepository likeRepository;
     private final PhotoService photoService;
     private final BookableDateService bookableDateService;
+    private final BookableDateRepository bookableDateRepository;
     private final ReservationRepository reservationRepository;
 
 
-    public HouseResponse createHouse(Long userId, List<MultipartFile> photos, HouseRequest request) {
+
+    public SavedHouseResponse createHouse(Long userId, List<MultipartFile> photos, HouseRequest request) {
         List<AreaListResponse> areaList = areaSigunguService.getAreaList();
         String address = request.getAddress();
         String region = createRegion(address, areaList);
 
         List<String> photoUrls = photoService.savePhotos(photos, HOUSE_BUCKET_FOLDER);
+
         House house = House.builder()
                 .hostName(request.getHostName())
                 .photos(photoUrls)
@@ -61,12 +70,21 @@ public class HouseService {
                 .maxNumPeople(request.getMaxNumPeople())
                 .reviewNum(0)
                 .starAvg(0.0)
-                .region(region) // 지역 정보 추가
+                .region(region)
                 .build();
 
-        HouseResponse houseresponse = HouseResponse.of(houseRepository.save(house), false);
+         house = houseRepository.save(house);
 
-        return houseresponse;
+        // Add bookable dates
+        bookableDateService.addBookableDates(house.getId(), request.getAvailableDates());
+
+        // Fetch the saved bookable dates
+        List<BookableDate> availableDates = bookableDateRepository.findAllByHouseId(house.getId());
+        List<String> availableDateStrings = availableDates.stream()
+                .map(bookableDate -> bookableDate.getAvailableDate().toString())
+                .collect(Collectors.toList());
+
+        return SavedHouseResponse.of(house, false, availableDateStrings);
     }
 
     @Transactional(readOnly = true)

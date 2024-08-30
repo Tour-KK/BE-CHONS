@@ -25,4 +25,6 @@ public class HouseRequest {
 
     private int maxNumPeople;
 
+    private List<String> availableDates;
+
 }

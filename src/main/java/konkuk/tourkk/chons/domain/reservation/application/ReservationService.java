@@ -105,15 +105,15 @@ public class ReservationService {
         LocalDate originalEndAt = reservation.getEndAt();
         Long houseId = reservation.getHouseId();
 
+        // 파싱 후 유효성 검사
+        LocalDate newStartAt = passer.parseDate(request.getStartAt());
+        LocalDate newEndAt = passer.parseDate(request.getEndAt());
+        String phoneNum = request.getPhoneNum();
+        validation.validate(newStartAt, newEndAt, phoneNum);
+
         try {
             // 기존 날짜를 available하게 변경하기
             bookabledateService.setPossibleBookableDates(houseId, originalStartAt, originalEndAt);
-
-            // 파싱 후 유효성 검사
-            LocalDate newStartAt = passer.parseDate(request.getStartAt());
-            LocalDate newEndAt = passer.parseDate(request.getEndAt());
-            String phoneNum = request.getPhoneNum();
-            validation.validate(newStartAt, newEndAt, phoneNum);
 
             // 예약 정보 업데이트
             reservation.setPrice(calculatePrice(houseId, newStartAt, newEndAt));

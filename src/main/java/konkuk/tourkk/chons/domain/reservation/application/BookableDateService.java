@@ -30,6 +30,8 @@ public class BookableDateService {
     private final BookableDateRepository bookableDateRepository;
     private final HouseRepository houseRepository;
 
+    //insert into area_tb (code, name) values (1, '고양시')
+
     //예약 가능일자 데베에 저장하기
     @Transactional
     public void saveBookableDates(Long houseId, LocalDate startAt, LocalDate endAt) {
@@ -79,6 +81,7 @@ public class BookableDateService {
 
         bookableDateRepository.saveAll(bookableDates);
     }
+
 
    @Transactional
     public void addBookableDates(Long houseId, List<String> dateStrings) {
