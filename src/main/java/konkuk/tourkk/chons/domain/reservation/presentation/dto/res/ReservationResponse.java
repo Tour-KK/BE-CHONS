@@ -11,7 +11,7 @@ import java.time.format.DateTimeParseException;
 
 @Getter
 public class ReservationResponse {
-    private Long Id;
+    private Long reservationId;
     private Long userId;
     private Long houseId;
     private int price;
@@ -23,7 +23,7 @@ public class ReservationResponse {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
 
     public ReservationResponse(Reservation reservation) {
-        this.Id = reservation.getId();
+        this.reservationId = reservation.getId();
         this.userId = reservation.getUserId();
         this.houseId = reservation.getHouseId();
         this.price = reservation.getPrice();

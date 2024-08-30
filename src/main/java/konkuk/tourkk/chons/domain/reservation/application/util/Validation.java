@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Component
 public class Validation {
     public void validate(LocalDate startAt, LocalDate endAt, String phoneNum) {
-        if (startAt != null && endAt != null && startAt.isAfter(endAt)) {
+        if (startAt != null && endAt != null && !startAt.isBefore(endAt)) {
             throw new ReservationException(ErrorCode.INVALID_DATE_RANGE);
         }
         if (phoneNum == null || !phoneNum.matches("^\\d{11}$")) {
