@@ -30,6 +30,8 @@ public class BookableDateService {
     private final BookableDateRepository bookableDateRepository;
     private final HouseRepository houseRepository;
 
+    //insert into area_tb (code, name) values (1, '고양시')
+
     //예약 가능일자 데베에 저장하기
     @Transactional
     public void saveBookableDates(Long houseId, LocalDate startAt, LocalDate endAt) {
@@ -64,9 +66,10 @@ public class BookableDateService {
             currentDate = currentDate.plusDays(1);
         }
     }
-    //예액 삭제시 삭제하는 기능
+
+    //예액 삭제시 예약 불가능하게 만듬
     @Transactional
-    public void deleteBookableDates(Long houseId, LocalDate startAt, LocalDate endAt) {
+    public void setPossibleBookableDates(Long houseId, LocalDate startAt, LocalDate endAt) {
         House house = houseRepository.findById(houseId)
                 .orElseThrow(() -> new HouseException(ErrorCode.HOUSE_NOT_FOUND));
 
@@ -96,4 +99,14 @@ public class BookableDateService {
 
         bookableDateRepository.saveAll(bookableDates);
     }
+
+    // 집 삭제시 예약 가능 날짜도 삭제하는 기능
+    @Transactional
+    public void deleteBookableDates(Long houseId) {
+        House house = houseRepository.findById(houseId)
+                .orElseThrow(() -> new HouseException(ErrorCode.HOUSE_NOT_FOUND));
+
+        bookableDateRepository.deleteByHouseId(houseId);
+    }
+
 }

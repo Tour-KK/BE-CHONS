@@ -2,6 +2,7 @@ package konkuk.tourkk.chons.domain.house.application;
 
 import static konkuk.tourkk.chons.global.common.photo.application.PhotoService.HOUSE_BUCKET_FOLDER;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 
 import java.util.Optional;
@@ -12,13 +13,20 @@ import konkuk.tourkk.chons.domain.house.exception.HouseException;
 import konkuk.tourkk.chons.domain.house.infrastructure.HouseRepository;
 import konkuk.tourkk.chons.domain.house.presentation.dto.req.HouseRequest;
 import konkuk.tourkk.chons.domain.house.presentation.dto.res.HouseResponse;
+import konkuk.tourkk.chons.domain.house.presentation.dto.res.SavedHouseResponse;
 import konkuk.tourkk.chons.domain.like.domain.entity.Like;
 import konkuk.tourkk.chons.domain.like.infrastructure.LikeRepository;
 import konkuk.tourkk.chons.domain.reservation.application.BookableDateService;
+import konkuk.tourkk.chons.domain.reservation.application.ReservationService;
+import konkuk.tourkk.chons.domain.reservation.domain.entity.BookableDate;
+import konkuk.tourkk.chons.domain.reservation.infrastructure.BookableDateRepository;
+import konkuk.tourkk.chons.domain.reservation.infrastructure.ReservationRepository;
 import konkuk.tourkk.chons.domain.user.application.UserService;
 import konkuk.tourkk.chons.global.common.photo.application.PhotoService;
 import konkuk.tourkk.chons.global.exception.properties.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,18 +46,18 @@ public class HouseService {
     private final LikeRepository likeRepository;
     private final PhotoService photoService;
     private final BookableDateService bookableDateService;
+    private final BookableDateRepository bookableDateRepository;
+    private final ReservationRepository reservationRepository;
 
 
 
-    public HouseResponse createHouse(Long userId, List<MultipartFile> photos, HouseRequest request) {
+    public SavedHouseResponse createHouse(Long userId, List<MultipartFile> photos, HouseRequest request) {
         List<AreaListResponse> areaList = areaSigunguService.getAreaList();
         String address = request.getAddress();
         String region = createRegion(address, areaList);
 
-        // List<String> availableDates = Arrays.asList("2024-07-01", "2024-07-02", "2024-07-05", "2024-07-10", "2024-07-11");
-
-
         List<String> photoUrls = photoService.savePhotos(photos, HOUSE_BUCKET_FOLDER);
+
         House house = House.builder()
                 .hostName(request.getHostName())
                 .photos(photoUrls)
@@ -62,16 +70,21 @@ public class HouseService {
                 .maxNumPeople(request.getMaxNumPeople())
                 .reviewNum(0)
                 .starAvg(0.0)
-                .region(region) // 지역 정보 추가
-     //          .dates(availableDates)
+                .region(region)
                 .build();
 
-        HouseResponse houseresponse = HouseResponse.of(houseRepository.save(house), false);
-        // bookableDateService.addBookableDates(house.getId(), availableDates);
+         house = houseRepository.save(house);
 
-        return houseresponse;
+        // Add bookable dates
+        bookableDateService.addBookableDates(house.getId(), request.getAvailableDates());
 
+        // Fetch the saved bookable dates
+        List<BookableDate> availableDates = bookableDateRepository.findAllByHouseId(house.getId());
+        List<String> availableDateStrings = availableDates.stream()
+                .map(bookableDate -> bookableDate.getAvailableDate().toString())
+                .collect(Collectors.toList());
 
+        return SavedHouseResponse.of(house, false, availableDateStrings);
     }
 
     @Transactional(readOnly = true)
@@ -97,6 +110,8 @@ public class HouseService {
 
         House house = checkAccess(userId, houseId);
         photoService.deletePhotos(house.getPhotos());
+        bookableDateService.deleteBookableDates(house.getId());
+        reservationRepository.deleteByHouseId(house.getId());
         houseRepository.delete(house);
     }
 
@@ -106,6 +121,7 @@ public class HouseService {
 
         photoService.deletePhotos(house.getPhotos());
         photoService.savePhotos(photos, HOUSE_BUCKET_FOLDER);
+        bookableDateService.deleteBookableDates(houseId);
         changeHouse(house, request);
         boolean isLiked = isLikedHouse(userId, houseId);
         return HouseResponse.of(house, isLiked);
@@ -120,6 +136,28 @@ public class HouseService {
                 return HouseResponse.of(house, isLiked);
             })
             .collect(Collectors.toList());
+    }
+
+    public List<HouseResponse> getHouseListByPrice(Long userId, int startPrice, int endPrice) {
+        userService.findUserById(userId);
+        return houseRepository.findByPriceBetween(startPrice,endPrice)
+                .stream()
+                .map(house -> {
+                    boolean isLiked = isLikedHouse(userId, house.getId());
+                    return HouseResponse.of(house, isLiked);
+                })
+                .collect(Collectors.toList());
+    }
+
+    public List<HouseResponse> getHouseListByNumPeople(Long userId, int numPeople) {
+        userService.findUserById(userId);
+        return houseRepository.findByNumPeople(numPeople)
+                .stream()
+                .map(house -> {
+                    boolean isLiked = isLikedHouse(userId, house.getId());
+                    return HouseResponse.of(house, isLiked);
+                })
+                .collect(Collectors.toList());
     }
 
     public List<HouseResponse> getHouseListByUserId(Long userId) {
@@ -152,8 +190,8 @@ public class HouseService {
     private String createRegion(String address, List<AreaListResponse> areaList) {
         String[] addressParts = address.split(" ");
         if (addressParts.length > 0) {
-            String firstWord = addressParts[0];
-            // 첫 번째 단어가 areaList에 포함되는지 확인
+            String firstWord = addressParts[1];
+            // 두 번째 단어가 areaList에 포함되는지 확인
             for (AreaListResponse area : areaList) {
                 if (area.getAreaName().contains(firstWord)) {
                     return area.getAreaName();

@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter
 @Builder
-public class HouseResponse {
+public class SavedHouseResponse {
 
     private Long id;
 
@@ -38,8 +38,10 @@ public class HouseResponse {
 
     private boolean isLiked;
 
-    public static HouseResponse of(House house, boolean isLiked) {
-        return HouseResponse.builder()
+    private List<String> availableDates;
+
+    public static SavedHouseResponse of(House house, boolean isLiked, List<String> availableDates) {
+        return SavedHouseResponse.builder()
                 .id(house.getId())
                 .hostName(house.getHostName())
                 .houseIntroduction(house.getHouseIntroduction())
@@ -54,6 +56,7 @@ public class HouseResponse {
                 .reviewNum(house.getReviewNum())
                 .starAvg(house.getStarAvg())
                 .isLiked(isLiked)
+                .availableDates(availableDates)
                 .build();
     }
 }

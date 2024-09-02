@@ -9,6 +9,7 @@ import konkuk.tourkk.chons.domain.house.application.HouseService;
 import konkuk.tourkk.chons.domain.house.presentation.dto.req.HouseListRequest;
 import konkuk.tourkk.chons.domain.house.presentation.dto.req.HouseRequest;
 import konkuk.tourkk.chons.domain.house.presentation.dto.res.HouseResponse;
+import konkuk.tourkk.chons.domain.house.presentation.dto.res.SavedHouseResponse;
 import konkuk.tourkk.chons.domain.review.presentation.dto.req.ReviewRequest;
 import konkuk.tourkk.chons.domain.user.domain.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -39,10 +40,10 @@ public class HouseController {
             description = "집 등록에 성공하였습니다."
     )
     @PostMapping
-    public ResponseEntity<HouseResponse> createHouse(@AuthenticationPrincipal User user, @RequestPart(value = "photos") List<MultipartFile> photos,
+    public ResponseEntity<SavedHouseResponse> createHouse(@AuthenticationPrincipal User user, @RequestPart(value = "photos") List<MultipartFile> photos,
         @RequestPart(value = "dto") HouseRequest request) {
         log.info("통과");
-        HouseResponse response = houseService.createHouse(user.getId(), photos, request);
+        SavedHouseResponse response = houseService.createHouse(user.getId(), photos, request);
         return ResponseEntity.ok(response);
     }
 
@@ -162,4 +163,33 @@ public class HouseController {
         return ResponseEntity.ok(responses);
     }
 
+    @Operation(
+            summary = "가격별 집 조회",
+            description = "가격별로 집을 조회합니다."
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "가격별 집 조회에 성공하였습니다."
+    )
+    @GetMapping("/list/price")
+    public ResponseEntity<List<HouseResponse>> getByPrice(@AuthenticationPrincipal User user,
+                                                           @RequestBody HouseListRequest request) {
+        List<HouseResponse> responses = houseService.getHouseListByPrice(user.getId(), request.getStartPrice(),request.getEndPrice());
+        return ResponseEntity.ok(responses);
+    }
+
+    @Operation(
+            summary = "지역별 집 조회",
+            description = "인원별로 집을 조회합니다."
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "인원별 집 조회에 성공하였습니다."
+    )
+    @GetMapping("/list/numPeople")
+    public ResponseEntity<List<HouseResponse>> getByPeopleNum(@AuthenticationPrincipal User user,
+                                                          @RequestBody HouseListRequest request) {
+        List<HouseResponse> responses = houseService.getHouseListByNumPeople(user.getId(), request.getNumPeople());
+        return ResponseEntity.ok(responses);
+    }
 }

@@ -1,0 +1,17 @@
+INSERT INTO area_tb (code, name, id) VALUES ('1', '서울, 서울특별시', 1);
+INSERT INTO area_tb (code, name, id) VALUES ('2', '인천, 인천광역시', 2);
+INSERT INTO area_tb (code, name, id) VALUES ('3', '대전, 대전광역시', 3);
+INSERT INTO area_tb (code, name, id) VALUES ('4', '대구, 대구광역시', 4);
+INSERT INTO area_tb (code, name, id) VALUES ('5', '광주, 광주광역시', 5);
+INSERT INTO area_tb (code, name, id) VALUES ('6', '부산, 부산광역시', 6);
+INSERT INTO area_tb (code, name, id) VALUES ('7', '울산, 울산광역시', 7);
+INSERT INTO area_tb (code, name, id) VALUES ('8', '세종, 세종특별자치시', 8);
+INSERT INTO area_tb (code, name, id) VALUES ('31', '경기도', 9);
+INSERT INTO area_tb (code, name, id) VALUES ('32', '강원도, 강원특별자치도', 10);
+INSERT INTO area_tb (code, name, id) VALUES ('33', '충청북도', 11);
+INSERT INTO area_tb (code, name, id) VALUES ('34', '충청남도', 12);
+INSERT INTO area_tb (code, name, id) VALUES ('35', '경상북도', 13);
+INSERT INTO area_tb (code, name, id) VALUES ('36', '경상남도', 14);
+INSERT INTO area_tb (code, name, id) VALUES ('37', '전라북도, 전북특별자치도', 15);
+INSERT INTO area_tb (code, name, id) VALUES ('38', '전라남도', 16);
+INSERT INTO area_tb (code, name, id) VALUES ('39', '제주도, 제주특별자치도', 17);

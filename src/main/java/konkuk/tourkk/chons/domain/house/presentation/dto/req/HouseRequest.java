@@ -20,11 +20,11 @@ public class HouseRequest {
     private Long pricePerNight;
 
     private Long registrantId;
-//잠시 아웃
-//    private int operationalStatus;
-//
-//    private List<String> availableReservationDates;
 
     private String address;
+
     private int maxNumPeople;
+
+    private List<String> availableDates;
+
 }
