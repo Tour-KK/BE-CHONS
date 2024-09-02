@@ -1,5 +1,7 @@
 package konkuk.tourkk.chons.global.common.webclient;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import konkuk.tourkk.chons.domain.areasigungu.domain.entity.Area;
 import konkuk.tourkk.chons.domain.areasigungu.domain.entity.Sigungu;
 import org.springframework.stereotype.Component;
