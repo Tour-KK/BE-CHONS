@@ -92,7 +92,7 @@ public class HouseController {
         HouseResponse response = houseService.updateHouse(user.getId(), houseId, photos, request);
         return ResponseEntity.ok(response);
     }
-
+  
     @Operation(
             summary = "지역 목록 조회",
             description = "지역 목록을 조회합니다."
