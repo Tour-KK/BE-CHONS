@@ -47,18 +47,6 @@ public class HouseController {
         return ResponseEntity.ok(response);
     }
 
-    @Operation(
-        summary = "집 전체 목록 조회",
-        description = "집 전체 목록을 조회합니다."
-    )
-    @ApiResponse(
-        responseCode = "200",
-        description = "집 전체 목록 조회에 성공하였습니다."
-    )
-    @GetMapping("/list")
-    public ResponseEntity<List<HouseResponse>> getHouse(@AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(houseService.getAllHouses(user.getId()));
-    }
 
     @Operation(
             summary = "집 상세 조회",
@@ -100,11 +88,11 @@ public class HouseController {
     @PutMapping("/{houseId}")
     public ResponseEntity<HouseResponse> updateHouse(@AuthenticationPrincipal User user,
                                                      @PathVariable Long houseId, @RequestPart(value = "photos") List<MultipartFile> photos,
-                                                     @RequestPart(value = "dto") HouseRequest request) {
+                                                    @RequestPart(value = "dto") HouseRequest request) {
         HouseResponse response = houseService.updateHouse(user.getId(), houseId, photos, request);
         return ResponseEntity.ok(response);
     }
-
+  
     @Operation(
             summary = "지역 목록 조회",
             description = "지역 목록을 조회합니다."
@@ -116,21 +104,6 @@ public class HouseController {
     @GetMapping("/region")
     public ResponseEntity<List<AreaListResponse>> getRegionList(@AuthenticationPrincipal User user) {
         List<AreaListResponse> responses = areaSigunguService.getAreaList();
-        return ResponseEntity.ok(responses);
-    }
-
-    @Operation(
-            summary = "지역별 집 조회",
-            description = "지역별로 집을 조회합니다."
-    )
-    @ApiResponse(
-            responseCode = "200",
-            description = "지역별 집 조회에 성공하였습니다."
-    )
-    @GetMapping("/list/region")
-    public ResponseEntity<List<HouseResponse>> getByRegion(@AuthenticationPrincipal User user,
-                                                           @RequestBody HouseListRequest request) {
-        List<HouseResponse> responses = houseService.getHouseListByRegion(user.getId(), request.getRegion());
         return ResponseEntity.ok(responses);
     }
 
@@ -163,33 +136,19 @@ public class HouseController {
         return ResponseEntity.ok(responses);
     }
 
-    @Operation(
-            summary = "가격별 집 조회",
-            description = "가격별로 집을 조회합니다."
-    )
-    @ApiResponse(
-            responseCode = "200",
-            description = "가격별 집 조회에 성공하였습니다."
-    )
-    @GetMapping("/list/price")
-    public ResponseEntity<List<HouseResponse>> getByPrice(@AuthenticationPrincipal User user,
-                                                           @RequestBody HouseListRequest request) {
-        List<HouseResponse> responses = houseService.getHouseListByPrice(user.getId(), request.getStartPrice(),request.getEndPrice());
-        return ResponseEntity.ok(responses);
-    }
 
     @Operation(
-            summary = "지역별 집 조회",
-            description = "인원별로 집을 조회합니다."
+            summary = "다중 조회",
+            description = "다중 조건으로 집 조회합니다"
     )
     @ApiResponse(
             responseCode = "200",
-            description = "인원별 집 조회에 성공하였습니다."
+            description = "다중 조건으로 집조회 성공하였습니다."
     )
-    @GetMapping("/list/numPeople")
-    public ResponseEntity<List<HouseResponse>> getByPeopleNum(@AuthenticationPrincipal User user,
-                                                          @RequestBody HouseListRequest request) {
-        List<HouseResponse> responses = houseService.getHouseListByNumPeople(user.getId(), request.getNumPeople());
+    @GetMapping("/list")
+    public ResponseEntity<List<HouseResponse>> getByFilter(@AuthenticationPrincipal User user,
+                                                              @RequestBody HouseListRequest request) {
+        List<HouseResponse> responses = houseService.getHouseListByFilter(user.getId(), request);
         return ResponseEntity.ok(responses);
     }
 }
