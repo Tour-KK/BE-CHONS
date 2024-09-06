@@ -100,7 +100,7 @@ public class HouseController {
     @PutMapping("/{houseId}")
     public ResponseEntity<HouseResponse> updateHouse(@AuthenticationPrincipal User user,
                                                      @PathVariable Long houseId, @RequestPart(value = "photos") List<MultipartFile> photos,
-                                                    @RequestBody HouseRequest request) {
+                                                     @RequestPart(value = "dto") HouseRequest request) {
         HouseResponse response = houseService.updateHouse(user.getId(), houseId, photos, request);
         return ResponseEntity.ok(response);
     }
