@@ -10,11 +10,15 @@ import java.util.List;
 public interface HouseRepository extends JpaRepository<House, Long> {
     List<House> findByRegistrantId(Long registrantId);
 
-    List<House> findByRegion(String region);
-
-    @Query("SELECT h FROM House h WHERE h.pricePerNight BETWEEN :startPrice AND :endPrice")
-    List<House> findByPriceBetween(@Param("startPrice") int startPrice, @Param("endPrice") int endPrice);
-
-    @Query("SELECT h FROM House h WHERE h.maxNumPeople >= :numPeople")
-    List<House> findByNumPeople(@Param("numPeople") int numPeople);
+    @Query("SELECT h FROM House h WHERE " +
+            "(:region IS NULL OR h.region = :region) AND " +
+            "(:numPeople IS NULL OR h.maxNumPeople >= :numPeople) AND " +
+            "(:startPrice IS NULL OR h.pricePerNight >= :startPrice) AND " +
+            "(:endPrice IS NULL OR h.pricePerNight <= :endPrice)")
+    List<House> findByFilters(
+            @Param("region") String region,
+            @Param("numPeople") Integer numPeople,
+            @Param("startPrice") Integer startPrice,
+            @Param("endPrice") Integer endPrice
+    );
 }
