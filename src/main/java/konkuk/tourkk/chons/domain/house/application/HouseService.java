@@ -11,6 +11,7 @@ import konkuk.tourkk.chons.domain.areasigungu.application.service.AreaSigunguSer
 import konkuk.tourkk.chons.domain.house.domain.entity.House;
 import konkuk.tourkk.chons.domain.house.exception.HouseException;
 import konkuk.tourkk.chons.domain.house.infrastructure.HouseRepository;
+import konkuk.tourkk.chons.domain.house.presentation.dto.req.HouseListRequest;
 import konkuk.tourkk.chons.domain.house.presentation.dto.req.HouseRequest;
 import konkuk.tourkk.chons.domain.house.presentation.dto.res.HouseResponse;
 import konkuk.tourkk.chons.domain.house.presentation.dto.res.SavedHouseResponse;
@@ -88,17 +89,6 @@ public class HouseService {
     }
 
     @Transactional(readOnly = true)
-    public List<HouseResponse> getAllHouses(Long userId) {
-        return houseRepository.findAll()
-            .stream()
-            .map(house -> {
-            boolean isLiked = isLikedHouse(userId, house.getId());
-            return HouseResponse.of(house, isLiked);
-        })
-            .collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
     public HouseResponse getHouse(Long userId, Long houseId) {
         House house = findHouseById(houseId);
         boolean isLiked = isLikedHouse(userId, houseId);
@@ -120,29 +110,32 @@ public class HouseService {
         House house = checkAccess(userId, houseId);
 
         photoService.deletePhotos(house.getPhotos());
-        photoService.savePhotos(photos, HOUSE_BUCKET_FOLDER);
+        List<String> photoUrls = photoService.savePhotos(photos, HOUSE_BUCKET_FOLDER);
         bookableDateService.deleteBookableDates(houseId);
         bookableDateService.addBookableDates(houseId, request.getAvailableDates());
-        changeHouse(house, request);
+        changeHouse(house, request,photoUrls);
+
         boolean isLiked = isLikedHouse(userId, houseId);
         return HouseResponse.of(house, isLiked);
     }
 
-    public List<HouseResponse> getHouseListByRegion(Long userId, String region) {
+    @Transactional(readOnly = true)
+    public List<HouseResponse> getHouseListByFilter(Long userId, HouseListRequest request) {
         userService.findUserById(userId);
-        return houseRepository.findByRegion(region)
-            .stream()
-            .map(house -> {
-                boolean isLiked = isLikedHouse(userId, house.getId());
-                return HouseResponse.of(house, isLiked);
-            })
-            .collect(Collectors.toList());
-    }
 
-    public List<HouseResponse> getHouseListByPrice(Long userId, int startPrice, int endPrice) {
-        userService.findUserById(userId);
-        return houseRepository.findByPriceBetween(startPrice,endPrice)
-                .stream()
+        String region = request.getRegion();
+        Integer numPeople = request.getNumPeople() != null && request.getNumPeople() > 0 ? request.getNumPeople() : null;
+        Integer startPrice = request.getStartPrice() != null && request.getStartPrice() > 0 ? request.getStartPrice() : null;
+        Integer endPrice = request.getEndPrice() != null && request.getEndPrice() > 0 ? request.getEndPrice() : null;
+
+        List<House> filteredHouses = houseRepository.findByFilters(
+                region != null && !region.isEmpty() ? region : null,
+                numPeople,
+                startPrice,
+                endPrice
+        );
+
+        return filteredHouses.stream()
                 .map(house -> {
                     boolean isLiked = isLikedHouse(userId, house.getId());
                     return HouseResponse.of(house, isLiked);
@@ -150,16 +143,6 @@ public class HouseService {
                 .collect(Collectors.toList());
     }
 
-    public List<HouseResponse> getHouseListByNumPeople(Long userId, int numPeople) {
-        userService.findUserById(userId);
-        return houseRepository.findByNumPeople(numPeople)
-                .stream()
-                .map(house -> {
-                    boolean isLiked = isLikedHouse(userId, house.getId());
-                    return HouseResponse.of(house, isLiked);
-                })
-                .collect(Collectors.toList());
-    }
 
     public List<HouseResponse> getHouseListByUserId(Long userId) {
         userService.findUserById(userId);
@@ -210,12 +193,12 @@ public class HouseService {
         return house;
     }
 
-    private void changeHouse(House house, HouseRequest request) {
+    private void changeHouse(House house, HouseRequest request,List<String> photosUrl) {
         house.changeHostName(request.getHostName());
         house.changeHouseIntroduction(request.getHouseIntroduction());
         house.changeFreeService(request.getFreeService());
         house.changePhoneNumber(request.getPhoneNumber());
-        house.changePhotos(request.getPhotos());
+        house.changePhotos(photosUrl);
         house.changeAddress(request.getAddress());
         house.changeRegion(createRegion(request.getAddress(), areaSigunguService.getAreaList()));
         house.changeMaxNumPeople(request.getMaxNumPeople());

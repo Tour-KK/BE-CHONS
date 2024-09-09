@@ -11,6 +11,7 @@ import konkuk.tourkk.chons.global.auth.presentation.dto.req.AdminLoginRequest;
 import konkuk.tourkk.chons.global.auth.presentation.dto.req.LoginRequest;
 import konkuk.tourkk.chons.global.auth.presentation.dto.res.AdminLoginResponse;
 import konkuk.tourkk.chons.global.auth.presentation.dto.res.LoginResponse;
+import konkuk.tourkk.chons.global.auth.presentation.dto.res.LogoutResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -69,10 +70,10 @@ public class AuthController {
             description = "로그아웃에 성공하였습니다."
     )
     @PatchMapping("/logout")
-    public ResponseEntity<Void> logout(HttpServletRequest request) {
+    public ResponseEntity<LogoutResponse> logout(HttpServletRequest request) {
         Optional<String> accessToken = jwtService.extractAccessToken(request);
         Optional<String> refreshToken = jwtService.extractRefreshToken(request);
-        authService.logout(accessToken, refreshToken);
-        return ResponseEntity.ok().build();
+        LogoutResponse response = authService.logout(accessToken, refreshToken);
+        return ResponseEntity.ok(response);
     }
 }
