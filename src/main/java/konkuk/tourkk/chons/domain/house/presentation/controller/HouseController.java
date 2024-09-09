@@ -143,12 +143,17 @@ public class HouseController {
     )
     @ApiResponse(
             responseCode = "200",
-            description = "다중 조건으로 집조회 성공하였습니다."
+            description = "다중 조건으로 집 조회에 성공하였습니다."
     )
     @GetMapping("/list")
     public ResponseEntity<List<HouseResponse>> getByFilter(@AuthenticationPrincipal User user,
-                                                              @RequestBody HouseListRequest request) {
+                                                           @RequestParam(required = false) String region,
+                                                           @RequestParam(required = false) Integer numPeople,
+                                                           @RequestParam(required = false) Integer startPrice,
+                                                           @RequestParam(required = false) Integer endPrice) {
+        HouseListRequest request = new HouseListRequest(region, numPeople, startPrice, endPrice);
         List<HouseResponse> responses = houseService.getHouseListByFilter(user.getId(), request);
         return ResponseEntity.ok(responses);
     }
+
 }
