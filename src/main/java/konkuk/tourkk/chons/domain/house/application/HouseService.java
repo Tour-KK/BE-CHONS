@@ -122,6 +122,7 @@ public class HouseService {
         photoService.deletePhotos(house.getPhotos());
         photoService.savePhotos(photos, HOUSE_BUCKET_FOLDER);
         bookableDateService.deleteBookableDates(houseId);
+        bookableDateService.addBookableDates(houseId, request.getAvailableDates());
         changeHouse(house, request);
         boolean isLiked = isLikedHouse(userId, houseId);
         return HouseResponse.of(house, isLiked);
