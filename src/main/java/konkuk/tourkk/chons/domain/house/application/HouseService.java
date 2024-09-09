@@ -120,12 +120,19 @@ public class HouseService {
     @Transactional(readOnly = true)
     public List<HouseResponse> getHouseListByFilter(Long userId, HouseListRequest request) {
         userService.findUserById(userId);
+
+        String region = request.getRegion();
+        Integer numPeople = request.getNumPeople() != null && request.getNumPeople() > 0 ? request.getNumPeople() : null;
+        Integer startPrice = request.getStartPrice() != null && request.getStartPrice() > 0 ? request.getStartPrice() : null;
+        Integer endPrice = request.getEndPrice() != null && request.getEndPrice() > 0 ? request.getEndPrice() : null;
+
         List<House> filteredHouses = houseRepository.findByFilters(
-                request.getRegion() != null && !request.getRegion().isEmpty() ? request.getRegion() : null,
-                request.getNumPeople() > 0 ? request.getNumPeople() : null,
-                request.getStartPrice() > 0 ? request.getStartPrice() : null,
-                request.getEndPrice() > 0 ? request.getEndPrice() : null
+                region != null && !region.isEmpty() ? region : null,
+                numPeople,
+                startPrice,
+                endPrice
         );
+
         return filteredHouses.stream()
                 .map(house -> {
                     boolean isLiked = isLikedHouse(userId, house.getId());
@@ -133,6 +140,7 @@ public class HouseService {
                 })
                 .collect(Collectors.toList());
     }
+
 
     public List<HouseResponse> getHouseListByUserId(Long userId) {
         userService.findUserById(userId);
