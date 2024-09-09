@@ -34,6 +34,11 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+            .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
+    }
+
     public UserInfoResponse getUserInfo(User user) {
         return UserInfoResponse.from(user);
     }
