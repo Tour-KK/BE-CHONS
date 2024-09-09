@@ -14,6 +14,7 @@ import konkuk.tourkk.chons.global.auth.presentation.dto.req.AdminLoginRequest;
 import konkuk.tourkk.chons.global.auth.presentation.dto.req.LoginRequest;
 import konkuk.tourkk.chons.global.auth.presentation.dto.res.AdminLoginResponse;
 import konkuk.tourkk.chons.global.auth.presentation.dto.res.LoginResponse;
+import konkuk.tourkk.chons.global.auth.presentation.dto.res.LogoutResponse;
 import konkuk.tourkk.chons.global.exception.properties.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -79,13 +80,13 @@ public class AuthService {
         jwtService.reissueAndSendTokens(response, refreshToken);
     }
 
-    public void logout(Optional<String> accessToken, Optional<String> refreshToken) {
+    public LogoutResponse logout(Optional<String> accessToken, Optional<String> refreshToken) {
         String access = accessToken
                 .orElseThrow(() -> new AuthException(ErrorCode.SECURITY_INVALID_ACCESS_TOKEN));
         String refresh = refreshToken
                 .orElseThrow(() -> new AuthException(ErrorCode.REFRESH_TOKEN_REQUIRED));
-        jwtService.extractEmail(access)
-                .orElseThrow(() -> new AuthException(ErrorCode.EMAIL_NOT_EXTRACTED));
+        String email = jwtService.extractEmail(access)
+            .orElseThrow(() -> new AuthException(ErrorCode.EMAIL_NOT_EXTRACTED));
 
         jwtService.isTokenValid(refresh);
         jwtService.isTokenValid(access);
@@ -93,6 +94,11 @@ public class AuthService {
         jwtService.deleteRefreshToken(refresh);
         //access token blacklist 처리 -> 로그아웃한 사용자가 요청 시 access token이 redis에 존재하면 jwtAuthenticationProcessingFilter에서 인증처리 거부
         jwtService.invalidAccessToken(access);
+
+        User user = userService.findByEmail(email);
+        return LogoutResponse.builder()
+            .socialType(user.getSocialType())
+            .build();
     }
 
 }
