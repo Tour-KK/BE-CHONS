@@ -1,4 +1,6 @@
 package konkuk.tourkk.chons.domain.reservation.presentation.controller;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import konkuk.tourkk.chons.domain.reservation.application.ReservationService;
 import konkuk.tourkk.chons.domain.reservation.presentation.dto.req.ReservationRequest;
 import konkuk.tourkk.chons.domain.reservation.presentation.dto.res.ReservationResponse;
@@ -19,7 +21,14 @@ public class ReservationController {
         this.reservationService = reservationService;
     }
 
-    // 예약 등록
+    @Operation(
+            summary = "예약 등록",
+            description = "예약을 등록합니다. "
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "예약 등록에 성공하였습니다."
+    )
     @PostMapping("/{houseId}")
     public ResponseEntity<ReservationResponse> registerReservation(
             @PathVariable Long houseId,
@@ -30,7 +39,14 @@ public class ReservationController {
         return ResponseEntity.ok(response);
     }
 
-    // 사용자의 예약 리스트 조회
+    @Operation(
+            summary = "유저별 예약 리스트 조회",
+            description = "유저별 예약 리스트를 조회합니다. "
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "유저별 예약 리스트 조회에 성공하였습니다."
+    )
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<ReservationResponse>> getReservationList(
             @PathVariable Long userId) {
@@ -40,7 +56,14 @@ public class ReservationController {
     }
 
 
-    // 예약 상세정보 조히
+    @Operation(
+            summary = "예약 상세 정보 조회",
+            description = "예약 상세 정보를 조회합니다. "
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "예약 상세 정보 조회에 성공하였습니다."
+    )
     @GetMapping("/{reservationId}")
     public ResponseEntity<ReservationResponse> getReservationInfo(
             @PathVariable Long reservationId) {
@@ -49,7 +72,14 @@ public class ReservationController {
         return ResponseEntity.ok(response);
     }
 
-    // 예약 삭제
+    @Operation(
+            summary = "예약 삭제",
+            description = "예약을 삭제합니다. "
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "예약 삭제에 성공하였습니다."
+    )
     @DeleteMapping("/{reservationId}")
     public ResponseEntity<Void> deleteReservation(
             @PathVariable Long reservationId,
@@ -59,7 +89,14 @@ public class ReservationController {
         return ResponseEntity.noContent().build();
     }
 
-    // 예약 수정
+    @Operation(
+            summary = "예약 정보 수정",
+            description = "예약 정보를 수정합니다. "
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "예약 정보 수정에 성공하였습니다."
+    )
     @PatchMapping("/{reservationId}")
     public ResponseEntity<ReservationResponse> editReservation(
             @RequestBody ReservationRequest request,
