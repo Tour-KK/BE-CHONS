@@ -13,6 +13,7 @@ import konkuk.tourkk.chons.domain.house.exception.HouseException;
 import konkuk.tourkk.chons.domain.house.infrastructure.HouseRepository;
 import konkuk.tourkk.chons.domain.house.presentation.dto.req.HouseListRequest;
 import konkuk.tourkk.chons.domain.house.presentation.dto.req.HouseRequest;
+import konkuk.tourkk.chons.domain.house.presentation.dto.res.HouseInfoResponse;
 import konkuk.tourkk.chons.domain.house.presentation.dto.res.HouseResponse;
 import konkuk.tourkk.chons.domain.house.presentation.dto.res.SavedHouseResponse;
 import konkuk.tourkk.chons.domain.like.domain.entity.Like;
@@ -89,10 +90,16 @@ public class HouseService {
     }
 
     @Transactional(readOnly = true)
-    public HouseResponse getHouse(Long userId, Long houseId) {
+    public HouseInfoResponse getHouse(Long userId, Long houseId) {
         House house = findHouseById(houseId);
         boolean isLiked = isLikedHouse(userId, houseId);
-        return HouseResponse.of(house, isLiked);
+
+        List<BookableDate> availableDates = bookableDateRepository.findAllByHouseId(house.getId());
+        List<String> availableDateStrings = availableDates.stream()
+                .map(bookableDate -> bookableDate.getAvailableDate().toString())
+                .collect(Collectors.toList());
+
+        return HouseInfoResponse.of(house, isLiked, availableDateStrings);
     }
 
     public void deleteHouse(Long userId, Long houseId) {
@@ -111,7 +118,6 @@ public class HouseService {
 
         photoService.deletePhotos(house.getPhotos());
         List<String> photoUrls = photoService.savePhotos(photos, HOUSE_BUCKET_FOLDER);
-        bookableDateService.deleteBookableDates(houseId);
         changeHouse(house, request,photoUrls);
         boolean isLiked = isLikedHouse(userId, houseId);
         return HouseResponse.of(house, isLiked);

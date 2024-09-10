@@ -8,6 +8,7 @@ import konkuk.tourkk.chons.domain.areasigungu.application.service.AreaSigunguSer
 import konkuk.tourkk.chons.domain.house.application.HouseService;
 import konkuk.tourkk.chons.domain.house.presentation.dto.req.HouseListRequest;
 import konkuk.tourkk.chons.domain.house.presentation.dto.req.HouseRequest;
+import konkuk.tourkk.chons.domain.house.presentation.dto.res.HouseInfoResponse;
 import konkuk.tourkk.chons.domain.house.presentation.dto.res.HouseResponse;
 import konkuk.tourkk.chons.domain.house.presentation.dto.res.SavedHouseResponse;
 import konkuk.tourkk.chons.domain.review.presentation.dto.req.ReviewRequest;
@@ -58,7 +59,7 @@ public class HouseController {
     )
 
     @GetMapping("/{houseId}")
-    public ResponseEntity<HouseResponse> getHouse(@AuthenticationPrincipal User user, @PathVariable Long houseId) {
+    public ResponseEntity<HouseInfoResponse> getHouse(@AuthenticationPrincipal User user, @PathVariable Long houseId) {
         return ResponseEntity.ok(houseService.getHouse(user.getId(), houseId));
     }
 
