@@ -13,6 +13,7 @@ import konkuk.tourkk.chons.domain.house.exception.HouseException;
 import konkuk.tourkk.chons.domain.house.infrastructure.HouseRepository;
 import konkuk.tourkk.chons.domain.house.presentation.dto.req.HouseListRequest;
 import konkuk.tourkk.chons.domain.house.presentation.dto.req.HouseRequest;
+import konkuk.tourkk.chons.domain.house.presentation.dto.req.HouseUpdateRequest;
 import konkuk.tourkk.chons.domain.house.presentation.dto.res.HouseInfoResponse;
 import konkuk.tourkk.chons.domain.house.presentation.dto.res.HouseResponse;
 import konkuk.tourkk.chons.domain.house.presentation.dto.res.SavedHouseResponse;
@@ -80,13 +81,7 @@ public class HouseService {
         // Add bookable dates
         bookableDateService.addBookableDates(house.getId(), request.getAvailableDates());
 
-        // Fetch the saved bookable dates
-        List<BookableDate> availableDates = bookableDateRepository.findAllByHouseId(house.getId());
-        List<String> availableDateStrings = availableDates.stream()
-                .map(bookableDate -> bookableDate.getAvailableDate().toString())
-                .collect(Collectors.toList());
-
-        return SavedHouseResponse.of(house, false, availableDateStrings);
+        return SavedHouseResponse.of(house, false, request.getAvailableDates());
     }
 
     @Transactional(readOnly = true)
@@ -94,7 +89,7 @@ public class HouseService {
         House house = findHouseById(houseId);
         boolean isLiked = isLikedHouse(userId, houseId);
 
-        List<BookableDate> availableDates = bookableDateRepository.findAllByHouseId(house.getId());
+        List<BookableDate> availableDates = bookableDateRepository.findByIsPossibleHouseId(house.getId());
         List<String> availableDateStrings = availableDates.stream()
                 .map(bookableDate -> bookableDate.getAvailableDate().toString())
                 .collect(Collectors.toList());
@@ -112,7 +107,7 @@ public class HouseService {
         houseRepository.delete(house);
     }
 
-    public HouseResponse updateHouse(Long userId, Long houseId, List<MultipartFile> photos, HouseRequest request) {
+    public HouseResponse updateHouse(Long userId, Long houseId, List<MultipartFile> photos, HouseUpdateRequest request) {
         userService.findUserById(userId);
         House house = checkAccess(userId, houseId);
 
@@ -197,7 +192,7 @@ public class HouseService {
         return house;
     }
 
-    private void changeHouse(House house, HouseRequest request,List<String> photosUrl) {
+    private void changeHouse(House house, HouseUpdateRequest request,List<String> photosUrl) {
         house.changeHostName(request.getHostName());
         house.changeHouseIntroduction(request.getHouseIntroduction());
         house.changeFreeService(request.getFreeService());

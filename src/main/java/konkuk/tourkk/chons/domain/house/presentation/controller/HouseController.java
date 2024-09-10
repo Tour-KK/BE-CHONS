@@ -8,6 +8,7 @@ import konkuk.tourkk.chons.domain.areasigungu.application.service.AreaSigunguSer
 import konkuk.tourkk.chons.domain.house.application.HouseService;
 import konkuk.tourkk.chons.domain.house.presentation.dto.req.HouseListRequest;
 import konkuk.tourkk.chons.domain.house.presentation.dto.req.HouseRequest;
+import konkuk.tourkk.chons.domain.house.presentation.dto.req.HouseUpdateRequest;
 import konkuk.tourkk.chons.domain.house.presentation.dto.res.HouseInfoResponse;
 import konkuk.tourkk.chons.domain.house.presentation.dto.res.HouseResponse;
 import konkuk.tourkk.chons.domain.house.presentation.dto.res.SavedHouseResponse;
@@ -89,7 +90,7 @@ public class HouseController {
     @PutMapping("/{houseId}")
     public ResponseEntity<HouseResponse> updateHouse(@AuthenticationPrincipal User user,
                                                      @PathVariable Long houseId, @RequestPart(value = "photos") List<MultipartFile> photos,
-                                                    @RequestPart(value = "dto") HouseRequest request) {
+                                                    @RequestPart(value = "dto") HouseUpdateRequest request) {
         HouseResponse response = houseService.updateHouse(user.getId(), houseId, photos, request);
         return ResponseEntity.ok(response);
     }
