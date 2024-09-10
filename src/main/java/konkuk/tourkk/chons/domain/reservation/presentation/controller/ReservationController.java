@@ -1,6 +1,7 @@
 package konkuk.tourkk.chons.domain.reservation.presentation.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import konkuk.tourkk.chons.domain.reservation.application.ReservationService;
 import konkuk.tourkk.chons.domain.reservation.presentation.dto.req.ReservationRequest;
 import konkuk.tourkk.chons.domain.reservation.presentation.dto.res.ReservationResponse;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "Reservation", description = "예약 관련 API. 토큰이 필요합니다.")
 @RestController
 @RequestMapping("/api/v1/reservation")
 public class ReservationController {
