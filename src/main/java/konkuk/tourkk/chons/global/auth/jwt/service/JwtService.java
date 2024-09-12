@@ -121,13 +121,13 @@ public class JwtService {
                 Duration.ofMillis(accessTokenExpirationPeriod));
     }
 
-    public String findRefreshTokenAndExtractEmail(String refreshToken) {
-        String email = redisService.getValues(refreshToken);
+    public String findRefreshTokenAndExtractSocialInfo(String refreshToken) {
+        String socialInfo = redisService.getValues(refreshToken);
 
-        if (email.equals(NOT_EXIST)) {
+        if (socialInfo.equals(NOT_EXIST)) {
             throw new AuthException(ErrorCode.SECURITY_INVALID_REFRESH_TOKEN);
         }
-        return email;
+        return socialInfo;
     }
 
     private void sendTokens(HttpServletResponse response, String reissuedAccessToken,
@@ -137,9 +137,9 @@ public class JwtService {
     }
 
     public void reissueAndSendTokens(HttpServletResponse response, String refreshToken) {
-        String email = findRefreshTokenAndExtractEmail(refreshToken);
-        String reissuedRefreshToken = reissueRefreshToken(email);
-        String reissuedAccessToken = createAccessToken(email);
+        String socialInfo = findRefreshTokenAndExtractSocialInfo(refreshToken);
+        String reissuedRefreshToken = reissueRefreshToken(socialInfo);
+        String reissuedAccessToken = createAccessToken(socialInfo);
 
         sendTokens(response, reissuedAccessToken, reissuedRefreshToken);
     }
