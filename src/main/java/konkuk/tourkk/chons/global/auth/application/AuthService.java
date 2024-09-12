@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.StringTokenizer;
 
 @Service
 @Transactional
@@ -36,11 +37,12 @@ public class AuthService {
         SocialType socialType = request.getSocialType();
         String name = request.getName();
         String socialId = request.getSocialId();
+        String socialInfo = socialType.getPrefix() + "_" + socialId;
 
-        String accessToken = jwtService.createAccessToken(email);
+        String accessToken = jwtService.createAccessToken(socialInfo);
         String refreshToken = jwtService.createRefreshToken();
-        jwtService.updateRefreshToken(refreshToken, email);
-        Optional<User> userOptional = userRepository.findByEmail(email);
+        jwtService.updateRefreshToken(refreshToken, socialInfo);
+        Optional<User> userOptional = userRepository.findBySocialTypeAndSocialId(socialType, socialId);
         if (userOptional.isEmpty()) {
             User newUser = userService.registerUser(name, email, socialId,
                     socialType, Role.USER);
@@ -85,8 +87,10 @@ public class AuthService {
                 .orElseThrow(() -> new AuthException(ErrorCode.SECURITY_INVALID_ACCESS_TOKEN));
         String refresh = refreshToken
                 .orElseThrow(() -> new AuthException(ErrorCode.REFRESH_TOKEN_REQUIRED));
-        String email = jwtService.extractEmail(access)
-            .orElseThrow(() -> new AuthException(ErrorCode.EMAIL_NOT_EXTRACTED));
+        String socialInfo = jwtService.extractSocialInfo(access)
+            .orElseThrow(() -> new AuthException(ErrorCode.SOCIAL_INFO_NOT_EXTRACTED));
+        StringTokenizer st = new StringTokenizer(socialInfo, "_");
+        SocialType socialType = SocialType.getSocialTypeFromPrefix(st.nextToken());
 
         jwtService.isTokenValid(refresh);
         jwtService.isTokenValid(access);
@@ -95,9 +99,8 @@ public class AuthService {
         //access token blacklist 처리 -> 로그아웃한 사용자가 요청 시 access token이 redis에 존재하면 jwtAuthenticationProcessingFilter에서 인증처리 거부
         jwtService.invalidAccessToken(access);
 
-        User user = userService.findByEmail(email);
         return LogoutResponse.builder()
-            .socialType(user.getSocialType())
+            .socialType(socialType)
             .build();
     }
 

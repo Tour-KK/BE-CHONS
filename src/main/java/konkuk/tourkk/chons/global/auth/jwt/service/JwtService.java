@@ -40,7 +40,7 @@ public class JwtService {
 
     private static final String ACCESS_TOKEN_SUBJECT = "AccessToken";
     private static final String REFRESH_TOKEN_SUBJECT = "RefreshToken";
-    private static final String EMAIL_CLAIM = "email";
+    private static final String SOCIAL_INFO_CLAIM = "socialInfo";
     private static final String BEARER = "Bearer ";
     private static final String NOT_EXIST = "false";
 
@@ -52,7 +52,7 @@ public class JwtService {
         return JWT.create()
                 .withSubject(ACCESS_TOKEN_SUBJECT)
                 .withExpiresAt(new Date(now.getTime() + accessTokenExpirationPeriod))
-                .withClaim(EMAIL_CLAIM, email)
+                .withClaim(SOCIAL_INFO_CLAIM, email)
                 .sign(Algorithm.HMAC512(secretKey));
     }
 
@@ -82,12 +82,12 @@ public class JwtService {
                 .map(accessToken -> accessToken.replace(BEARER, ""));
     }
 
-    public Optional<String> extractEmail(String accessToken) {
+    public Optional<String> extractSocialInfo(String accessToken) {
         try {
             return Optional.ofNullable(JWT.require(Algorithm.HMAC512(secretKey))
                     .build()
                     .verify(accessToken) //검증
-                    .getClaim(EMAIL_CLAIM) //추출
+                    .getClaim(SOCIAL_INFO_CLAIM) //추출
                     .asString());
         } catch (JWTVerificationException e) {
             throw new AuthException(ErrorCode.SECURITY_UNAUTHORIZED);
@@ -95,8 +95,8 @@ public class JwtService {
     }
 
     //RefreshToken redis 저장
-    public void updateRefreshToken(String refreshToken, String email) {
-        redisService.setValues(refreshToken, email,
+    public void updateRefreshToken(String refreshToken, String socialInfo) {
+        redisService.setValues(refreshToken, socialInfo,
                 Duration.ofMillis(refreshTokenExpirationPeriod));
     }
 
