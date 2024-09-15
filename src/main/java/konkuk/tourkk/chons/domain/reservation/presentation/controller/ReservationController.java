@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import konkuk.tourkk.chons.domain.reservation.application.ReservationService;
 import konkuk.tourkk.chons.domain.reservation.presentation.dto.req.ReservationRequest;
 import konkuk.tourkk.chons.domain.reservation.presentation.dto.res.ReservationResponse;
+import konkuk.tourkk.chons.domain.reservation.presentation.dto.res.ReservationWithHouseResponse;
 import konkuk.tourkk.chons.domain.user.domain.entity.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -50,10 +51,10 @@ public class ReservationController {
             description = "유저별 예약 리스트 조회에 성공하였습니다."
     )
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<ReservationResponse>> getReservationList(
+    public ResponseEntity<List<ReservationWithHouseResponse>> getReservationList(
             @PathVariable Long userId) {
 
-        List<ReservationResponse> responses = reservationService.getReservationsByUserId(userId);
+        List<ReservationWithHouseResponse> responses = reservationService.getReservationsByUserId(userId);
         return ResponseEntity.ok(responses);
     }
 

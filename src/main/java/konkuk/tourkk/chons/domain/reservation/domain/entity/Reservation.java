@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import konkuk.tourkk.chons.domain.user.domain.enums.Role;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -44,7 +46,18 @@ public class Reservation {
     @Column(nullable = false)
     private String phoneNum;
 
-    public Reservation(Long userId, Long houseId, int price, LocalDate startAt, LocalDate endAt, int personNum, String phoneNum) {
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private InterestLevel interestLevel;
+
+    @Column(nullable = true)
+    private String reservationRequest;
+
+
+    public Reservation(Long userId, Long houseId, int price,
+                       LocalDate startAt, LocalDate endAt,
+                       int personNum, String phoneNum,
+                       InterestLevel interestLevel, String reservationRequest) {
         this.userId = userId;
         this.houseId = houseId;
         this.price = price;
@@ -52,6 +65,8 @@ public class Reservation {
         this.endAt = endAt;
         this.personNum = personNum;
         this.phoneNum=phoneNum;
+        this.interestLevel = interestLevel;
+        this.reservationRequest = reservationRequest;
     }
 
     public Long getId() {
@@ -117,4 +132,16 @@ public class Reservation {
     public void setPersonNum(int personNum) {
         this.personNum = personNum;
     }
+
+    public void setPhoneNum(String phoneNum) {this.phoneNum = phoneNum;}
+
+    public String getPhoneNum() {return phoneNum;}
+
+    public void setReservationRequest(String reservationRequest) {this.reservationRequest = reservationRequest;}
+
+    public String getReservationRequest() {return reservationRequest;}
+
+    public void setInterestLevel(InterestLevel interestLevel) {this.interestLevel = interestLevel;}
+
+    public InterestLevel getInterestLevel() {return interestLevel;}
 }
