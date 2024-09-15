@@ -29,6 +29,7 @@ import konkuk.tourkk.chons.domain.user.application.UserService;
 import konkuk.tourkk.chons.global.common.photo.application.PhotoService;
 import konkuk.tourkk.chons.global.exception.properties.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -42,6 +43,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Transactional
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class HouseService {
 
     private final HouseRepository houseRepository;
@@ -58,9 +60,9 @@ public class HouseService {
         List<AreaListResponse> areaList = areaSigunguService.getAreaList();
         String address = request.getAddress();
         String region = createRegion(address, areaList);
-
+        log.info("?");
         List<String> photoUrls = photoService.savePhotos(photos, HOUSE_BUCKET_FOLDER);
-
+        log.info("dmdld");
         House house = House.builder()
                 .hostName(request.getHostName())
                 .photos(photoUrls)

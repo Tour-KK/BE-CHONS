@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import konkuk.tourkk.chons.domain.user.domain.entity.User;
+import konkuk.tourkk.chons.domain.user.domain.enums.SocialType;
 import konkuk.tourkk.chons.domain.user.infrastructure.UserRepository;
 import konkuk.tourkk.chons.global.auth.exception.AuthException;
 import konkuk.tourkk.chons.global.auth.jwt.service.JwtService;
@@ -20,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.StringTokenizer;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -57,8 +59,11 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     private void checkAccessTokenAndSaveAuthentication(HttpServletRequest request,
                                                        HttpServletResponse response, FilterChain filterChain) {
         jwtService.extractAccessToken(request)
-                .flatMap(jwtService::extractEmail)
-                .flatMap(userRepository::findByEmail).ifPresent(this::saveAuthentication);
+                .flatMap(jwtService::extractSocialInfo)
+                .flatMap(socialInfo -> {
+                    StringTokenizer st = new StringTokenizer(socialInfo, "_");
+                    return userRepository.findBySocialTypeAndSocialId(SocialType.getSocialTypeFromPrefix(st.nextToken()), st.nextToken());
+                }).ifPresent(this::saveAuthentication);
 
         try {
             filterChain.doFilter(request, response);

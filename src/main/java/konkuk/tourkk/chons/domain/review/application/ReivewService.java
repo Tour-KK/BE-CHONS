@@ -16,10 +16,12 @@ import konkuk.tourkk.chons.global.common.photo.application.PhotoService;
 import konkuk.tourkk.chons.global.exception.properties.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -64,8 +66,11 @@ public class ReivewService {
         userService.findUserById(userId);
         Review review = checkAccess(userId, reviewId);
 
-        photoService.deletePhotos(review.getPhotos());
-        photoService.savePhotos(photos, REVIEW_BUCKET_FOLDER);
+        photoService.deletePhotos(request.getPhotos());
+        List<String> newPhotos = photoService.savePhotos(photos, REVIEW_BUCKET_FOLDER);
+        List<String> originPhotos = review.getPhotos();
+        removeOriginPhotos(request, originPhotos);
+        originPhotos.addAll(newPhotos);
         review.changeContent(request.getContent());
         review.changeStar(request.getStar());
 
@@ -116,5 +121,11 @@ public class ReivewService {
     private House findHouseById(Long houseId) {
         return houseRepository.findById(houseId)
             .orElseThrow(() -> new HouseException(ErrorCode.HOUSE_NOT_FOUND));
+    }
+
+    private void removeOriginPhotos(ReviewUpdateRequest request, List<String> originPhotos) {
+        for(String url : request.getPhotos()) {
+            originPhotos.remove(url);
+        }
     }
 }
