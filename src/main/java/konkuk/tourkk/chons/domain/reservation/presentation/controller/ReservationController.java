@@ -2,6 +2,7 @@ package konkuk.tourkk.chons.domain.reservation.presentation.controller;
 import konkuk.tourkk.chons.domain.reservation.application.ReservationService;
 import konkuk.tourkk.chons.domain.reservation.presentation.dto.req.ReservationRequest;
 import konkuk.tourkk.chons.domain.reservation.presentation.dto.res.ReservationResponse;
+import konkuk.tourkk.chons.domain.reservation.presentation.dto.res.ReservationWithHouseResponse;
 import konkuk.tourkk.chons.domain.user.domain.entity.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -32,10 +33,10 @@ public class ReservationController {
 
     // 사용자의 예약 리스트 조회
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<ReservationResponse>> getReservationList(
+    public ResponseEntity<List<ReservationWithHouseResponse>> getReservationList(
             @PathVariable Long userId) {
 
-        List<ReservationResponse> responses = reservationService.getReservationsByUserId(userId);
+        List<ReservationWithHouseResponse> responses = reservationService.getReservationsByUserId(userId);
         return ResponseEntity.ok(responses);
     }
 

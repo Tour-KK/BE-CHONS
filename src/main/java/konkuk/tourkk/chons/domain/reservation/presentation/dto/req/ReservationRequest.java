@@ -1,5 +1,6 @@
 package konkuk.tourkk.chons.domain.reservation.presentation.dto.req;
 
+import konkuk.tourkk.chons.domain.reservation.domain.entity.InterestLevel;
 import konkuk.tourkk.chons.domain.reservation.domain.entity.Reservation;
 import konkuk.tourkk.chons.domain.reservation.exception.ReservationException;
 import konkuk.tourkk.chons.global.exception.properties.ErrorCode;
@@ -16,5 +17,7 @@ public class ReservationRequest {
     private String endAt;
     private int personNum;
     private String phoneNum;
+    private InterestLevel interestLevel;
+    private String reservationRequest;
 
 }

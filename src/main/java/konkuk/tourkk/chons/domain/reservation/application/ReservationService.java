@@ -14,6 +14,7 @@ import konkuk.tourkk.chons.domain.reservation.exception.ReservationException;
 import konkuk.tourkk.chons.domain.reservation.infrastructure.ReservationRepository;
 import konkuk.tourkk.chons.domain.reservation.presentation.dto.req.ReservationRequest;
 import konkuk.tourkk.chons.domain.reservation.presentation.dto.res.ReservationResponse;
+import konkuk.tourkk.chons.domain.reservation.presentation.dto.res.ReservationWithHouseResponse;
 import konkuk.tourkk.chons.domain.user.domain.entity.User;
 
 import konkuk.tourkk.chons.domain.user.infrastructure.UserRepository;
@@ -55,7 +56,9 @@ public class ReservationService {
                 StartAt,
                 EndAt,
                 request.getPersonNum(),
-                phoneNum
+                phoneNum,
+                request.getInterestLevel(),
+                request.getReservationRequest()
         );
         bookabledateService.checkAvailability(houseId, StartAt, EndAt);
         Reservation savedReservation = reservationRepository.save(reservation);
@@ -67,11 +70,16 @@ public class ReservationService {
     }
 
     @Transactional
-    public List<ReservationResponse> getReservationsByUserId(Long userId) {
+    public List<ReservationWithHouseResponse> getReservationsByUserId(Long userId) {
 
-        return reservationRepository.findByUserId(userId)
-                .stream()
-                .map(ReservationResponse::new)
+        List<Reservation> reservations = reservationRepository.findByUserId(userId);
+
+        return reservations.stream()
+                .map(reservation -> {
+                    House house = houseRepository.findById(reservation.getHouseId())
+                            .orElseThrow(() -> new HouseException(ErrorCode.HOUSE_NOT_FOUND));
+                    return new ReservationWithHouseResponse(reservation, house);
+                })
                 .collect(Collectors.toList());
     }
 
@@ -120,6 +128,8 @@ public class ReservationService {
             reservation.setStartAt(newStartAt);
             reservation.setEndAt(newEndAt);
             reservation.setPersonNum(request.getPersonNum());
+            reservation.setInterestLevel(request.getInterestLevel());
+            reservation.setReservationRequest(request.getReservationRequest());
 
             bookabledateService.checkAvailability(houseId, newStartAt, newEndAt);
             Reservation updatedReservation = reservationRepository.save(reservation);

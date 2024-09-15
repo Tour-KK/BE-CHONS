@@ -22,6 +22,7 @@ import konkuk.tourkk.chons.domain.like.infrastructure.LikeRepository;
 import konkuk.tourkk.chons.domain.reservation.application.BookableDateService;
 import konkuk.tourkk.chons.domain.reservation.application.ReservationService;
 import konkuk.tourkk.chons.domain.reservation.domain.entity.BookableDate;
+import konkuk.tourkk.chons.domain.reservation.exception.ReservationException;
 import konkuk.tourkk.chons.domain.reservation.infrastructure.BookableDateRepository;
 import konkuk.tourkk.chons.domain.reservation.infrastructure.ReservationRepository;
 import konkuk.tourkk.chons.domain.user.application.UserService;
@@ -51,7 +52,6 @@ public class HouseService {
     private final BookableDateService bookableDateService;
     private final BookableDateRepository bookableDateRepository;
     private final ReservationRepository reservationRepository;
-
 
 
     public SavedHouseResponse createHouse(Long userId, List<MultipartFile> photos, HouseRequest request) {

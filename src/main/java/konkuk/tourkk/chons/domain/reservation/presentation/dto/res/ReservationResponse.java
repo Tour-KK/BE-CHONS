@@ -1,5 +1,6 @@
 package konkuk.tourkk.chons.domain.reservation.presentation.dto.res;
 
+import konkuk.tourkk.chons.domain.reservation.domain.entity.InterestLevel;
 import konkuk.tourkk.chons.domain.reservation.domain.entity.Reservation;
 import konkuk.tourkk.chons.domain.reservation.exception.ReservationException;
 import konkuk.tourkk.chons.global.exception.properties.ErrorCode;
@@ -19,6 +20,9 @@ public class ReservationResponse {
     private String endAt;
     private int personNum;
     private String phoneNum;
+    private InterestLevel interestLevel;
+    private String reservationRequest;
+
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
 
@@ -31,6 +35,10 @@ public class ReservationResponse {
         this.endAt = formatDate(reservation.getEndAt());
         this.personNum = reservation.getPersonNum();
         this.phoneNum = reservation.getPhoneNum();
+        this.interestLevel = reservation.getInterestLevel();
+        this.reservationRequest = reservation.getReservationRequest();
+        this.interestLevel = reservation.getInterestLevel();
+        this.reservationRequest = reservation.getReservationRequest();
     }
 
     public String formatDate(LocalDate date) {
