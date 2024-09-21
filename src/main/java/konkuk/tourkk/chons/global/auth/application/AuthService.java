@@ -37,7 +37,7 @@ public class AuthService {
         SocialType socialType = request.getSocialType();
         String name = request.getName();
         String socialId = request.getSocialId();
-        String socialInfo = socialType.getPrefix() + "_" + socialId;
+        String socialInfo = socialType.getPrefix() + " " + socialId;
 
         String accessToken = jwtService.createAccessToken(socialInfo);
         String refreshToken = jwtService.createRefreshToken();

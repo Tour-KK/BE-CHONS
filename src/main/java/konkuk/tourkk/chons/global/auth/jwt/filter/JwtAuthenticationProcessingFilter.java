@@ -61,7 +61,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         jwtService.extractAccessToken(request)
                 .flatMap(jwtService::extractSocialInfo)
                 .flatMap(socialInfo -> {
-                    StringTokenizer st = new StringTokenizer(socialInfo, "_");
+                    StringTokenizer st = new StringTokenizer(socialInfo, " ");
                     return userRepository.findBySocialTypeAndSocialId(SocialType.getSocialTypeFromPrefix(st.nextToken()), st.nextToken());
                 }).ifPresent(this::saveAuthentication);
 
