@@ -21,7 +21,7 @@ public class ReservationWithHouseResponse {
 
     private String phoneNumber;
 
-    private Long pricePerNight;
+    private int price;
 
     private Long registrantId;
 
@@ -43,7 +43,7 @@ public class ReservationWithHouseResponse {
         this.freeService= house.getFreeService();
         this.photos = house.getPhotos();
         this.phoneNumber = house.getPhoneNumber();
-        this.pricePerNight = house.getPricePerNight();
+        this.price = reservation.getPrice();
         this.registrantId = house.getRegistrantId();
         this.address = house.getAddress();
         this.region = house.getRegion();
