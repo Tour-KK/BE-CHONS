@@ -73,7 +73,9 @@ public class ReservationService {
     public List<ReservationWithHouseResponse> getReservationsByUserId(Long userId) {
 
         List<Reservation> reservations = reservationRepository.findByUserId(userId);
-
+        if (reservations.isEmpty()) {
+            throw new ReservationException(ErrorCode.RESERVATION_NOT_FOUND);
+        }
         return reservations.stream()
                 .map(reservation -> {
                     House house = houseRepository.findById(reservation.getHouseId())
