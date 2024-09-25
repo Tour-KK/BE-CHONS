@@ -9,7 +9,9 @@ import java.util.List;
 @Getter
 public class ReservationWithHouseResponse {
 
-    private Long reservationid;
+    private Long reservationId;
+
+    private Long houseId;
 
     private String hostName;
 
@@ -37,7 +39,8 @@ public class ReservationWithHouseResponse {
 
     public ReservationWithHouseResponse(Reservation reservation, House house) {
 
-        this.reservationid = reservation.getId();
+        this.reservationId = reservation.getId();
+        this.houseId = house.getId();
         this.hostName = house.getHostName();
         this.houseIntroduction= house.getHouseIntroduction();
         this.freeService= house.getFreeService();
