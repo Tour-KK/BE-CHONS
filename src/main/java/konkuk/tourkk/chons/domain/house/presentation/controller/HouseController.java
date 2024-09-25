@@ -105,7 +105,7 @@ public class HouseController {
     )
     @GetMapping("/region")
     public ResponseEntity<List<AreaListResponse>> getRegionList(@AuthenticationPrincipal User user) {
-        List<AreaListResponse> responses = areaSigunguService.getAreaList();
+        List<AreaListResponse> responses = areaSigunguService.getAreaListSimple();
         return ResponseEntity.ok(responses);
     }
 
