@@ -179,7 +179,7 @@ public class HouseService {
             // 두 번째 단어가 areaList에 포함되는지 확인
             for (AreaListResponse area : areaList) {
                 if (area.getAreaName().contains(firstWord)) {
-                    return area.getAreaName();
+                    return firstWord;
                 }
             }
         }
