@@ -52,6 +52,13 @@ public class AreaSigunguService {
                 .map(area -> new AreaListResponse(area.getName()))
                 .collect(Collectors.toList());
     }
+    public List<AreaListResponse> getAreaListSimple() {
+        List<Area> areas = areaRepository.findAll();
+
+        return areas.stream()
+                .map(area -> new AreaListResponse(area.getName().split(",")[0]))
+                .collect(Collectors.toList());
+    }
 
     private void saveSigungus(Long areaCode) {
         webClientService.requestSigungus(areaCode)
