@@ -15,6 +15,7 @@ public class ReservationResponse {
     private Long reservationId;
     private Long userId;
     private Long houseId;
+    private String userName;
     private int price;
     private String startAt;
     private String endAt;
@@ -26,10 +27,11 @@ public class ReservationResponse {
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
 
-    public ReservationResponse(Reservation reservation) {
+    public ReservationResponse(Reservation reservation, String userName) {
         this.reservationId = reservation.getId();
         this.userId = reservation.getUserId();
         this.houseId = reservation.getHouseId();
+        this.userName = userName;
         this.price = reservation.getPrice();
         this.startAt = formatDate(reservation.getStartAt());
         this.endAt = formatDate(reservation.getEndAt());

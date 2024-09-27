@@ -17,6 +17,7 @@ import konkuk.tourkk.chons.domain.reservation.presentation.dto.res.ReservationRe
 import konkuk.tourkk.chons.domain.reservation.presentation.dto.res.ReservationWithHouseResponse;
 import konkuk.tourkk.chons.domain.user.domain.entity.User;
 
+import konkuk.tourkk.chons.domain.user.exception.UserException;
 import konkuk.tourkk.chons.domain.user.infrastructure.UserRepository;
 import konkuk.tourkk.chons.global.exception.properties.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -64,7 +65,7 @@ public class ReservationService {
         Reservation savedReservation = reservationRepository.save(reservation);
         bookabledateService.saveBookableDates(houseId, StartAt, EndAt);
 
-        ReservationResponse reservationResponse = new ReservationResponse(savedReservation);
+        ReservationResponse reservationResponse = new ReservationResponse(savedReservation, currentUser.getName());
 
         return reservationResponse;
     }
@@ -90,7 +91,9 @@ public class ReservationService {
 
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new ReservationException(ErrorCode.RESERVATION_NOT_FOUND));
-        ReservationResponse reservationResponse = new ReservationResponse(reservation);
+        User currentUser = userRepository.findById(reservation.getUserId())
+                .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
+        ReservationResponse reservationResponse = new ReservationResponse(reservation, currentUser.getName());
         return reservationResponse;
     }
 
@@ -139,7 +142,7 @@ public class ReservationService {
             // 새로운 날짜를 unavailable하게 변경하기
             bookabledateService.saveBookableDates(houseId, newStartAt, newEndAt);
 
-            return new ReservationResponse(updatedReservation);
+            return new ReservationResponse(updatedReservation, currentUser.getName());
         } catch (Exception e) {
             // 예외 발생 시 기존 날짜를 다시 unavailable하게 변경
             bookabledateService.saveBookableDates(houseId, originalStartAt, originalEndAt);
